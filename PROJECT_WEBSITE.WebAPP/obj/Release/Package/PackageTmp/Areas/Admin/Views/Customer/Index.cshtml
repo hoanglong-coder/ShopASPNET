@@ -1,0 +1,138 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@section scripts{
+    <script src="~/Assets/Admin/plugins/select2/js/select2.full.min.js"></script>
+    <script src="~/Assets/Admin/plugins/sweetalert2/sweetalert2.js"></script>
+    <script src="~/Assets/Admin/plugins/mustache.min.js"></script>
+    <script src="~/Assets/Admin/dist/js/jquery.twbsPagination.js"></script>
+    <script src="~/Assets/Admin/plugins/jquery-validation/jquery.validate.js"></script>
+    <script src="~/Assets/Admin/plugins/moment/moment.min.js"></script>
+    <link href="~/Assets/Admin/plugins/daterangepicker/daterangepicker.css" rel="stylesheet" />
+    <script src="~/Assets/Admin/plugins/daterangepicker/daterangepicker.js"></script>
+
+    <script src="~/Assets/Admin/dist/js/pages/admin-customer-index.js"></script>
+}
+<div class="row">
+    <div class="col-12">
+        <div class="card card-default card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Quản lý khách hàng</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+
+                .<!--header Table-->
+                <div class="row mb-3">
+                    <div class="col-6 col-md-3">
+                        <div class="input-group">
+                            <input type="search" id="search-news" class="form-control" placeholder="Nhập thông tin" />
+                        </div>
+                    </div>
+                    <div class="col-3 col-md-3">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Từ ngày</span>
+                            </div>
+                            <input type="date" class="form-control float-right" id="TuNgay">
+                        </div>
+                    </div>
+                    <div class="col-3 col-md-3">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Đến ngày</span>
+                            </div>
+                            <input type="date" class="form-control float-right" id="DenNgay">
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-1">
+                        <button type="button" id="btnTiemKiem" class="btn btn-primary"><i class="fas fa-search"></i>Tìm kiếm</button>
+                    </div>
+                </div>
+                <!--Table-->
+                <div class="row">
+                    <div class="col-sm-12">
+                        <table class="table table-bordered table-hover" id="tbl-data">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Mã KH</th>
+                                    <th>Tên KH</th>
+                                    <th>Ngày tạo</th>
+                                    <th>SĐT</th>
+                                    <th>Địa chỉ</th>
+                                    <th>Email</th>
+                                    <th>Ngày sinh</th>
+                                    <th>Giới tính</th>
+                                    <th>Trạng thái</th>
+                                    <th>#</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbNews">
+                            </tbody>
+                        </table>
+                        <ul id="paginationnews" class="pagination"></ul>
+                        <script id="data-templateNews" type="x-tmpl-mustache">
+                                            <tr>
+                                                <td>{{STT}}</td>
+                                                <td>{{CustomerIDDisplay}}</td>
+                                                <td>{{Name}}</td>
+                                                <td>{{CreateDate}}</td>
+                                                <td>{{Phone}}</td>
+                                                <td>{{Address}}</td>
+                                                <td>{{Email}}</td>
+                                                <td>{{Birth}}</td>
+                                                <td>{{Gender}}</td>
+                                                <td>{{{Status}}}</td>
+                                                <th>
+                                                   <a class="actiondisplayProduct" data-id="{{CustomerID}}" style="margin-left:5px" data-toggle="tooltip" data-placement="top" title="Dừng/Bán sản phẩm"><i class="{{DisplayProduct}}"></i></a>
+                                                    <a class="actiondelete" data-id="{{CustomerID}}" data-name="{{Name}}" style="margin-left:5px"data-toggle="tooltip" data-placement="top" title="Xóa tin tức"><i class="far fa-trash-alt"></i></a>
+                                                </th>
+                                            </tr>
+                        </script>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Xác nhận xóa sản phẩm -->
+<div class="modal fade" id="ModalDeleteProduct" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 1000px!important" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #01A65B;color:white">
+                <h5>XÁC NHẬN XÓA </h5>
+            </div>
+            <div class="modal-body">
+                <p id="NameProductDelete"></p><br />
+                <div class="alert alert-danger" id="ResultProductDelete" hidden role="alert">
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-default float-right" style="margin-right:10px" data-dismiss="modal"><i class="fas fa-sign-out-alt"></i>Thoát</button>
+                    <button type="button" class="btn btn-info float-right" id="btndeleteProduct" style="margin-right:10px"><i class="fas fa-trash-alt"></i>Xóa</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section headerBig{
+    Quản lý khách hàng
+}
+
+@section headersmall{
+    Quản lý khách hàng
+}
+
+
+
+

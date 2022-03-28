@@ -1,0 +1,112 @@
+﻿@model List<PROJECT_WEBSITE.Data.EF.ProductCategory>
+@{
+    var product = (List<PROJECT_WEBSITE.Data.ModelCustom.MProduct>)ViewBag.ListProduct;
+    List<PROJECT_WEBSITE.Data.EF.ProductCategory> cate = Model.Where(t => t.ShowOnHome == true).ToList();
+    
+}
+
+<section class="categorie-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Section Title -->
+                <div class="section-title mt-res-sx-30px mt-res-md-30px">
+                    <h2>Danh mục sản phẩm</h2>
+                    <p>Tất cả loại sản phẩm</p>
+                </div>
+                <!-- Section Title -->
+            </div>
+        </div>
+        <!-- Category Slider Start -->
+        <div class="category-slider owl-carousel owl-nav-style">
+
+            @{
+                int index = (cate.Count) / 2;
+                int count = 0;
+
+                for (int i = index; i < cate.Count; i++)
+                {
+                    <!-- Single item -->
+            <div class="category-item">
+                @if (@count != @index || (cate.Count % 2) == 0)
+                {
+                    <div class="category-list">
+                        <div class="category-thumb">
+                            <a href="/san-pham/@cate[count].MetaTitle-@cate[count].ProductCategoryID">
+                                <img src="@cate[count].Image" alt="" style="filter: blur(5px); -webkit-filter: blur(5px);" />
+                            </a>
+                        </div>
+                        <div class="desc-listcategoreis">
+                            <div class="name_categories">
+                                <h4 style="color: black ">@cate[count].Name</h4>
+                            </div>
+                            @{
+                                var sub2 = Model.Where(t => t.ParentID == @cate[count].ProductCategoryID);
+                                if (sub2.Count() != 0)
+                                {
+                                    int c2 = 0;
+                                    foreach (var item1 in sub2)
+                                    {
+                                        c2 += product.Count(t => t.ProductCategoryID == item1.ProductCategoryID);
+
+                                    }
+                                    <span class="number_product" style="color:black">@c2 Sản phẩm</span>
+                                }
+                                else
+                                {
+                                    int c2 = 0;
+                                    c2 += product.Count(t => t.ProductCategoryID == @cate[count].ProductCategoryID);
+                                    <span class="number_product" style="color: black ">@c2 Sản phẩm</span>
+                                }
+
+                            }
+                            <a href="/san-pham/@cate[count].MetaTitle-@cate[count].ProductCategoryID" style="color: black "> Mua ngay <i class="ion-android-arrow-dropright-circle"></i></a>
+                        </div>
+                    </div>
+                }
+                <div class="category-list mb-30px">
+                    <div class="category-thumb">
+                        <a href="/san-pham/@cate[i].MetaTitle-@cate[i].ProductCategoryID">
+                            <img src="@cate[i].Image" alt="" style="filter: blur(5px); -webkit-filter: blur(5px);"  />
+                        </a>
+                    </div>
+                    <div class="desc-listcategoreis">
+                        <div class="name_categories">
+                            <h4 style="color: black ">@cate[i].Name</h4>
+                        </div>
+                        @{
+
+                            var sub = Model.Where(t => t.ParentID == cate[i].ProductCategoryID);
+                            if (sub.Count() != 0)
+                            {
+                                int c = 0;
+                                foreach (var item1 in sub)
+                                {
+                                    c += product.Count(t => t.ProductCategoryID == item1.ProductCategoryID);
+
+                                }
+                                <span class="number_product" style="color: black ">@c Sản phẩm</span>
+                            }
+                            else
+                            {
+                                int c = 0;
+
+                                c = product.Count(t => t.ProductCategoryID == cate[i].ProductCategoryID);
+                                <span class="number_product" style="color: black ">@c Sản phẩm</span>
+                            }
+
+                        }
+                        <a href="/san-pham/@cate[i].MetaTitle-@cate[i].ProductCategoryID" style="color: black "> Mua ngay <i class="ion-android-arrow-dropright-circle"></i></a>
+                    </div>
+                </div>
+
+            </div>
+                    count++;
+                }
+            }
+
+        </div>
+    </div>
+</section>
+
+

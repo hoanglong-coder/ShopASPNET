@@ -1,0 +1,88 @@
+﻿
+@{
+    ViewBag.Title = "Trang chủ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var ListDMSP = (List<PROJECT_WEBSITE.Data.EF.ProductCategory>)ViewBag.ListDMSP;
+    var combo = (List<PROJECT_WEBSITE.Data.EF.Product>)ViewBag.combo;
+}
+
+<!-- Slider Arae Start -->
+@Html.Action("SliderHeader", "Home")
+<!-- Slider Arae End -->
+<!-- Static Area Start -->
+<section class="static-area mtb-60px">
+    <div class="container">
+        <div class="static-area-wrap">
+            <div class="row">
+                <!-- Static Single Item Start -->
+                <div class="col-lg-3 col-xs-12 col-md-6 col-sm-6">
+                    <div class="single-static pb-res-md-0 pb-res-sm-0 pb-res-xs-0">
+                        <img src="~/Assets/Client/images/icons/static-icons-1.png" alt="" class="img-responsive" />
+                        <div class="single-static-meta">
+                            <h4>Miễn phí giao hàng</h4>
+                            <p>Cho tất cả sản phẩm trên 300,000đ</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Static Single Item End -->
+                <!-- Static Single Item Start -->
+                <div class="col-lg-3 col-xs-12 col-md-6 col-sm-6">
+                    <div class="single-static pb-res-md-0 pb-res-sm-0 pb-res-xs-0 pt-res-xs-20">
+                        <img src="~/Assets/Client/images/icons/static-icons-2.png" alt="" class="img-responsive" />
+                        <div class="single-static-meta">
+                            <h4>Miễn phí đổi trả</h4>
+                            <p>Đổi trả sản phẩm miến phí trong vòng 9 ngày</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Static Single Item End -->
+                <!-- Static Single Item Start -->
+                <div class="col-lg-3 col-xs-12 col-md-6 col-sm-6">
+                    <div class="single-static pt-res-md-30 pb-res-sm-30 pb-res-xs-0 pt-res-xs-20">
+                        <img src="~/Assets/Client/images/icons/static-icons-3.png" alt="" class="img-responsive" />
+                        <div class="single-static-meta">
+                            <h4>100% Thanh toán an toàn</h4>
+                            <p>Hệ thống thanh toán an toàn từ chúng tôi.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Static Single Item End -->
+                <!-- Static Single Item Start -->
+                <div class="col-lg-3 col-xs-12 col-md-6 col-sm-6">
+                    <div class="single-static pt-res-md-30 pb-res-sm-30 pt-res-xs-20">
+                        <img src="~/Assets/Client/images/icons/static-icons-4.png" alt="" class="img-responsive" />
+                        <div class="single-static-meta">
+                            <h4>Hỗ trợ 24/7</h4>
+                            <p>Hộ trợ tư vấn 24h trong ngày</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Static Single Item End -->
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Static Area End -->
+<!-- Category Area Start -->
+@Html.Action("CategoryProducts", "Home");
+<!-- Category Area End  -->
+<!-- Hot deal area Start -->
+<section class="hot-deal-area">
+    <div class="container">
+        <div class="row">
+            <!-- Hot Deal Start -->
+            @Html.Action("HotDeal", "Home")
+            <!-- Hot Deal End -->
+            <!-- New Arrivals Area Start -->
+            @Html.Action("NewProducts", "Home")
+            <!-- New Arrivals Area End -->
+        </div>
+    </div>
+</section>
+<!-- Hot Deal Area End -->
+<!-- Feature Area Start -->
+@Html.Action("FeatureProduct", "Home");
+<!-- Feature Area End -->
+<!-- Brand area start -->
+@Html.Action("BrandSlider", "Home");
+<!-- Brand area end -->

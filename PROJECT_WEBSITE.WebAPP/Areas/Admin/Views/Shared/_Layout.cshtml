@@ -1,0 +1,340 @@
+﻿@using PROJECT_WEBSITE.WebAPP.Common
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Trang quản trị</title>
+
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="~/Assets/Admin/plugins/fontawesome-free/css/all.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/Assets/Admin/dist/css/adminlte.min.css">
+    <!-- PagedList-->
+    <link rel="stylesheet" href="~/Assets/Admin/dist/css/PagedList.css">
+    <!-- sweetleart2 -->
+    <link rel="stylesheet" href="~/Assets/Admin/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
+    <!-- Select2 -->
+    <link rel="stylesheet" href="~/Assets/Admin/plugins/select2/css/select2.min.css">
+    <link rel="stylesheet" href="~/Assets/Admin/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+    <link href="~/Assets/Admin/dist/css/validate.css" rel="stylesheet" />
+
+</head>
+<body class="hold-transition sidebar-mini">
+
+    <!-- Site wrapper -->
+    <div class="wrapper">
+        <!-- Main Sidebar Container -->
+        <aside class="main-sidebar sidebar-dark-primary elevation-4">
+            <div class="sidebar">
+                <!-- Sidebar user (optional) -->
+                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                    <div class="image">
+                        <img src="~/Data/Images/UserImage.jpg" class="img-circle elevation-2" alt="User Image" />
+                    </div>
+                    <div class="info">
+                        <a href="#" class="d-block">@ViewBag.UserName</a>
+                        <a href="#" style="color:white" class="d-block">@ViewBag.Role</a>
+                    </div>
+                    <div class="info">
+                        <a class="nav-link" data-widget="pushmenu" href="#" role="button" style="width: 19px;margin-top:-6px"><i class="fas fa-bars"></i></a>
+                    </div>
+                </div>
+
+
+
+                <!-- Sidebar Menu -->
+                <nav class="mt-2">
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                        <!-- Add icons to the links using the .nav-icon class with font-awesome or any other icon font library -->
+                        @{
+                            var session = (UserLogin)Session[PROJECT_WEBSITE.WebAPP.Common.CommonConstants.USER_SESSION];
+
+
+                            if (session.Roles.Where(t => t == (int)Role.Dashboard).Count() != 0)
+                            {
+                                <li class="nav-item">
+                                    <a href="/admin/home" class="nav-link">
+                                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                                        <p>
+                                            Dashboard
+                                        </p>
+                                    </a>
+                                </li>
+                            }
+                            if (session.Roles.Where(t => t == (int)Role.QuanLyDonhang).Count() != 0)
+                            {
+                                <li class="nav-item">
+                                    <a href="/admin/order" class="nav-link">
+                                        <i class="nav-icon fas fa-shopping-cart"></i>
+                                        <p>
+                                            Quản lý đơn hàng
+                                        </p>
+                                    </a>
+                                </li>
+                            }
+
+                            if (session.Roles.Where(t => t == (int)Role.QuanLyKhoHang).Count() != 0 || session.Roles.Where(t => t == (int)Role.QuanLyNhapHang).Count() != 0 || session.Roles.Where(t => t == (int)Role.QuanLyCombo).Count() != 0 || session.Roles.Where(t => t == (int)Role.QuanLyMaKhuyenMai).Count() != 0)
+                            {
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link">
+                                        <i class="nav-icon fab fa-product-hunt"></i>
+                                        <p>
+                                            Quản lý sản phẩm
+                                            <i class="right fas fa-angle-left"></i>
+                                        </p>
+                                    </a>
+                                    <ul class="nav nav-treeview">
+                                        @{
+                                            if (session.Roles.Where(t => t == (int)Role.QuanLyKhoHang).Count() != 0)
+                                            {
+                                                <li class="nav-item">
+                                                    <a href="/admin/product" class="nav-link">
+                                                        <i class="fas fa-warehouse nav-icon"></i>
+                                                        <p>Kho hàng</p>
+                                                    </a>
+                                                </li>
+                                            }
+                                            if (session.Roles.Where(t => t == (int)Role.QuanLyNhapHang).Count() != 0)
+                                            {
+                                                <li class="nav-item">
+                                                    <a href="/admin/receipt" class="nav-link">
+                                                        <i class="fas fa-file-upload nav-icon"></i>
+                                                        <p>Nhập hàng</p>
+                                                    </a>
+                                                </li>
+                                            }
+                                            if (session.Roles.Where(t => t == (int)Role.QuanLyCombo).Count() != 0)
+                                            {
+                                                <li class="nav-item">
+                                                    <a href="/admin/productcombo" class="nav-link">
+                                                        <i class="fas fa-recycle nav-icon"></i>
+                                                        <p>Combo sản phẩm</p>
+                                                    </a>
+                                                </li>
+                                            }
+                                            if (session.Roles.Where(t => t == (int)Role.QuanLyMaKhuyenMai).Count() != 0)
+                                            {
+                                                <li class="nav-item">
+                                                    <a href="/admin/DiscountCode" class="nav-link">
+                                                        <i class="fas fa-ticket-alt nav-icon"></i>
+                                                        <p>Mã khuyến mãi</p>
+                                                    </a>
+                                                </li>
+                                            }
+                                        }
+                                    </ul>
+                                </li>
+                            }
+
+                            if (session.Roles.Where(t => t == (int)Role.TimTOPK).Count() != 0)
+                            {
+                                <li class="nav-item">
+                                    <a href="/admin/tkualgo" class="nav-link">
+                                        <i class="nav-icon fas fa-project-diagram"></i>
+                                        <p>
+                                            Chức năng tìm TOP-K
+                                        </p>
+                                    </a>
+                                </li>
+                            }
+
+                            if (session.Roles.Where(t => t == (int)Role.QuanLyNhanVien).Count() != 0)
+                            {
+                                <li class="nav-item">
+                                    <a href="/admin/user" class="nav-link">
+                                        <i class="nav-icon fas fa-user"></i>
+                                        <p>
+                                            Quản lý user
+                                        </p>
+                                    </a>
+                                </li>
+                            }
+
+                            if (session.Roles.Where(t => t == (int)Role.QuanLyKhachHang).Count() != 0)
+                            {
+                                <li class="nav-item">
+                                    <a href="/admin/customer" class="nav-link">
+                                        <i class="nav-icon fas fa-user"></i>
+                                        <p>
+                                            Quản lý khách hàng
+                                        </p>
+                                    </a>
+                                </li>
+                            }
+
+                            if (session.Roles.Where(t => t == (int)Role.QuanLyTinTuc).Count() != 0 || session.Roles.Where(t => t == (int)Role.QuanLyGioiThieu).Count() != 0 || session.Roles.Where(t => t == (int)Role.QuanLySlide).Count() != 0 || session.Roles.Where(t => t == (int)Role.QuanLyChanTrang).Count() != 0)
+                            {
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link">
+                                        <i class="nav-icon fas fa-tasks"></i>
+                                        <p>
+                                            Quản lý Website
+                                            <i class="right fas fa-angle-left"></i>
+                                        </p>
+                                    </a>
+                                    <ul class="nav nav-treeview">
+                                        @{
+                                            if (session.Roles.Where(t => t == (int)Role.QuanLyTinTuc).Count() != 0)
+
+                                            {
+                                                <li class="nav-item">
+                                                    <a href="/admin/news" class="nav-link">
+                                                        <i class="far fa-newspaper nav-icon"></i>
+                                                        <p>Tin tức</p>
+                                                    </a>
+                                                </li>
+                                            }
+                                            if (session.Roles.Where(t => t == (int)Role.QuanLyGioiThieu).Count() != 0)
+                                            {
+                                                <li class="nav-item">
+                                                    <a href="/admin/gioithieu" class="nav-link">
+                                                        <i class="fas fa-users nav-icon"></i>
+                                                        <p>Giới thiệu</p>
+                                                    </a>
+                                                </li>
+                                            }
+                                            if (session.Roles.Where(t => t == (int)Role.QuanLySlide).Count() != 0)
+                                            {
+                                                <li class="nav-item">
+                                                    <a href="/admin/slide" class="nav-link">
+                                                        <i class="fab fa-slideshare nav-icon"></i>
+                                                        <p>Slide</p>
+                                                    </a>
+                                                </li>
+                                            }
+                                            if (session.Roles.Where(t => t == (int)Role.QuanLyChanTrang).Count() != 0)
+
+                                            {
+                                                <li class="nav-item">
+                                                    <a href="/admin/footer" class="nav-link">
+                                                        <i class="fas fa-cogs nav-icon"></i>
+                                                        <p>Chân trang </p>
+                                                    </a>
+                                                </li>
+                                            }
+
+                                        }
+                                    </ul>
+                                </li>
+                            }
+
+
+                            if (session.Roles.Where(t => t == (int)Role.BaoCaoDoanhSo).Count() != 0 || session.Roles.Where(t => t == (int)Role.BaoCaoLoiNhuan).Count() != 0)
+                            {
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link">
+                                        <i class="nav-icon fas fa-chart-pie"></i>
+                                        <p>
+                                            Thống kê - báo cáo
+                                            <i class="right fas fa-angle-left"></i>
+                                        </p>
+                                    </a>
+                                    <ul class="nav nav-treeview">
+                                        @{
+                                            if (session.Roles.Where(t => t == (int)Role.BaoCaoDoanhSo).Count() != 0)
+
+                                            {
+                                                <li class="nav-item">
+                                                    <a href="/admin/statistic" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p>Báo cáo doanh số</p>
+                                                    </a>
+                                                </li>
+                                            }
+                                            if (session.Roles.Where(t => t == (int)Role.BaoCaoLoiNhuan).Count() != 0)
+
+                                            {
+                                                <li class="nav-item">
+                                                    <a href="/admin/statisticLN" class="nav-link">
+                                                        <i class="far fa-chart-bar nav-icon"></i>
+                                                        <p>Báo cáo lợi nhuận</p>
+                                                    </a>
+                                                </li>
+                                            }
+                                        }
+
+                                    </ul>
+                                </li>
+                            }
+                        }
+                        <li class="nav-item">
+                            <a href="@Url.Action("ClearSessuion","UserLogin")" class="nav-link">
+                                <i class="nav-icon fas fa-sign-out-alt"></i>
+                                <p>
+                                    Đăng xuất
+                                </p>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+                <!-- /.sidebar-menu -->
+            </div>
+            <!-- /.sidebar -->
+        </aside>
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <section class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1>@RenderSection("headerBig", required: true)</h1>
+                        </div>
+                        <div class="col-sm-6">
+                            <ol class="breadcrumb float-sm-right">
+                                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                                <li class="breadcrumb-item active">@RenderSection("headersmall", required: true)</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div><!-- /.container-fluid -->
+            </section>
+
+            <!-- Main content -->
+            <section class="content">
+                <div class="container-fluid">
+                    @RenderBody()
+                </div>
+            </section>
+            <!-- /.content -->
+        </div>
+        <!-- /.content-wrapper -->
+
+        <footer class="main-footer">
+        </footer>
+
+        <!-- Control Sidebar -->
+        <aside class="control-sidebar control-sidebar-dark">
+            <!-- Control sidebar content goes here -->
+        </aside>
+        <!-- /.control-sidebar -->
+    </div>
+    <!-- ./wrapper -->
+
+
+</body>
+</html>
+<!-- jQuery -->
+@Scripts.Render("~/Assets/Admin/plugins/jquery/jquery.min.js")
+<!-- Bootstrap 4 -->
+@Scripts.Render("~/Assets/Admin/plugins/bootstrap/js/bootstrap.bundle.min.js")
+<!-- CkfinderFix -->
+@Scripts.Render("~/Assets/Admin/dist/js/FixModalCKeditor.js")
+<!-- Ckfinder -->
+@Scripts.Render("~/Assets/Admin/plugins/ckfinder/ckfinder.js")
+<!-- Ckeditor -->
+@Scripts.Render("~/Assets/Admin/plugins/ckeditor/ckeditor.js")
+<!-- AdminLTE App -->
+@Scripts.Render("~/Assets/Admin/dist/js/adminlte.min.js")
+<!-- Select2 -->
+@Scripts.Render("~/Assets/Admin/plugins/select2/js/select2.full.min.js")
+
+@RenderSection("scripts", required: false)

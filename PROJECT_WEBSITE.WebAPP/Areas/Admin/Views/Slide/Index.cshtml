@@ -1,0 +1,251 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@section scripts{
+    <script src="~/Assets/Admin/plugins/select2/js/select2.full.min.js"></script>
+    <script src="~/Assets/Admin/plugins/sweetalert2/sweetalert2.js"></script>
+    <script src="~/Assets/Admin/plugins/mustache.min.js"></script>
+    <script src="~/Assets/Admin/dist/js/jquery.twbsPagination.js"></script>
+    <script src="~/Assets/Admin/plugins/jquery-validation/jquery.validate.js"></script>
+    <script src="~/Assets/Admin/plugins/moment/moment.min.js"></script>
+    <link href="~/Assets/Admin/plugins/daterangepicker/daterangepicker.css" rel="stylesheet" />
+    <script src="~/Assets/Admin/plugins/daterangepicker/daterangepicker.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            var Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
+            });
+
+
+            $.ajax({
+                url: '/admin/Slide/LoadSlide',
+                type: 'get',
+                dataType: 'json',
+                success: function (data) {
+                    if (data.code = 200) {
+                        var html = "";
+                        var template = $('#data-templateNews').html();
+                        var dem = 1;
+                        $.each(data.data, function (key, value) {
+                            html += Mustache.render(template, {
+                                STT: dem,
+                                ID: value.SlideID,
+                                Name: value.Name,
+                            });
+                            dem++;
+                        });
+
+                        $('#tbNews').html(html);
+
+
+                        $('#ImageMore').off('click').on('click', function (e) {
+                            e.preventDefault();
+                            var finder = new CKFinder();
+                            finder.selectActionFunction = function (url) {
+                                $('#ImageListUpdate').append('<div class="col-2"><img src="' + url + '" width="100" /><a href="#" class="btnupdatedelete" style="margin-left: 42px;"><i class="fas fa-trash" ></i></a>' + '<input type ="hidden" class="hidImage" value ="' + url + '"></div>');
+
+                                $('.btnupdatedelete').off('click').on('click', function (e) {
+                                    e.preventDefault();
+                                    $(this).parent().remove();
+                                })
+                            };
+                            finder.popup();
+                        });
+
+
+                        $(".modalshowEdit").off('click').on('click', function () {
+                            var id = $(this).data('id');
+                            $.ajax({
+                                url: '/admin/Slide/GetID',
+                                type: 'get',
+                                data: {
+                                    id: id
+                                },
+                                dataType: 'json',
+                                success: function (data) {
+                                    if (data.code = 200) {
+                                        $("#SlideID").val(data.data.SlideID);
+                                        $("#SlideName").val(data.data.Name);
+                                        $("#ModalEditSlide").modal('show');
+
+                                        var ImageMore = data.images;
+                                        var html = '';
+                                        $.each(ImageMore, function (i, item) {
+
+                                            html += '<div class="col-2"><img src="' + item + '" width="100" /><a href="#" class="btnupdatedelete" style="margin-left: 42px;"><i class="fas fa-trash" ></i></a>' + '<input type ="hidden" class="hidImage" value ="' + item + '"></div>';
+
+                                        })
+                                        $('#ImageListUpdate').html(html);
+
+                                        $('.btnupdatedelete').off('click').on('click', function (e) {
+                                            e.preventDefault();
+                                            $(this).parent().remove();
+                                        })
+                                    }
+                                }
+                            });
+                            $("#FromEditSlide").off('submit').on('submit', function (e) {
+
+                                e.preventDefault();
+
+                                var Slide = new Object();
+                                Slide.SlideID = id;
+
+                                var imagemore = [];
+
+                                $.each($('#ImageListUpdate .hidImage'), function (i, item) {
+                                    imagemore.push($(item).val());
+                                });
+
+                                Slide.ImageMore = JSON.stringify(imagemore);
+
+                                $.ajax({
+                                    type: "post",
+                                    url: '/admin/Slide/Update',
+                                    data: Slide,
+                                    dataType: 'json',
+                                    success: function (data) {
+                                        if (data.code == 200) {
+                                            if (data.data == true) {
+                                                $("#ModalEditSlide").modal('hide');
+                                                Toast.fire({
+                                                    icon: 'success',
+                                                    title: 'Thành công',
+                                                })
+
+                                            } else {
+                                                Toast.fire({
+                                                    icon: 'error',
+                                                    title: 'Thất bại',
+                                                })
+                                            }
+                                        }
+                                    }
+                                });
+
+                            })
+                        })
+
+                    }
+                }
+            });
+
+        })
+
+
+    </script>
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card card-default card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Silde</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <table class="table table-bordered table-hover" id="tbl-data">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Mã slide</th>
+                                    <th>Tên</th>
+                                    <th>#</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbNews">
+                            </tbody>
+                        </table>
+                        <script id="data-templateNews" type="x-tmpl-mustache">
+                                            <tr>
+                                                <td>{{STT}}</td>
+                                                <td>{{ID}}</td>
+                                                <td>{{Name}}</td>
+                                                <th>
+                                                    <a class="modalshowEdit" data-id="{{ID}}" data-name="Name"  data-toggle="tooltip" data-placement="top" title="Sửa tin tức"><i class="far fa-edit"></i></a>
+
+                                                </th>
+                                            </tr>
+                        </script>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Chỉnh sửa Slide -->
+<div class="modal fade" id="ModalEditSlide" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 1000px!important" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #01A65B;color:white">
+                <h5>CHỈNH SỬA SILDE</h5>
+            </div>
+            <div class="modal-body">
+                <!-- form start -->
+                <form class="form-horizontal" id="FromEditSlide" method="post">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-2 col-form-label">Mã Slide*</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="SlideID" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-2 col-form-label">Tên Silde*</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="SlideName" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword3" class="col-sm-2 col-form-label">Hình ảnh</label>
+                            <div class="col-sm-4">
+                                <button class="btn btn-default" style="width:100%" id="ImageMore"><i class="far fa-images"></i>Chọn hình ảnh</button>
+                            </div>
+                        </div>
+                        <div class="row">         
+                            <div class="col-12">
+                                <div class="row" id="ImageListUpdate">
+                                    <div id="ImageListUpdate">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer">
+                        <button class="btn btn-default float-right" style="margin-right:10px" data-dismiss="modal">Thoát</button>
+                        <button type="submit" class="btn btn-info float-right" style="margin-right:10px">Lưu</button>
+                    </div>
+                    <!-- /.card-footer -->
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section headerBig{
+    Quản lí Silde
+}
+
+@section headersmall{
+    Quản lí Silde
+}
+
+
+

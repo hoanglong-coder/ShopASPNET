@@ -1,0 +1,182 @@
+﻿
+@{
+    ViewBag.Title = "Quản lý giao hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@section scripts{
+    <script src="~/Assets/Admin/plugins/sweetalert2/sweetalert2.js"></script>
+    <script src="~/Assets/Admin/plugins/mustache.min.js"></script>
+    <script src="~/Assets/Admin/dist/js/jquery.twbsPagination.js"></script>
+    <script src="~/Assets/Admin/plugins/jquery-validation/jquery.validate.js"></script>
+    <script src="~/Assets/Admin/plugins/moment/moment.min.js"></script>
+    <link href="~/Assets/Admin/plugins/daterangepicker/daterangepicker.css" rel="stylesheet" />
+    <script src="~/Assets/Admin/plugins/daterangepicker/daterangepicker.js"></script>
+    <script src="~/Assets/Admin/dist/js/pages/admin-ship-index.js"></script>
+    <script>
+        $('#reservationtime').daterangepicker({
+            timePicker: true,
+            timePickerIncrement: 30,
+            locale: {
+                format: 'DD/MM/YYYY hh:mm A'
+            }
+        })
+    </script>
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card card-default card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Danh sách đơn hàng </h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <!--header Table-->
+                <div class="row mb-3">
+                    <div class="col-6 col-md-3">
+                        <div class="input-group">
+                            <input type="search" id="search-text" class="form-control" placeholder="Nhập mã đơn hàng để tìm kiếm" />
+                            <select class="form-control ml-3" style="border-radius:unset" id="search-dropdown">
+                                <option value="" selected>Đơn hàng</option>
+                                <option value="0">Chưa giao</option>
+                                <option value="1">Đang giao</option>
+                                <option value="2">Hoàn thành</option>
+                            </select>
+
+                        </div>
+
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="far fa-clock"></i></span>
+                            </div>
+                            <input type="text" class="form-control float-right" id="reservationtime">
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <button class="btn btn-primary">Tìm kiếm</button>
+                    </div>
+                </div>
+                <!--Table-->
+                <div class="row">
+                    <div class="col-sm-12">
+                        <table class="table table-bordered table-hover" id="tbl-data">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th></th>
+                                    <th>Mã đơn hàng</th>
+                                    <th>Người nhận</th>
+                                    <th>Số điện thoại</th>
+                                    <th>Email</th>
+                                    <th>Ngày tạo</th>
+                                    <th>Tổng tiền</th>
+                                    <th>Trạng thái</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbOrder">
+                            </tbody>
+                        </table>
+                        <div class="collapse" id="collapseExample">
+                            <div class="card card-body">
+                                Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
+                            </div>
+                        </div>
+                        <ul id="pagination" class="pagination"></ul>
+                        <script id="data-template" type="x-tmpl-mustache">
+                            <tr>
+                                <th><a class="modalshowsub" data-id="{{ID}}" data-status={{st}}><i class="fas fa-plus-circle"></i></a></th>
+                                <td>{{ID}}</td>
+                                <td>{{Name}}</td>
+                                <td>{{Phone}}</td>
+                                <td>{{Email}}</td>
+                                <td>{{CREATEDATE}}</td>
+                                <td>{{Totalprice}}</td>
+                                <td>{{{Status}}}</td>
+                            </tr>
+                            </tr>
+                        </script>
+
+                    </div>
+                </div>
+            </div>
+            <!-- /.card-body -->
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="suborderdetail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 1350px!important;" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Chi tiết đơn hàng</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered table-hover" id="tbl-data">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>STT</th>
+                            <th>Mã sản phẩm</th>
+                            <th>Tên sản phẩm</th>
+                            <th>Số lượng</th>
+                            <th>Đơn giá</th>
+                            <th>Thành tiền</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbOrderDetail">
+                    </tbody>
+                </table>
+                <script id="data-tbOrderDetail" type="x-tmpl-mustache">
+                            <tr>
+                                <td>{{STT}}</td>
+                                <td>{{ID}}</td>
+                                <td>{{Name}}</td>
+                                <td>{{Quantity}}</td>
+                                <td>{{Price}}</td>
+                                <td>{{{Totalprice}}}</td>
+                            </tr>
+                            </tr>
+                </script>
+                <div class="alert alert-success border-dark" role="alert">
+                    <div class="row">
+                        <div class="col-3 col-md-2">
+                            <p><i class="fas fa-shopping-cart"></i> Số lượng: <strong id="quantitysub"></strong></p>
+                        </div>
+                        <div class="col-3 col-md-2">
+                            <p><i class="fas fa-dollar-sign"></i> Tiền hàng: <strong id="total"></strong></p>
+                        </div>
+                        <div class="col-3 col-md-2">
+                            <p><i class="fas fa-ticket-alt"></i> Giảm giá: <strong>0</strong></p>
+                        </div>
+                        <div class="col-3 col-md-2">
+                            <p><i class="fas fa-dollar-sign"></i> Tổng tiền: <strong id="totalprice"></strong></p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-change-status"></button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Thoát</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section headerBig{
+    Quản lý giao hàng
+}
+
+@section headersmall{
+    Quản lý giao hàng
+}

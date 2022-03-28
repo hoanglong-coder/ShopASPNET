@@ -1,0 +1,89 @@
+﻿@model PROJECT_WEBSITE.Data.EF.News
+@{
+    ViewBag.Title = "Detail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var lstnewCateogry = (List<PROJECT_WEBSITE.Data.EF.CategoryNew>)ViewBag.lstnew;
+}
+
+<!-- Breadcrumb Area start -->
+<section class="breadcrumb-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="breadcrumb-content">
+                    <h1 class="breadcrumb-hrading">Chi tiết tin tức</h1>
+                    <ul class="breadcrumb-links">
+                        <li><a href="index.html">Trang chủ</a></li>
+                        <li>Single Blog Left Sidebar</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Breadcrumb Area End -->
+<!-- Shop Category Area End -->
+<div class="shop-category-area single-blog">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-9 order-lg-last col-md-12 order-md-first">
+                <div class="blog-posts">
+                    <div class="single-blog-post blog-grid-post" style="border-top: 1px solid #fff">
+                        <div class="blog-post-content-inner" style="border-top: 1px solid #fff">
+                            <h4 class="blog-title"><a href="#">@Model.Name</a></h4>
+                            <ul class="blog-page-meta">
+                                <li>
+                                    <a href="#"><i class="ion-person"></i> @Model.User.FullName</a>
+                                </li>
+                                <li>
+                                    <a href="#"><i class="ion-calendar"></i> @Model.CreateDate.Value.Date</a>
+                                </li>
+                            </ul>
+                            <div style="border-top:none">
+                                @Html.Raw(new HtmlString(Model.Detail))
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <!-- single blog post -->
+                </div>
+            </div>
+            <!-- Sidebar Area Start -->
+            <div class="col-lg-3 order-lg-first col-md-12 order-md-last mb-res-md-60px mb-res-sm-60px">
+                <div class="left-sidebar">
+                    <!-- Sidebar single item -->
+                    <div class="sidebar-widget">
+                        <div class="main-heading">
+                            <h2>Tìm kiếm</h2>
+                        </div>
+                        <div class="search-widget">
+                            @using (Html.BeginForm("SearchNews", "News"))
+                            {
+                                <input placeholder="Nhập tiêu đề tin tức..." type="text" name="query" />
+                                <input hidden value="@Model.CategoryNewID" name="id" />
+                                <button type="submit"><i class="ion-ios-search-strong"></i></button>
+                            }
+                        </div>
+                    </div>
+                    <!-- Sidebar single item -->
+                    <!-- Sidebar single item -->
+                    <div class="sidebar-widget mt-40">
+                        <div class="main-heading">
+                            <h2>Loại tin tức</h2>
+                        </div>
+                        <div class="category-post">
+                            <ul>
+                                @foreach (var item in lstnewCateogry)
+                                {
+                                    <li><a href="/tin-tuc/@item.CategoryNewID">@item.Name</a></li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Sidebar Area End -->
+        </div>
+    </div>
+</div>
+<!-- Shop Category Area End -->

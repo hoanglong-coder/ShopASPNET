@@ -1,0 +1,410 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@section scripts{
+    <script src="~/Assets/Admin/plugins/select2/js/select2.full.min.js"></script>
+    <script src="~/Assets/Admin/plugins/sweetalert2/sweetalert2.js"></script>
+    <script src="~/Assets/Admin/plugins/mustache.min.js"></script>
+    <script src="~/Assets/Admin/dist/js/jquery.twbsPagination.js"></script>
+    <script src="~/Assets/Admin/plugins/jquery-validation/jquery.validate.js"></script>
+    <script src="~/Assets/Admin/plugins/moment/moment.min.js"></script>
+    <link href="~/Assets/Admin/plugins/daterangepicker/daterangepicker.css" rel="stylesheet" />
+    <script src="~/Assets/Admin/plugins/daterangepicker/daterangepicker.js"></script>
+
+    <script src="~/Assets/Admin/dist/js/pages/admin-footer-index.js"></script>
+}
+
+
+<div class="row">
+    <div class="col-12">
+        <div class="card card-default card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Quản lý Chân trang</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <div class="card card-primary card-tabs">
+                    <div class="card-header p-0 pt-1">
+                        <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="custom-tabs-one-tintuc-tab" data-toggle="pill" href="#custom-tabs-one-tintuc" role="tab" aria-controls="custom-tabs-one-tintuc" aria-selected="true">Danh sách footer</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="custom-tabs-one-loaitintuc-tab" data-toggle="pill" href="#custom-tabs-one-loaitintuc" role="tab" aria-controls="custom-tabs-one-loaitintuc" aria-selected="false">Danh sách loại footer</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body">
+                        <div class="tab-content" id="custom-tabs-one-tabContent">
+                            <div class="tab-pane fade show active" id="custom-tabs-one-tintuc" role="tabpanel" aria-labelledby="custom-tabs-one-tintuc-tab">
+                                .<!--header Table-->
+                                <div class="row mb-3">
+                                    <div class="col-6 col-md-3">
+                                        <div class="input-group">
+                                            <input type="search" id="search-news" class="form-control" placeholder="Nhập tên footer" />
+                                        </div>
+                                    </div>
+                                    <div class="col-3 col-md-3">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">Từ ngày</span>
+                                            </div>
+                                            <input type="date" class="form-control float-right" id="TuNgay">
+                                        </div>
+                                    </div>
+                                    <div class="col-3 col-md-3">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">Đến ngày</span>
+                                            </div>
+                                            <input type="date" class="form-control float-right" id="DenNgay">
+                                        </div>
+                                    </div>
+                                    <div class="col-6 col-md-1">
+                                        <button type="button" id="btnTiemKiem" class="btn btn-primary"><i class="fas fa-search"></i>Tìm kiếm</button>
+                                    </div>
+                                    <div class="col-6 col-md-2">
+                                        <button type="button" class="btn btn-primary" id="CreateNews"><i class="fas fa-plus"></i>Thêm footer</button>
+                                    </div>
+                                </div>
+                                <!--Table-->
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <table class="table table-bordered table-hover" id="tbl-data">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th>STT</th>
+                                                    <th>Mã footer</th>
+                                                    <th>Ngày tạo</th>
+                                                    <th>Tên footer</th>
+                                                    <th>Loại footer</th>
+                                                    <th>#</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tbNews">
+                                            </tbody>
+                                        </table>
+                                        <ul id="paginationnews" class="pagination"></ul>
+                                        <script id="data-templateNews" type="x-tmpl-mustache">
+                                            <tr>
+                                                <td>{{STT}}</td>
+                                                <td>{{FooterID}}</td>
+                                                <td>{{CreateDate}}</td>
+                                                <td>{{Name}}</td>
+                                                <td>{{FooterCategoryList}}</td>
+                                                <th>
+                                                    <a class="modalshowEdit" data-id="{{FooterID}}"  data-toggle="tooltip" data-placement="top" title="Sửa footer"><i class="far fa-edit"></i></a>
+                                                    <a class="actiondelete" data-id="{{FooterID}}" data-name="{{Name}}" style="margin-left:5px"data-toggle="tooltip" data-placement="top" title="Xóa footer"><i class="far fa-trash-alt"></i></a>
+                                                </th>
+                                            </tr>
+                                        </script>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="custom-tabs-one-loaitintuc" role="tabpanel" aria-labelledby="custom-tabs-one-loaitintuc-tab">
+                                <!--header Table-->
+                                <div class="row mb-3">
+                                    <div class="col-6 col-md-3">
+                                        <div class="input-group">
+                                            <input type="search" id="search-newscategory" class="form-control" placeholder="Nhập tên loại" />
+                                        </div>
+                                    </div>
+                                    <div class="col-3 col-md-3">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">Từ ngày</span>
+                                            </div>
+                                            <input type="date" class="form-control float-right" id="TuNgayCategory">
+                                        </div>
+                                    </div>
+                                    <div class="col-3 col-md-3">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">Đến ngày</span>
+                                            </div>
+                                            <input type="date" class="form-control float-right" id="DenNgayCategory">
+                                        </div>
+                                    </div>
+                                    <div class="col-6 col-md-1">
+                                        <button type="button" id="btnTiemKiemCategory" class="btn btn-primary"><i class="fas fa-search"></i>Tìm kiếm</button>
+                                    </div>
+                                    <div class="col-6 col-md-2">
+                                        <button type="button" class="btn btn-primary" id="CreateNewsCategory"><i class="fas fa-plus"></i>Thêm loại tin tức</button>
+                                    </div>
+                                </div>
+                                <!--Table-->
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <table class="table table-bordered table-hover" id="tbl-data">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th>STT</th>
+                                                    <th>Mã loại footer</th>
+                                                    <th>Ngày tạo</th>
+                                                    <th>Tên loại footer</th>
+                                                    <th>Giá trị hiển thị</th>
+                                                    <th>#</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tbCategoryNews">
+                                            </tbody>
+                                        </table>
+                                        <ul id="paginationCategoryNews" class="pagination"></ul>
+                                        <script id="data-templateCategoryNews" type="x-tmpl-mustache">
+                                            <tr>
+                                                <td>{{STT}}</td>
+                                                <td>{{FooterCategoryID}}</td>
+                                                <td>{{CreateDate}}</td>
+                                                <td>{{NameCategory}}</td>
+                                                <td style="text-align:right">{{Display}}</td>
+                                                <th>
+                                                    <a class="modalshowEditCategory" data-id={{FooterCategoryID}}><i class="far fa-edit"></i></a>
+                                                    <a class="actiondeleteCategory" data-id="{{FooterCategoryID}}" data-name="{{NameCategory}}" style="margin-left:5px"><i class="far fa-trash-alt"></i></a>
+                                                </th>
+                                            </tr>
+                                        </script>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.card -->
+                </div>
+            </div>
+            <!-- /.card-body -->
+        </div>
+    </div>
+</div>
+
+<!-- Modal Thêm footer -->
+<div class="modal fade" id="ModalCreateNews" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 1000px!important" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #01A65B;color:white">
+                <h5>THÊM FOOTER</h5>
+            </div>
+            <div class="modal-body">
+                <!-- form start -->
+                <form class="form-horizontal" id="FromCreateNews" method="post">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-2 col-form-label">Tên footer*</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="NewName" placeholder="Nhập tên footer" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword3" class="col-sm-2 col-form-label">Loại footer*</label>
+                            <div class="col-sm-10">
+                                <select class="form-control" id="categorynews" style="width: 100%;">
+                                    <option selected="selected">Chọn loại footer</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword3" class="col-sm-2 col-form-label">Nội dung</label>
+                            <div class="col-sm-10">
+                                <textarea type="text" class="form-control rounded-0" id="detailnew"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- /.card-body -->
+                    <div class="card-footer">
+                        <button class="btn btn-default float-right" style="margin-right:10px" data-dismiss="modal">Thoát</button>
+                        <button type="submit" class="btn btn-info float-right" style="margin-right:10px">Lưu</button>
+                    </div>
+                    <!-- /.card-footer -->
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal Chỉnh sửa footer -->
+<div class="modal fade" id="ModalEditNews" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 1000px!important" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #01A65B;color:white">
+                <h5>THÊM FOOTER</h5>
+            </div>
+            <div class="modal-body">
+                <!-- form start -->
+                <form class="form-horizontal" id="FromEditNews" method="post">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-2 col-form-label">Mã footer</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="NewsIDDisplay" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-2 col-form-label">Tên footer*</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="NewNameEdit" placeholder="Nhập tên footer" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword3" class="col-sm-2 col-form-label">Loại footer*</label>
+                            <div class="col-sm-10">
+                                <select class="form-control" id="categorynewsedit" style="width: 100%;">
+                                    <option selected="selected">Chọn loại footer</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword3" class="col-sm-2 col-form-label">Nội dung</label>
+                            <div class="col-sm-10">
+                                <textarea type="text" class="form-control rounded-0" id="detailnewedit"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- /.card-body -->
+                    <div class="card-footer">
+                        <button class="btn btn-default float-right" style="margin-right:10px" data-dismiss="modal">Thoát</button>
+                        <button type="submit" class="btn btn-info float-right" style="margin-right:10px">Lưu</button>
+                    </div>
+                    <!-- /.card-footer -->
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Xác nhận xóa footer-->
+<div class="modal fade" id="ModalDelete" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 1000px!important" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #01A65B;color:white">
+                <h5>XÁC NHẬN XÓA </h5>
+            </div>
+            <div class="modal-body">
+                <p id="idnews"></p><br />
+                <p id="namenews" style="margin-top:3px"></p>
+                <div class="card-footer">
+                    <button class="btn btn-default float-right" style="margin-right:10px" data-dismiss="modal">Thoát</button>
+                    <button type="button" class="btn btn-info float-right" id="btndelete" style="margin-right:10px">Xóa</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Thêm loại footer -->
+<div class="modal fade" id="ModalCreateNewsCategory" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 1000px!important" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #01A65B;color:white">
+                <h5>THÊM LOẠI FOOTER</h5>
+            </div>
+            <div class="modal-body">
+                <!-- form start -->
+                <form class="form-horizontal" id="FromCreateNewsCategory" method="post">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-2 col-form-label">Tên loại Footer*</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="CategoryName" placeholder="Nhập tên loại tin tức" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-2 col-form-label">Giá trị hiển thị*</label>
+                            <div class="col-sm-10">
+                                <input type="number" class="form-control" id="Displaycategory" placeholder="Nhập giá trị hiển thị" required>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer">
+                        <button class="btn btn-default float-right" style="margin-right:10px" data-dismiss="modal">Thoát</button>
+                        <button type="submit" class="btn btn-info float-right" style="margin-right:10px">Lưu</button>
+                    </div>
+                    <!-- /.card-footer -->
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Chỉnh sửa loại footer -->
+<div class="modal fade" id="ModalEditNewsCategory" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 1000px!important" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #01A65B;color:white">
+                <h5>CHỈNH SỬA LOẠI FOOTER</h5>
+            </div>
+            <div class="modal-body">
+                <!-- form start -->
+                <form class="form-horizontal" id="FromEditNewsCategory" method="post">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-2 col-form-label">Mã loại footer*</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="CategoryIDDisplay" placeholder="Nhập tên loại tin tức" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-2 col-form-label">Tên loại footer*</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="CategoryNameEdit" placeholder="Nhập tên loại tin tức" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-2 col-form-label">Giá trị hiển thị*</label>
+                            <div class="col-sm-10">
+                                <input type="number" class="form-control" id="DisplaycategoryEdit" placeholder="Nhập giá trị hiển thị" required>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer">
+                        <button class="btn btn-default float-right" style="margin-right:10px" data-dismiss="modal">Thoát</button>
+                        <button type="submit" class="btn btn-info float-right" style="margin-right:10px">Lưu</button>
+                    </div>
+                    <!-- /.card-footer -->
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Xác nhận xóa loại tin tức -->
+<div class="modal fade" id="ModalDeleteCategory" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 1000px!important" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #01A65B;color:white">
+                <h5>XÁC NHẬN XÓA </h5>
+            </div>
+            <div class="modal-body">
+                <p id="idnewscategory"></p><br />
+                <p id="namenewscategory" style="margin-top:3px"></p>
+                <div class="card-footer">
+                    <button class="btn btn-default float-right" style="margin-right:10px" data-dismiss="modal">Thoát</button>
+                    <button type="button" class="btn btn-info float-right" id="btndeleteCateogry" style="margin-right:10px">Xóa</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section headerBig{
+    Quản lý chân trang
+}
+
+@section headersmall{
+    Quản lý chân trang
+}
+
+
+

@@ -1,0 +1,227 @@
+﻿@model PROJECT_WEBSITE.Data.EF.Customer
+@{
+    ViewBag.Title = "EditAccount";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var gen = (Model.Gender == true) ? 1 : 0;
+    var DATECHECK = (DateTime?)Model.Birth;
+    DateTime date = DateTime.Now;
+
+    if (DATECHECK.HasValue)
+    {
+        date = DATECHECK.Value;
+    }
+    var address1 = (string)Model.Address;
+
+    var rs = "";
+
+    int flag = 0;
+
+    string[] address = new string[10];
+
+    if (!string.IsNullOrEmpty(address1))
+    {
+        address = address1.Split(',');
+        if (address[0] == "")
+        {
+            rs = address[1] + ", " + address[2] + ", " + address[3];
+        }
+        else
+        {
+            rs = address[0] + ", " + address[1] + ", " + address[2] + ", " + address[3];
+        }
+        flag = 1;
+    }
+    else
+    {
+        rs = "n/a";
+    }
+
+}
+
+<!-- Breadcrumb Area start -->
+<section class="breadcrumb-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="breadcrumb-content">
+                    <h1 class="breadcrumb-hrading">Chỉnh sửa tài khoản</h1>
+                    <ul class="breadcrumb-links">
+                        <li><a href="/">Trang chủ</a></li>
+                        <li>Tài khoản của tôi</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Breadcrumb Area End -->
+<!-- account area start -->
+<div class="checkout-area mtb-60px">
+    <div class="container">
+        <div class="row">
+            <div class="ml-auto mr-auto col-lg-9">
+                <div class="checkout-wrapper">
+                    <div id="faq" class="panel-group">
+                        <div class="panel panel-default single-my-account">
+                            <div class="panel-heading my-account-title">
+                                <h3 class="panel-title"><span>1 .</span> <a data-toggle="collapse" data-parent="#faq" href="#my-account-1">Thông tin tài khoản</a></h3>
+                            </div>
+                            <div id="my-account-1" class="panel-collapse collapse show">
+                                <div class="panel-body">
+                                    <div class="myaccount-info-wrapper">
+                                        <div class="row">
+                                            <div class="col-lg-6 col-md-6">
+                                                <div class="billing-info">
+                                                    <label>Họ tên</label>
+                                                    <input type="text" id="Name" value="@Model.Name" />
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6">
+                                                <div class="billing-info">
+                                                    <label>Số điện thoại</label>
+                                                    <input type="text" value="@Model.Phone" readonly />
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6">
+                                                <div class="billing-info">
+                                                    <label>Email</label>
+                                                    <input type="email" id="Email" value="@Model.Email" />
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6">
+                                                <div class="billing-info">
+                                                    <label>Ngày sinh</label>
+                                                    <input type="date" id="birth" value="@date.Year-@date.Month-@date.Day" />
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6">
+                                                <div class="billing-info">
+                                                    <label>giới tính</label>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="Gender" value="1" id="Nam" style="width:1em;height:1em">
+                                                        <label class="form-check-label" for="flexRadioDefault1">
+                                                            Nam
+                                                        </label>
+                                                        <input class="form-check-input" type="radio" name="Gender" value="0" id="Nu" style="width: 1em; height: 1em; margin-left: 10px">
+                                                        <label class="form-check-label" for="flexRadioDefault2" style="margin-left: 29px">
+                                                            Nữ
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="panel panel-default single-my-account">
+                                <div class="panel-heading my-account-title">
+                                    <h3 class="panel-title"><span>2 .</span> <a data-toggle="collapse" data-parent="#faq" href="#my-account-2" id="diachi">Địa chỉ </a></h3>
+                                </div>
+                                <div id="my-account-2" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <div class="myaccount-info-wrapper">
+                                            <div class="row">
+                                                <div class="col-lg-6">
+                                                    <div class="mb-20px">
+                                                        <label>Tỉnh/Thành phố</label>
+                                                        <select class="form-control" id="tinh">
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <div class="mb-20px">
+                                                        <label>Quận/huyện</label>
+                                                        <select class="form-control" id="quan">
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <div class="mb-20px">
+                                                        <label>Xã/Phường</label>
+                                                        <select class="form-control" id="xa">
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6 col-md-6">
+                                                    <div class="billing-info mb-20px">
+                                                        <label>Số nhà, tên đường</label>
+                                                        <input type="text" id="txtAddress" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="billing-back-btn">
+                                                <div class="billing-btn">
+                                                    <button id="btn-edit">Chỉnh sửa</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- account area end -->
+@section scripts{
+    <script>
+        $(document).ready(function () {
+
+            if (@gen == 1) {
+                $('#Nam').prop('checked', true);
+            } else {
+                $('#Nu').prop('checked', true);
+            }
+            $("#btn-edit").on('click', function(){
+                var user = new Object();
+                user.CustomerID = @Model.CustomerID;
+                user.Name = $("#Name").val();
+                user.Email = $("#Email").val();
+                var date = $("#birth").val().split("-");
+                var birt = date[2] + "/" + date[1] + "/" + date[0];
+                user.Birth = birt;
+                user.Gender = ($("input[name=Gender]:checked").val() == 0) ? false:true;
+                var address = $("#txtAddress").val() + "," + $('#xa :selected').text() + "," + $('#quan :selected').text() + "," + $('#tinh :selected').text() + "," + $('#xa :selected').val() + "," + $('#quan :selected').val() + "," + $('#tinh :selected').val();
+                user.Address = address;
+
+                $.ajax({
+                    url: '/Account/EditAccount',
+                    type: 'post',
+                    data: user,
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.code == 200) {
+                            alert("Thành công");
+                            window.location.href = "/tai-khoan/@Model.CustomerID";
+                        } else {
+                            alert("Thất bại");
+                        }
+                    }
+
+                });
+            });
+
+            $("#diachi").on('click', function () {
+                if (@flag == 1) {
+                    $('#tinh').val(@address[6]).change();
+                    $('#quan').val(@address[5]).change();
+                    $('#xa').val(@address[4]).change();
+                    $('#txtAddress').val("@address[0]");
+                } else {
+                }
+
+            })
+
+        });
+
+
+    </script>
+    <script src="~/Assets/Client/js/Address.js"></script>
+
+}
+
+

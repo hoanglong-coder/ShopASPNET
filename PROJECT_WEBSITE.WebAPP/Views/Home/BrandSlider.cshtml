@@ -1,0 +1,17 @@
+﻿@{ 
+    var lst = (List<string>)ViewData["Slide"];
+
+}
+<div class="brand-area">
+    <div class="container">
+        <div class="brand-slider owl-carousel owl-nav-style owl-nav-style-2">
+            @foreach (var item in lst)
+            {
+                <div class="brand-slider-item">
+                    <a href="#"><img src="@item" alt="" /></a>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>

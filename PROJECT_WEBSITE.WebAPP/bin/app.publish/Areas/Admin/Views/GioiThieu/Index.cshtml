@@ -1,0 +1,57 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@section scripts{
+    <script src="~/Assets/Admin/plugins/select2/js/select2.full.min.js"></script>
+    <script src="~/Assets/Admin/plugins/sweetalert2/sweetalert2.js"></script>
+    <script src="~/Assets/Admin/plugins/mustache.min.js"></script>
+    <script src="~/Assets/Admin/dist/js/jquery.twbsPagination.js"></script>
+    <script src="~/Assets/Admin/plugins/jquery-validation/jquery.validate.js"></script>
+    <script src="~/Assets/Admin/plugins/moment/moment.min.js"></script>
+    <link href="~/Assets/Admin/plugins/daterangepicker/daterangepicker.css" rel="stylesheet" />
+    <script src="~/Assets/Admin/plugins/daterangepicker/daterangepicker.js"></script>
+    <script src="~/Assets/Admin/dist/js/pages/admin-gioithieu-index.js"></script>
+}
+<div class="row">
+    <div class="col-12">
+        <div class="card card-default card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Soạn thảo</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <div class="row mb-2">
+                    <div class="col-1">
+                        <button class="btn btn-primary" id="Luu" style="width:100%"><i class="far fa-save" style="margin-right:5px"></i>Lưu</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <textarea class="form-control" id="NoiDung" rows="30"></textarea>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section headerBig{
+    Soạn thảo giới thiệu
+}
+
+@section headersmall{
+    Soạn thảo giới thiệu
+}
+
+
+

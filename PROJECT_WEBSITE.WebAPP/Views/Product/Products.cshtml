@@ -1,0 +1,475 @@
+﻿@model List<PROJECT_WEBSITE.Data.ModelCustom.MProduct>
+@{
+    ViewBag.Title = ViewBag.Name;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var link = "";
+    var name = ViewBag.Name;
+    //filter sort
+    var s = (string)ViewBag.Sort;
+    if (s == null)
+    {
+        s = "New";
+    }
+    //filter category
+    var countCategory = (List<PROJECT_WEBSITE.Data.ModelCustom.MProduct>)ViewBag.CountCategroy;
+    var CategorySearch = (List<PROJECT_WEBSITE.Data.EF.ProductCategory>)ViewBag.CategorySearch;
+    var ListCategory = (List<PROJECT_WEBSITE.Data.EF.ProductCategory>)ViewBag.ListCategory;
+    string catepara = (string)ViewBag.Category;
+    if (catepara == null)
+    {
+        catepara = "null";
+    }
+    string price = (string)ViewBag.price;
+    if (price == null)
+    {
+        price = "null";
+    }
+}
+
+
+<!-- Breadcrumb Area start -->
+<section class="breadcrumb-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="breadcrumb-content">
+                    <h1 class="breadcrumb-hrading">Danh sách sản phẩm</h1>
+                    <ul class="breadcrumb-links">
+                        <li><a href="index.html">Trang chủ</a></li>
+                        <li>@name</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Breadcrumb Area End -->
+<!-- Shop Category Area End -->
+<div class="shop-category-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-9 order-lg-last col-md-12 order-md-first">
+                <!-- Shop Top Area Start -->
+                <div class="shop-top-bar">
+                    <!-- Left Side start -->
+                    <div class="shop-tab nav mb-res-sm-15">
+                        <a class="active" href="#shop-1" data-toggle="tab">
+                            <i class="fa fa-th show_grid"></i>
+                        </a>
+                        <a href="#shop-2" data-toggle="tab">
+                            <i class="fa fa-list-ul"></i>
+                        </a>
+                        <p>Mặt hàng này có @ViewBag.Total sản phẩm.</p>
+                    </div>
+                    <!-- Left Side End -->
+                    <!-- Right Side Start -->
+                    <div class="select-shoing-wrap">
+                        <div class="shot-product">
+                            <p>Sắp xếp:</p>
+                        </div>
+                        <div class="shop-select">
+                            <select id="TypeOfUser" name="typeOfUser" style="width:200px" class="active text-normal form-control">
+                                <option value="New">Mặt hàng mới</option>
+                                <option value="AZ">A đến Z</option>
+                                <option value="ZA"> Z đến A</option>
+                                <option value="BS">Theo giá lớn - bé</option>
+                                <option value="SB">Theo giá bé - lớn</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- Right Side End -->
+                </div>
+                <!-- Shop Top Area End -->
+                <!-- Shop Bottom Area Start -->
+                <div class="shop-bottom-area mt-35">
+                    <!-- Shop Tab Content Start -->
+                    <div class="tab-content jump">
+                        <!-- Tab One Start -->
+                        <div id="shop-1" class="tab-pane active">
+                            <div class="row">
+                                @{
+                                    for (int i = 0; i < Model.Count; i++)
+                                    {
+                                        var url = "/chi-tiet/" + Model[i].MetaTitle + "-" + Model[i].ProductID;
+                                        <div class="col-xl-3 col-md-6 col-lg-4 col-sm-6 col-xs-12">
+                                            <article class="list-product">
+                                                <div class="img-block">
+                                                    <a href="@url" class="thumbnail">
+                                                        <img class="first-img" src="@Model[i].Image" alt="" />
+                                                    </a>
+                                                </div>
+                                                <ul class="product-flag">
+                                                    <li class="new">New</li>
+                                                </ul>
+                                                <div class="product-decs">
+                                                    @GetName(i, url)
+                                                    <div class="pricing-meta">
+                                                        <ul>
+                                                            @Price(i)
+                                                            @Distcout(i)
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                @{
+                                                    if (Model[i].CountProduct != 0)
+                                                    {
+                                                        <div class="add-to-link">
+                                                            <ul>
+                                                                <li class="cart"><a class="cart-btn" href="/them-gio-hang?productId=@Model[i].ProductID&quantity=1">Thêm vào giỏ </a></li>
+                                                            </ul>
+                                                        </div>
+                                                    }
+                                                }
+                                            </article>
+                                        </div>
+                                    }
+                                }
+
+                            </div>
+                        </div>
+                        <!-- Tab One End -->
+                        <!-- Tab Two Start -->
+                        <div id="shop-2" class="tab-pane">
+                            @{
+                                for (int i = 0; i < Model.Count; i++)
+                                {
+                                    var url = "/chi-tiet/" + Model[i].MetaTitle + "-" + Model[i].ProductID;
+                                    <div class="shop-list-wrap mb-30px scroll-zoom">
+                                        <div class="row list-product m-0px">
+                                            <div class="col-md-12">
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                                        <div class="left-img">
+                                                            <div class="img-block">
+                                                                <a href="@url" class="thumbnail">
+                                                                    <img class="first-img" src="@Model[i].Image" alt="" />                                                                 
+                                                                </a>
+                                                            </div>
+                                                            <ul class="product-flag">
+                                                                <li class="new">New</li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                                                        <div class="product-desc-wrap">
+                                                            <div class="product-decs">
+                                                                @GetName(i, url)
+                                                                <div class="pricing-meta">
+                                                                    <ul>
+                                                                        @Price(i)
+                                                                        @Distcout(i)
+                                                                    </ul>
+                                                                </div>
+                                                                <div class="product-intro-info">
+                                                                    <p>@Model[i].Discription</p>
+                                                                </div>
+                                                                <div class="in-stock">Số lương còn: <span>@Model[i].CountProduct trong kho</span></div>
+                                                            </div>
+                                                            @{
+                                                                if (Model[i].CountProduct != 0)
+                                                                {
+                                                                    <div class="add-to-link">
+                                                                        <ul>
+                                                                            <li class="cart"><a class="cart-btn" href="/them-gio-hang?productId=@Model[i].ProductID&quantity=1">Thêm vào giỏ </a></li>
+                                                                        </ul>
+                                                                    </div>
+                                                                }
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+
+                        </div>
+                        <!-- Tab Two End -->
+                    </div>
+                    <!-- Shop Tab Content End -->
+                    <!--Phân trang-->
+                    @if (ViewBag.TotalPage > 1)
+                    {
+                        var pageDisplay = (int)ViewBag.MaxPage;
+                        int totalPage = (int)ViewBag.TotalPage;
+                        int currentPage = (int)ViewBag.Page;
+
+                        var startPageIndex = Math.Max(1, currentPage - pageDisplay / 2);
+                        var endPageIndex = Math.Min(totalPage, currentPage + pageDisplay / 2);
+
+                        <!--  Pagination Area Start -->
+                        <div class="pro-pagination-style text-center">
+                            <ul>
+                                @if (currentPage > ViewBag.Firts)
+                                {
+                                    <li><a href="@link?page=@ViewBag.Firts&sort=@ViewBag.Sort&category=@catepara&price=@price" title="Trang đầu" class="first"><i class=" ion-ios-arrow-thin-left"></i></a></li>
+                                    <li>
+                                        <a class="prev" href="@link?page=@ViewBag.Prev&sort=@ViewBag.Sort&category=@catepara&price=@price" title="Trang trước"><i class="ion-ios-arrow-left"></i></a>
+                                    </li>
+                                }
+                                @for (int i = startPageIndex; i <= endPageIndex; i++)
+                                {
+                                    if (currentPage == i)
+                                    {
+                                        <li><a class="active" title="Trang @i" href="@link?page=@i&sort=@ViewBag.Sort&category=@catepara&price=@price">@i</a></li>
+                                    }
+                                    else
+                                    {
+                                        <li><a title="Trang @i" href="@link?page=@i&sort=@ViewBag.Sort&category=@catepara&price=@price">@i</a></li>
+                                    }
+                                }
+                                @if (currentPage < totalPage)
+                                {
+                                    <li>
+                                        <a class="next" href="@link?page=@ViewBag.Next&sort=@ViewBag.Sort&category=@catepara&price=@price" title="Trang sau"><i class="ion-ios-arrow-right"></i></a>
+                                    </li>
+                                    <li> <a href="@link?page=@ViewBag.Last&sort=@ViewBag.Sort&category=@catepara&price=@price" class="last" title="Trang cuối"><i class="ion-ios-arrow-thin-right"></i></a></li>
+                                }
+                            </ul>
+                        </div>
+                        <!--  Pagination Area End -->
+                    }
+                </div>
+                <!-- Shop Bottom Area End -->
+            </div>
+            <!-- Sidebar Area Start -->
+            <div class="col-lg-3 order-lg-first col-md-12 order-md-last mb-res-md-60px mb-res-sm-60px">
+                <div class="left-sidebar">
+                    <div class="sidebar-heading">
+                        <div class="main-heading">
+                            <h2>Bộ lọc tìm kiếm</h2>
+                        </div>
+                        <!-- Sidebar single item -->
+                        <div class="sidebar-widget">
+                            <h4 class="pro-sidebar-title">Theo danh mục</h4>
+                            <div class="sidebar-widget-list">
+                                <ul>
+                                    @{
+                                        foreach (var item in CategorySearch)
+                                        {
+                                            <li>
+                                                <div class="sidebar-widget-list-left">
+                                                    <input type="checkbox" value="@item.ProductCategoryID" />&nbsp  &nbsp  &nbsp @item.Name @GetCount(item.ProductCategoryID, countCategory, item.ParentID, ListCategory)
+                                                    <span class="checkmark"></span>
+                                                </div>
+                                            </li>
+                                        }
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                        <!-- Sidebar single item -->
+                    </div>
+                    <!-- Sidebar single item -->
+                    <div class="sidebar-widget mt-20">
+                        <h4 class="pro-sidebar-title">Giá</h4>
+                        <div class="price-filter mt-10">
+                            <div class="price-slider-amount">
+                                <input type="text" id="amount" name="price" placeholder="Nhập giá bạn muốn" value="" />
+                            </div>
+                            <div id="slider-range"></div>
+
+                        </div>
+                    </div>
+                    <button id="ok" class="btn btn-primary" style="width:100%">Áp dụng</button>
+                    <div class="sidebar-widget tag mt-30">
+                        <div class="main-heading">
+                            <h2>Tag</h2>
+                        </div>
+                        <div class="sidebar-widget-tag">
+                            <ul>
+                                <li><a href="#">Sửa chua</a></li>
+                                <li><a href="#"> Sữa thanh trùng</a></li>
+                                <li><a href="#">Sữa tươi</a></li>
+                                <li><a href="#"> Nước trái cây</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- Sidebar single item -->
+                </div>
+            </div>
+
+            <!-- Sidebar Area End -->
+        </div>
+    </div>
+</div>
+<!-- Shop Category Area End -->
+@helper Distcout(int count)
+{
+    var price = "";
+    var pricepromotion = "";
+    if (Model[count].PriceOut.HasValue && !Model[count].PricePromotion.HasValue)
+    { price = Model[count].PriceOut.Value.ToString("N0") + "₫"; }
+    if (Model[count].PricePromotion.HasValue)
+    {
+        pricepromotion = Model[count].PriceOut.ToString();
+        price = Model[count].PricePromotion.ToString();
+    }
+    if (!Model[count].PriceOut.HasValue && !Model[count].PricePromotion.HasValue)
+    { price = "Liên hệ"; }
+
+    string c = "";
+    if (pricepromotion != "" & price != "")
+    {
+        double t = Math.Round(100 - ((double.Parse(price) / double.Parse(pricepromotion)) * 100));
+        c = t.ToString();
+    }
+    if (c != "")
+    {
+        <li class="discount-price">@c%</li>
+    }
+}
+
+@helper Price(int count)
+{
+    var price = "";
+    var pricepromotion = "";
+    if (Model[count].CountProduct == 0)
+    {
+        <br />
+        <li class="old-price not-cut">Liên hệ </li>
+    }
+    else
+    {
+        if (Model[count].PriceOut.HasValue && !Model[count].PricePromotion.HasValue)
+        { price = Model[count].PriceOut.Value.ToString("N0") + "₫"; }
+        if (Model[count].PricePromotion.HasValue)
+        {
+            pricepromotion = Model[count].PriceOut.Value.ToString("N0") + "₫";
+            price = Model[count].PricePromotion.Value.ToString("N0") + "₫";
+        }
+        if (!Model[count].PriceOut.HasValue && !Model[count].PricePromotion.HasValue)
+        { price = "Liên hệ"; }
+        if (pricepromotion != "")
+        {
+            <li class="old-price">@pricepromotion </li>
+            <br>
+            <li class="current-price">@price </li>
+        }
+        else
+        {
+            <br />
+            <li class="old-price not-cut">@price </li>
+        }
+    }
+
+
+}
+
+@helper GetName(int count, string url)
+{
+
+    string name = "";
+    if (Model[count].Name.Length > 35)
+    {
+        name = Model[count].Name.Substring(0, 35).Trim() + "...";
+        <h2><a href="@url" class="product-link">@name</a></h2>
+    }
+    else
+    {
+        name = Model[count].Name;
+        <h2><a href="@url" class="product-link">@name</a></h2>
+    }
+}
+
+@helper  GetCount(long id, List<PROJECT_WEBSITE.Data.ModelCustom.MProduct> countCategory, long? parentid, List<PROJECT_WEBSITE.Data.EF.ProductCategory> cate)
+{
+    if (id != 0 && parentid != 0)
+    {
+        int count = countCategory.Where(t => t.ProductCategoryID == id).Count();
+        <span>(@count)</span>
+    }
+    if (parentid == 0)
+    {
+        int c = 0;
+        var temp = cate.Where(t => t.ParentID == id);
+        foreach (var item in temp)
+        {
+            c += countCategory.Where(t => t.ProductCategoryID == item.ProductCategoryID).Count();
+        }
+        <span>(@c)</span>
+    }
+
+}
+
+
+@section scripts{
+    <script>
+        $('#TypeOfUser option[value="@s"]').attr('selected', 'selected');
+        if ("@catepara" != "null") {
+
+            var temp = "@catepara";
+            if (temp != "") {
+                var words = temp.split('_');
+                $.each(words, function () {
+                    $(".sidebar-widget-list [value=" + this + "]").attr("checked", "checked");
+                });
+            }
+
+        }
+
+        $(document).ready(function () {
+            $('#TypeOfUser').on('change', function (e) {
+                var optionSelected = $("option:selected", this);
+                var valueSelected = this.value;
+                if (valueSelected != null) {
+                    window.location.href = "" + '?sort=' + valueSelected + "&category=" + "@catepara" +"&price="+"@price";
+                }
+            });
+            $('#ok').on('click',function () {
+                var str = "";
+
+                //theo danh mục
+                $("input:checked").each(function () {
+                    str += $(this).val() + "_";
+                });
+                str = str.substr(0, str.length - 1);
+                if (str != "") {
+                    window.location.href = "" + '?sort=' + "@s" + '&category=' + str;
+                } else {
+                     window.location.href = "" + '?sort=' + "@s" + '&category=' + "null";
+                }
+
+                //theo giá
+                var price = $("#amount").val();
+                var newword = price.split(' ');
+                var price1 = newword[0].split('đ');
+                var price2 = newword[2].split('đ');
+                price1 = price1[0];
+                price2 = price2[0];
+                if (price1 != 0 || str != "") {
+                    window.location.href = "" + '?sort=' + "@s" + '&category=' + str +'&price='+price1+'_'+price2;
+                }
+            });
+            if ("@price" != "null") {
+                var temp = "@price";
+                temp = temp.split('_');
+                var value = temp[0] + "đ" + " - " + temp[1] + "đ";
+                $("#slider-range").slider({
+                    range: true,
+                    min: 0,
+                    max: 1000000,
+                    values: [0, 1000000],
+                    slide: function (event, ui) {
+                        $("#amount").val(ui.values[0] + "đ" + " - " + ui.values[1] + "đ");
+                    }
+                });
+                $("#amount").val(value);
+            } else {
+                $("#slider-range").slider({
+                    range: true,
+                    min: 0,
+                    max: 1000000,
+                    values: [0, 1000000],
+                    slide: function (event, ui) {
+                        $("#amount").val(ui.values[0] + "đ" + " - " + ui.values[1] + "đ");
+                    }
+                });
+                $("#amount").val("0đ - 1000000đ");
+            }
+        })
+    </script>
+
+}
+

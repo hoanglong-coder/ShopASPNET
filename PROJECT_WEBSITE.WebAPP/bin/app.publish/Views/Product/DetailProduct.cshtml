@@ -1,0 +1,372 @@
+﻿@model PROJECT_WEBSITE.Data.ModelCustom.MProduct
+
+@{
+    ViewBag.Title = Model.Name;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var category = (string)ViewBag.Category;
+    var ListProductSame = (List<PROJECT_WEBSITE.Data.ModelCustom.MProduct>)ViewBag.ListProductSame;
+
+    
+
+    var MoreImage = (List<string>)ViewBag.MoreImage;
+
+}
+
+<!-- Breadcrumb Area start -->
+<section class="breadcrumb-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="breadcrumb-content">
+                    <h1 class="breadcrumb-hrading">Chi tiết sản phẩm</h1>
+                    <ul class="breadcrumb-links">
+                        <li><a href="/">Trang chủ</a></li>
+                        <li>@Model.Name</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Breadcrumb Area End -->
+<!-- Shop details Area start -->
+<section class="product-details-area mtb-60px">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-6 col-lg-6 col-md-12">
+                <div class="product-details-img product-details-tab">
+                    <div class="zoompro-wrap zoompro-2">
+                        <div class="zoompro-border zoompro-span">
+                            <img class="zoompro" src="@Model.Image" data-zoom-image="@Model.Image" alt="" />
+                        </div>
+                    </div>
+                    <div id="gallery" class="product-dec-slider-2">
+                        @if (MoreImage != null)
+                        {
+                            <a class="active" data-image="@MoreImage.FirstOrDefault()" data-zoom-image="@MoreImage.FirstOrDefault()">
+                                <img src="@MoreImage.FirstOrDefault()" alt="" />
+                            </a>
+                            foreach (var item in MoreImage)
+                            {
+                                <a data-image="@item" data-zoom-image="@item">
+                                    <img src="@item" alt="" />
+                                </a>
+                            }
+                        }
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-6 col-lg-6 col-md-12">
+                <div class="product-details-content">
+                    <h2 style="font-size:21px">@Model.Name.ToUpper()</h2>
+                    <p class="reference">Loại sản phẩm:<span> @(string.IsNullOrEmpty(category)?"Sản phẩm combo":category)</span></p>
+                    <div class="pricing-meta">
+                        <ul>
+                            @Price()@Distcout()
+                        </ul>
+                    </div>
+
+                    <div class="pro-details-quality mt-0px mt-3">
+
+                        @if (Model.CountProduct != 0)
+                        {
+                            <div class="cart-plus-minus">
+                                <input class="cart-plus-minus-box" type="text" id="quantity" name="qtybutton" value="1" />
+                            </div>
+                            <div class="pro-details-cart btn-hover">
+                                <a class="cart"> + Thêm vào giỏ hàng</a>
+                            </div>
+                        }
+
+                    </div>
+                    <div class="pro-details-social-info">
+                        <div class="social-info">
+                        </div>
+                    </div>
+                    <div class="pro-details-policy" style="font-size:18px">
+                        <div class="row mb-3">
+                            <div class="col-4">THƯƠNG HIỆU</div>
+                            <div class="col-8">
+                                <p class="reference">@Model.TradeMark</p>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-4">XUẤT XỨ THƯƠNG HIỆU</div>
+                            <div class="col-8">
+                                <p class="reference">@Model.TradeOrigin</p>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-4">NƠI SẢN XUẤT</div>
+                            <div class="col-8">
+                                <p class="reference">@Model.Production</p>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-4">THÀNH PHẦN</div>
+                            <div class="col-8">
+                                <p class="reference">@Model.Ingredient</p>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-4">HẠN SỬ DỤNG</div>
+                            <div class="col-8">
+                                <p class="reference">@Model.Expiry</p>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-4">HƯỚNG DẨN SỬ DỤNG</div>
+                            <div class="col-8">
+                                <p class="reference">@Model.UserManual</p>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-4">HƯỚNG DẪN BẢO QUẢN</div>
+                            <div class="col-8">
+                                <p class="reference">@Model.CareInstructions</p>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-4">QUY CÁCH ĐÓNG GÓI</div>
+                            <div class="col-8">
+                                <p class="reference">@Model.Packing</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Shop details Area End -->
+<!-- product details description area start -->
+<div class="description-review-area mb-60px">
+    <div class="container">
+        <div class="description-review-wrapper">
+            <div class="description-review-topbar nav">
+                <a class="active" data-toggle="tab" href="#des-details2">Chi tiết</a>
+            </div>
+            <div class="tab-content description-review-bottom">
+                <div id="des-details2" class="tab-pane active">
+                    <div class="product-anotherinfo-wrapper">
+                        @Html.Raw(new HtmlString(Model.Discription))
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- product details description area end -->
+<!-- Recent Add Product Area Start -->
+<section class="recent-add-area mt-30 mb-30px">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Section Title -->
+                <div class="section-title">
+                    <h2>Sản phẩm tương tự</h2>
+                    <p>@(ListProductSame != null? ListProductSame.Count:0) sản phẩm khác cùng loại</p>
+                </div>
+                <!-- Section Title -->
+            </div>
+        </div>
+        <!-- Recent Product slider Start -->
+        <div class="recent-product-slider owl-carousel owl-nav-style">
+            @{
+                if (ListProductSame != null)
+                {
+                    for (int i = 0; i < ListProductSame.Count; i++)
+                    {
+                        var url = "/chi-tiet/" + ListProductSame[i].MetaTitle + "-" + ListProductSame[i].ProductID;
+                        <!-- Single Item -->
+                        <article class="list-product">
+                            <div class="img-block">
+                                <a name="sub" href="@url" class="thumbnail">
+                                    <img class="first-img" src="@ListProductSame[i].Image" alt="" />
+                                </a>
+                            </div>
+                            <ul class="product-flag">
+                                <li class="new">New</li>
+                            </ul>
+                            <div class="product-decs">
+                                @{
+                                    string name = "";
+                                    if (ListProductSame[i].Name.Length > 35)
+                                    {
+                                        name = ListProductSame[i].Name.Substring(0, 35) + "...";
+                                        <h2><a href="@url" class="product-link">@name</a></h2>
+                                    }
+                                    else
+                                    {
+                                        name = ListProductSame[i].Name;
+                                        <h2><a href="@url" class="product-link">@name</a></h2>
+                                    }
+                                }
+                                <div class="pricing-meta">
+                                    <ul>
+                                        @{
+                                            var price = "";
+                                            var pricepromotion = "";
+                                            if (ListProductSame[i].PriceOut.HasValue && !ListProductSame[i].PricePromotion.HasValue)
+                                            { price = ListProductSame[i].PriceOut.Value.ToString("N0") + "₫"; }
+                                            if (ListProductSame[i].PricePromotion.HasValue)
+                                            {
+                                                pricepromotion = ListProductSame[i].PriceOut.Value.ToString("N0") + "₫";
+                                                price = ListProductSame[i].PricePromotion.Value.ToString("N0") + "₫";
+                                            }
+                                            if (!ListProductSame[i].PriceOut.HasValue && !ListProductSame[i].PricePromotion.HasValue)
+                                            { price = "Liên hệ"; }
+                                            if (pricepromotion != "")
+                                            {
+                                                <li class="old-price">@pricepromotion </li>
+                                                <br />
+                                                <li class="current-price">@price </li>
+                                            }
+                                            else
+                                            {
+                                                <br />
+                                                <li class="old-price not-cut">@price </li>
+                                            }
+                                        }
+                                        @{
+                                            if (ListProductSame[i].CountProduct != 0)
+                                            {
+                                                var price2 = "";
+                                                var pricepromotion2 = "";
+                                                if (ListProductSame[i].PriceOut.HasValue && !ListProductSame[i].PricePromotion.HasValue)
+                                                { price2 = ListProductSame[i].PriceOut.Value.ToString("N0") + "₫"; }
+                                                if (ListProductSame[i].PricePromotion.HasValue)
+                                                {
+                                                    pricepromotion2 = ListProductSame[i].PriceOut.ToString();
+                                                    price2 = ListProductSame[i].PricePromotion.ToString();
+                                                }
+                                                if (!ListProductSame[i].PriceOut.HasValue && !ListProductSame[i].PricePromotion.HasValue)
+                                                { price2 = "Liên hệ"; }
+
+                                                string c = "";
+                                                if (pricepromotion2 != "" & price2 != "")
+                                                {
+                                                    double t = Math.Round(100 - ((double.Parse(price2) / double.Parse(pricepromotion2)) * 100));
+                                                    c = t.ToString();
+                                                }
+                                                if (c != "")
+                                                {
+                                                    <li class="discount-price">@c%</li>
+                                                }
+                                            }
+
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="add-to-link">
+                                <ul>
+                                    <li class="cart"><a class="cart-btn" href="#">Thêm vào giỏ </a></li>
+                                    <li>
+                                        <a href="wishlist.html"><i class="ion-android-favorite-outline"></i></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </article>
+                    }
+                }
+            }
+
+        </div>
+        <!-- Recent product slider end -->
+    </div>
+</section>
+<!-- Recent product area end -->
+@helper Distcout()
+{
+    if (Model.CountProduct != 0)
+    {
+
+        var price = "";
+        var pricepromotion = "";
+        if (Model.PriceOut.HasValue && !Model.PricePromotion.HasValue)
+        { price = Model.PriceOut.Value.ToString("N0") + "₫"; }
+        if (Model.PricePromotion.HasValue)
+        {
+            pricepromotion = Model.PriceOut.ToString();
+            price = Model.PricePromotion.ToString();
+        }
+        if (!Model.PriceOut.HasValue && !Model.PricePromotion.HasValue)
+        { price = "Liên hệ"; }
+
+        string c = "";
+        if (pricepromotion != "" & price != "")
+        {
+            double t = Math.Round(100 - ((double.Parse(price) / double.Parse(pricepromotion)) * 100));
+            c = t.ToString();
+        }
+        if (c != "")
+        {
+            <li class="discount-price">@c%</li>
+        }
+    }
+}
+
+@helper Price()
+{               var price = "";
+    var pricepromotion = "";
+    if (Model.CountProduct == 0)
+    {
+        <br />
+        <li class="old-price not-cut">Liên hệ </li>
+    }
+    else
+    {
+        if (Model.PriceOut.HasValue && !Model.PricePromotion.HasValue)
+        { price = Model.PriceOut.Value.ToString("N0") + "₫"; }
+        if (Model.PricePromotion.HasValue)
+        {
+            pricepromotion = Model.PriceOut.Value.ToString("N0") + "₫";
+            price = Model.PricePromotion.Value.ToString("N0") + "₫";
+        }
+        if (!Model.PriceOut.HasValue && !Model.PricePromotion.HasValue)
+        { price = "Liên hệ"; }
+        if (pricepromotion != "")
+        {
+            <li class="old-price">@pricepromotion </li>
+            <br>
+            <li class="current-price">@price </li>
+        }
+        else
+        {
+            <br />
+            <li class="old-price not-cut">@price </li>
+        }
+    }
+}
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            var CartPlusMinus = $('.cart-plus-minus');
+            CartPlusMinus.prepend('<div class="dec qtybutton">-</div>');
+            CartPlusMinus.append('<div class="inc qtybutton">+</div>');
+            $(".qtybutton").on("click", function () {
+                var $button = $(this);
+                var oldValue = $button.parent().find("input").val();
+                if ($button.text() === "+") {
+                    var newVal = parseFloat(oldValue) + 1;
+
+                } else {
+                    // Don't allow decrementing below zero
+                    if (oldValue > 1) {
+                        var newVal = parseFloat(oldValue) - 1;
+                    } else {
+                        newVal = 3;
+                    }
+                }
+                $button.parent().find("input").val(newVal);
+                var value = $("#quantity").val();
+                $("a.cart").attr("href", "/them-gio-hang?productId=@Model.ProductID&quantity=" + value + "");
+            });
+             var value = $("#quantity").val();
+            $("a.cart").attr("href", "/them-gio-hang?productId=@Model.ProductID&quantity=" + value + "");
+        });
+
+    </script>
+}

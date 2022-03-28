@@ -1,0 +1,29 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    var rs = (string)ViewData["gioithieu"];
+}
+
+<!-- Breadcrumb Area start -->
+<section class="breadcrumb-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="breadcrumb-content">
+                    <h1 class="breadcrumb-hrading">Trang Giới thiệu</h1>
+                    <ul class="breadcrumb-links">
+                        <li><a href="/">Trang chủ</a></li>
+                        <li>Giới thiệu</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Breadcrumb Area End -->
+<!-- account area start -->
+<div class="checkout-area mtb-60px">
+    <div class="container">
+        @Html.Raw(new HtmlString(rs))
+    </div>
+</div>

@@ -1,0 +1,38 @@
+C:\Users\HoangLong\source\repos\PROJECT_WEBSITE\PROJECT_WEBSITE.Data\bin\Debug\Accord.dll.config
+C:\Users\HoangLong\source\repos\PROJECT_WEBSITE\PROJECT_WEBSITE.Data\bin\Debug\PROJECT_WEBSITE.Data.dll.config
+C:\Users\HoangLong\source\repos\PROJECT_WEBSITE\PROJECT_WEBSITE.Data\bin\Debug\PROJECT_WEBSITE.Data.dll
+C:\Users\HoangLong\source\repos\PROJECT_WEBSITE\PROJECT_WEBSITE.Data\bin\Debug\PROJECT_WEBSITE.Data.pdb
+C:\Users\HoangLong\source\repos\PROJECT_WEBSITE\PROJECT_WEBSITE.Data\bin\Debug\Accord.dll
+C:\Users\HoangLong\source\repos\PROJECT_WEBSITE\PROJECT_WEBSITE.Data\bin\Debug\EntityFramework.dll
+C:\Users\HoangLong\source\repos\PROJECT_WEBSITE\PROJECT_WEBSITE.Data\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\HoangLong\source\repos\PROJECT_WEBSITE\PROJECT_WEBSITE.Data\bin\Debug\PagedList.dll
+C:\Users\HoangLong\source\repos\PROJECT_WEBSITE\PROJECT_WEBSITE.Data\bin\Debug\PagedList.Mvc.dll
+C:\Users\HoangLong\source\repos\PROJECT_WEBSITE\PROJECT_WEBSITE.Data\bin\Debug\Accord.xml
+C:\Users\HoangLong\source\repos\PROJECT_WEBSITE\PROJECT_WEBSITE.Data\bin\Debug\EntityFramework.xml
+C:\Users\HoangLong\source\repos\PROJECT_WEBSITE\PROJECT_WEBSITE.Data\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\HoangLong\source\repos\PROJECT_WEBSITE\PROJECT_WEBSITE.Data\bin\Debug\PagedList.xml
+C:\Users\HoangLong\source\repos\PROJECT_WEBSITE\PROJECT_WEBSITE.Data\bin\Debug\PagedList.Mvc.xml
+C:\Users\HoangLong\source\repos\PROJECT_WEBSITE\PROJECT_WEBSITE.Data\obj\Debug\PROJECT_WEBSITE.Data.csproj.AssemblyReference.cache
+C:\Users\HoangLong\source\repos\PROJECT_WEBSITE\PROJECT_WEBSITE.Data\obj\Debug\PROJECT_WEBSITE.Data.csproj.CoreCompileInputs.cache
+C:\Users\HoangLong\source\repos\PROJECT_WEBSITE\PROJECT_WEBSITE.Data\obj\Debug\PROJECT_WEBSITE.Data.csproj.CopyComplete
+C:\Users\HoangLong\source\repos\PROJECT_WEBSITE\PROJECT_WEBSITE.Data\obj\Debug\PROJECT_WEBSITE.Data.dll
+C:\Users\HoangLong\source\repos\PROJECT_WEBSITE\PROJECT_WEBSITE.Data\obj\Debug\PROJECT_WEBSITE.Data.pdb
+C:\Users\HoangLong\Downloads\image\Image\104_ManhThienLy\Source code\PROJECT_WEBSITE\PROJECT_WEBSITE.Data\bin\Debug\Accord.dll.config
+C:\Users\HoangLong\Downloads\image\Image\104_ManhThienLy\Source code\PROJECT_WEBSITE\PROJECT_WEBSITE.Data\bin\Debug\PROJECT_WEBSITE.Data.dll.config
+C:\Users\HoangLong\Downloads\image\Image\104_ManhThienLy\Source code\PROJECT_WEBSITE\PROJECT_WEBSITE.Data\bin\Debug\PROJECT_WEBSITE.Data.dll
+C:\Users\HoangLong\Downloads\image\Image\104_ManhThienLy\Source code\PROJECT_WEBSITE\PROJECT_WEBSITE.Data\bin\Debug\PROJECT_WEBSITE.Data.pdb
+C:\Users\HoangLong\Downloads\image\Image\104_ManhThienLy\Source code\PROJECT_WEBSITE\PROJECT_WEBSITE.Data\bin\Debug\Accord.dll
+C:\Users\HoangLong\Downloads\image\Image\104_ManhThienLy\Source code\PROJECT_WEBSITE\PROJECT_WEBSITE.Data\bin\Debug\EntityFramework.dll
+C:\Users\HoangLong\Downloads\image\Image\104_ManhThienLy\Source code\PROJECT_WEBSITE\PROJECT_WEBSITE.Data\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\HoangLong\Downloads\image\Image\104_ManhThienLy\Source code\PROJECT_WEBSITE\PROJECT_WEBSITE.Data\bin\Debug\PagedList.dll
+C:\Users\HoangLong\Downloads\image\Image\104_ManhThienLy\Source code\PROJECT_WEBSITE\PROJECT_WEBSITE.Data\bin\Debug\PagedList.Mvc.dll
+C:\Users\HoangLong\Downloads\image\Image\104_ManhThienLy\Source code\PROJECT_WEBSITE\PROJECT_WEBSITE.Data\bin\Debug\Accord.xml
+C:\Users\HoangLong\Downloads\image\Image\104_ManhThienLy\Source code\PROJECT_WEBSITE\PROJECT_WEBSITE.Data\bin\Debug\EntityFramework.xml
+C:\Users\HoangLong\Downloads\image\Image\104_ManhThienLy\Source code\PROJECT_WEBSITE\PROJECT_WEBSITE.Data\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\HoangLong\Downloads\image\Image\104_ManhThienLy\Source code\PROJECT_WEBSITE\PROJECT_WEBSITE.Data\bin\Debug\PagedList.xml
+C:\Users\HoangLong\Downloads\image\Image\104_ManhThienLy\Source code\PROJECT_WEBSITE\PROJECT_WEBSITE.Data\bin\Debug\PagedList.Mvc.xml
+C:\Users\HoangLong\Downloads\image\Image\104_ManhThienLy\Source code\PROJECT_WEBSITE\PROJECT_WEBSITE.Data\obj\Debug\PROJECT_WEBSITE.Data.csproj.CoreCompileInputs.cache
+C:\Users\HoangLong\Downloads\image\Image\104_ManhThienLy\Source code\PROJECT_WEBSITE\PROJECT_WEBSITE.Data\obj\Debug\PROJECT_WEBSITE.Data.csproj.CopyComplete
+C:\Users\HoangLong\Downloads\image\Image\104_ManhThienLy\Source code\PROJECT_WEBSITE\PROJECT_WEBSITE.Data\obj\Debug\PROJECT_WEBSITE.Data.dll
+C:\Users\HoangLong\Downloads\image\Image\104_ManhThienLy\Source code\PROJECT_WEBSITE\PROJECT_WEBSITE.Data\obj\Debug\PROJECT_WEBSITE.Data.pdb
+C:\Users\HoangLong\Downloads\image\Image\104_ManhThienLy\Source code\PROJECT_WEBSITE\PROJECT_WEBSITE.Data\obj\Debug\PROJECT_WEBSITE.Data.csproj.AssemblyReference.cache

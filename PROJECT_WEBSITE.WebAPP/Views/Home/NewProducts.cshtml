@@ -1,0 +1,176 @@
+﻿@model List<PROJECT_WEBSITE.Data.ModelCustom.MProduct>
+<div class="col-xs-12 col-sm-12 col-md-7 col-lg-7 col-xl-8">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Section Title -->
+            <div class="section-title ml-0px mt-res-sx-30px">
+                <h2>Sản phẩm mới</h2>
+                <p>Các sản phẩm mới trong tuần</p>
+            </div>
+            <!-- Section Title -->
+        </div>
+    </div>
+    <!-- New Product Slider Start -->
+    <div class="new-product-slider owl-carousel owl-nav-style">
+
+        @{
+            int index = (Model.Count() / 2);
+            int count = 0;
+
+            for (int i = index; i < Model.Count; i++)
+            {
+                var url = "/chi-tiet/" + Model[count].MetaTitle + "-" + Model[count].ProductID;
+                <!-- Product Single Item -->
+                <div class="product-inner-item">
+                    @if (@count != @index || (Model.Count % 2) == 0)
+                    {
+                        <article class="list-product mb-30px">
+                            <div class="img-block">
+                                <a href="single-product.html" class="thumbnail">
+                                    <img class="first-img" src="@Model[count].Image" alt="" />
+                                </a>
+                            </div>
+                            <ul class="product-flag">
+                                <li class="new">New</li>
+                            </ul>
+                            <div class="product-decs">
+                                @GetName(count, url)
+                                <div class="pricing-meta">
+                                    <ul>
+                                        @Price(count)
+                                        @Distcout(count)
+                                    </ul>
+                                </div>
+                            </div>
+                            @{
+                                if (Model[count].CountProduct != 0)
+                                {
+                                    <div class="add-to-link">
+                                        <ul>
+                                            <li class="cart"><a class="cart-btn" href="/them-gio-hang?productId=@Model[count].ProductID&quantity=1">Thêm vào giỏ </a></li>
+                                        </ul>
+                                    </div>
+                                }
+                            }
+
+                        </article>
+                    }
+                    @{var url1 = "/chi-tiet/" + Model[i].MetaTitle + "-" + Model[i].ProductID;
+                    }
+                    <article class="list-product">
+                        <div class="img-block">
+                            <a href="single-product.html" class="thumbnail">
+                                <img class="first-img" src="@Model[i].Image" alt="" />
+                            </a>
+                        </div>
+                        <ul class="product-flag">
+                            <li class="new">New</li>
+                        </ul>
+                        <div class="product-decs">
+                            @GetName(i, url1)
+                            <div class="pricing-meta">
+                                <ul>
+                                    @Price(i)
+                                    @Distcout(i)
+                                </ul>
+                            </div>
+                        </div>
+                        @{
+                            if (Model[i].CountProduct != 0)
+                            {
+                                <div class="add-to-link">
+                                    <ul>
+                                        <li class="cart"><a class="cart-btn" href="/them-gio-hang?productId=@Model[i].ProductID&quantity=1">Thêm vào giỏ </a></li>
+                                    </ul>
+                                </div>
+                            }
+                        }
+
+                    </article>
+
+
+                </div>
+                count++;
+            }
+        }
+    </div>
+    <!-- Product Slider End -->
+</div>
+
+@helper Distcout(int count)
+{
+    var price = "";
+    var pricepromotion = "";
+    if (Model[count].PriceOut.HasValue && !Model[count].PricePromotion.HasValue)
+    { price = Model[count].PriceOut.Value.ToString("N0") + "₫"; }
+    if (Model[count].PricePromotion.HasValue)
+    {
+        pricepromotion = Model[count].PriceOut.ToString();
+        price = Model[count].PricePromotion.ToString();
+    }
+    if (!Model[count].PriceOut.HasValue && !Model[count].PricePromotion.HasValue)
+    { price = "Liên hệ"; }
+
+    string c = "";
+    if (pricepromotion != "" & price != "")
+    {
+        double t = Math.Round(100 - ((double.Parse(price) / double.Parse(pricepromotion)) * 100));
+        c = t.ToString();
+    }
+    if (c != "")
+    {
+        <li class="discount-price">@c%</li>
+    }
+}
+
+@helper Price(int count)
+{
+    var price = "";
+    var pricepromotion = "";
+    if (Model[count].CountProduct == 0)
+    {
+        <br />
+        <li class="old-price not-cut">Liên hệ </li>
+    }
+    else
+    {
+        if (Model[count].PriceOut.HasValue && !Model[count].PricePromotion.HasValue)
+        { price = Model[count].PriceOut.Value.ToString("N0") + "₫"; }
+        if (Model[count].PricePromotion.HasValue)
+        {
+            pricepromotion = Model[count].PriceOut.Value.ToString("N0") + "₫";
+            price = Model[count].PricePromotion.Value.ToString("N0") + "₫";
+        }
+        if (!Model[count].PriceOut.HasValue && !Model[count].PricePromotion.HasValue)
+        { price = "Liên hệ"; }
+        if (pricepromotion != "")
+        {
+            <li class="old-price">@pricepromotion </li>
+            <br>
+            <li class="current-price">@price </li>
+        }
+        else
+        {
+            <br />
+            <li class="old-price not-cut">@price </li>
+        }
+    }
+
+
+}
+
+@helper GetName(int count, string url)
+{
+
+    string name = "";
+    if (Model[count].Name.Length > 35)
+    {
+        name = Model[count].Name.Substring(0, 35).Trim() + "...";
+        <h2><a href="@url" class="product-link">@name</a></h2>
+    }
+    else
+    {
+        name = Model[count].Name;
+        <h2><a href="@url" class="product-link">@name</a></h2>
+    }
+}

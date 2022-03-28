@@ -1,0 +1,124 @@
+﻿@model List<PROJECT_WEBSITE.Data.ModelCustom.MProduct>
+<section class="feature-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Section Title -->
+                <div class="section-title">
+                    <h2>Sản phẩm nổi bật</h2>
+                    <p>Các sản phẩm nổi bật cho bạn</p>
+                </div>
+                <!-- Section Title -->
+            </div>
+        </div>
+        <!-- Feature Slider Start -->
+        <div class="feature-slider owl-carousel owl-nav-style">
+            @{
+                int index = (Model.Count() / 2);
+                int count = 0;
+
+                for (int i = index; i < Model.Count; i++)
+                {
+
+                    <!-- Single Item -->
+                    <div class="feature-slider-item">
+                        @if (@count != @index || (Model.Count % 2) == 0)
+                        {
+                            var url = "/chi-tiet/" + Model[count].MetaTitle + "-" + Model[count].ProductID;
+                            <article class="list-product">
+                                <div class="img-block">
+                                    <a href="single-product.html" class="thumbnail">
+                                        <img class="first-img" src="@Model[count].Image" alt="" />
+                                    </a>
+                                </div>
+                                <div class="product-decs">
+                                    @GetName(count, url)
+                                    <div class="pricing-meta">
+                                        <ul>
+                                            @Price(count)
+                                        </ul>
+                                    </div>
+                                </div>
+                            </article>
+                        }
+                        @{var url1 = "/chi-tiet/" + Model[i].MetaTitle + "-" + Model[i].ProductID;
+                        }
+                        <article class="list-product">
+                            <div class="img-block">
+                                <a href="single-product.html" class="thumbnail">
+                                    <img class="first-img" src="@Model[i].Image" alt="" />
+                                </a>
+                            </div>
+                            <div class="product-decs">
+                                @GetName(i, url1)
+                                <div class="pricing-meta">
+                                    <ul>
+                                        @Price(i)
+                                    </ul>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                    count++;
+
+                }
+
+            }
+
+
+        </div>
+        <!-- Feature Slider End -->
+    </div>
+</section>
+
+@helper Price(int count)
+{
+    var price = "";
+    var pricepromotion = "";
+    if (Model[count].CountProduct == 0)
+    {
+        <br />
+        <li class="old-price not-cut">Liên hệ </li>
+    }
+    else
+    {
+        if (Model[count].PriceOut.HasValue && !Model[count].PricePromotion.HasValue)
+        { price = Model[count].PriceOut.Value.ToString("N0") + "₫"; }
+        if (Model[count].PricePromotion.HasValue)
+        {
+            pricepromotion = Model[count].PriceOut.Value.ToString("N0") + "₫";
+            price = Model[count].PricePromotion.Value.ToString("N0") + "₫";
+        }
+        if (!Model[count].PriceOut.HasValue && !Model[count].PricePromotion.HasValue)
+        { price = "Liên hệ"; }
+        if (pricepromotion != "")
+        {
+            <li class="old-price">@pricepromotion </li>
+            <br>
+            <li class="current-price">@price </li>
+        }
+        else
+        {
+            <br />
+            <li class="old-price not-cut">@price </li>
+        }
+    }
+
+
+}
+
+@helper GetName(int count, string url)
+{
+
+    string name = "";
+    if (Model[count].Name.Length > 35)
+    {
+        name = Model[count].Name.Substring(0, 35).Trim() + "...";
+        <h2><a href="@url" class="product-link">@name</a></h2>
+    }
+    else
+    {
+        name = Model[count].Name;
+        <h2><a href="@url" class="product-link">@name</a></h2>
+    }
+}

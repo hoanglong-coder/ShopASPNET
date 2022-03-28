@@ -1,0 +1,472 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@section scripts{
+    <script src="~/Assets/Admin/plugins/select2/js/select2.full.min.js"></script>
+    <script src="~/Assets/Admin/plugins/sweetalert2/sweetalert2.js"></script>
+    <script src="~/Assets/Admin/plugins/mustache.min.js"></script>
+    <script src="~/Assets/Admin/dist/js/jquery.twbsPagination.js"></script>
+    <script src="~/Assets/Admin/plugins/jquery-validation/jquery.validate.js"></script>
+    <script src="~/Assets/Admin/plugins/moment/moment.min.js"></script>
+    <link href="~/Assets/Admin/plugins/daterangepicker/daterangepicker.css" rel="stylesheet" />
+    <script src="~/Assets/Admin/plugins/daterangepicker/daterangepicker.js"></script>
+
+    <script src="~/Assets/Admin/dist/js/pages/admin-user-index.js"></script>
+
+    <script>
+
+        $(document).ready(function () {
+
+
+            $(".select2").select2({
+                theme: 'bootstrap4'
+            });
+
+
+        })
+    </script>
+}
+<div class="row">
+    <div class="col-12">
+        <div class="card card-default card-primary">
+            <div class="card-header">
+                <h3 class="card-title">
+                    Quản lý nhân viên
+                </h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <div class="card card-primary card-tabs">
+                    <div class="card-header p-0 pt-1">
+                        <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="custom-tabs-one-tintuc-tab" data-toggle="pill" href="#custom-tabs-one-tintuc" role="tab" aria-controls="custom-tabs-one-tintuc" aria-selected="true">Danh sách tài khoản</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="custom-tabs-one-loaitintuc-tab" data-toggle="pill" href="#custom-tabs-one-loaitintuc" role="tab" aria-controls="custom-tabs-one-loaitintuc" aria-selected="false">Nhóm quyền</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="custom-tabs-one-quyen-tab" data-toggle="pill" href="#custom-tabs-one-quyen" role="tab" aria-controls="custom-tabs-one-tintuc" aria-selected="true">Quyền</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body">
+                        <div class="tab-content" id="custom-tabs-one-tabContent">
+                            <div class="tab-pane fade show active" id="custom-tabs-one-tintuc" role="tabpanel" aria-labelledby="custom-tabs-one-tintuc-tab">
+                                .<!--header Table-->
+                                <div class="row mb-3">
+                                    <div class="col-6 col-md-3">
+                                        <div class="input-group">
+                                            <input type="search" id="search-news" class="form-control" placeholder="Nhập nội dung" />
+                                        </div>
+                                    </div>
+                                    <div class="col-3 col-md-3">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">Từ ngày</span>
+                                            </div>
+                                            <input type="date" class="form-control float-right" id="TuNgay">
+                                        </div>
+                                    </div>
+                                    <div class="col-3 col-md-3">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">Đến ngày</span>
+                                            </div>
+                                            <input type="date" class="form-control float-right" id="DenNgay">
+                                        </div>
+                                    </div>
+                                    <div class="col-6 col-md-1">
+                                        <button type="button" id="btnTiemKiem" class="btn btn-primary"><i class="fas fa-search"></i>Tìm kiếm</button>
+                                    </div>
+                                    <div class="col-6 col-md-2">
+                                        <button type="button" class="btn btn-primary" id="CreateNews"><i class="fas fa-plus"></i>Thêm tài khoản</button>
+                                    </div>
+                                </div>
+                                <!--Table-->
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <table class="table table-bordered table-hover" id="tbl-data">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th>STT</th>
+                                                    <th>Mã nhân viên</th>
+                                                    <th>Tên nhân viên</th>
+                                                    <th>Tài khoản</th>
+                                                    <th>Ngày tạo</th>
+                                                    <th>Địa chỉ</th>
+                                                    <th>Ngày sinh</th>
+                                                    <th>SĐT</th>
+                                                    <th>Chức vụ</th>
+                                                    <th>Trạng thái</th>
+                                                    <th>#</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tbNews">
+                                            </tbody>
+                                        </table>
+                                        <ul id="paginationnews" class="pagination"></ul>
+                                        <script id="data-templateNews" type="x-tmpl-mustache">
+                                            <tr>
+                                                <td>{{STT}}</td>
+                                                <td>{{UserIDDisplay}}</td>
+                                                <td>{{FullName}}</td>
+                                                <td>{{UserName}}</td>
+                                                <td>{{CreateDate}}</td>
+                                                <td>{{Address}}</td>
+                                                <td>{{Birth}}</td>
+                                                <td>{{Phone}}</td>
+                                                <td>{{UserRoleGroup}}</td>
+                                                <td>{{{UserStatus}}}</td>
+                                                <th>
+                                                    <a class="modalshowEdit" data-id="{{UserID}}"  data-toggle="tooltip" data-placement="top" title="Sửa tài khoản"><i class="far fa-edit"></i></a>
+                                                      <a class="actiondisplayProduct" data-id="{{UserID}}" style="margin-left:5px" data-toggle="tooltip" data-placement="top" title="Hoạt động/khóa tài khoản"><i class="{{DisplayProduct}}"></i></a>
+                                                    <a class="actiondelete" data-id="{{UserID}}" data-name="{{FullName}}" style="margin-left:5px"data-toggle="tooltip" data-placement="top" title="Xóa tài khoản"><i class="far fa-trash-alt"></i></a>
+                                                </th>
+                                            </tr>
+                                        </script>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="custom-tabs-one-loaitintuc" role="tabpanel" aria-labelledby="custom-tabs-one-loaitintuc-tab">
+
+                                <!--header Table-->
+                                <div class="row mb-3">
+                                    <div class="col-6 col-md-2">
+                                        <button type="button" class="btn btn-primary" id="CreateChucvu"><i class="fas fa-plus"></i>Thêm chức vụ</button>
+                                    </div>
+                                </div>
+                                <!--Table-->
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <table class="table table-bordered table-hover" id="tbl-data">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th>STT</th>
+                                                    <th>Mã Chức vụ</th>
+                                                    <th>Tên chức vụ</th>
+                                                    <th>Ngày tạo</th>
+                                                    <th>#</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                            <tbody id="tbChucvu">
+                                            </tbody>
+                                        </table>
+                                        <ul id="paginationchucvu" class="pagination"></ul>
+                                        <script id="data-templateChucvu" type="x-tmpl-mustache">
+                                            <tr>
+                                                <td>{{STT}}</td>
+                                                <td>{{UserRoleGroupIDDisplay}}</td>
+                                                <td>{{Name}}</td>
+                                                <td>{{CreateDate}}</td>
+                                                <th>
+                                                    <a class="modalshowEditCategory" data-id={{UserRoleGroupID}} data-name="{{Name}}"><i class="far fa-edit"></i></a>
+                                                    <a class="actiondeleteChucvu" data-id="{{UserRoleGroupID}}" data-name="{{Name}}" style="margin-left:5px"><i class="far fa-trash-alt"></i></a>
+                                                </th>
+                                            </tr>
+                                        </script>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="tab-pane fade" id="custom-tabs-one-quyen" role="tabpanel" aria-labelledby="custom-tabs-one-quyen-tab">
+                                <!--Table-->
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <table class="table table-bordered table-hover" id="tbl-data">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th>STT</th>
+                                                    <th>Mã quyền</th>
+                                                    <th>Tên quyền</th>
+                                                    <th>Ngày tạo</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                            <tbody id="tbrole">
+                                            </tbody>
+                                        </table>
+                                        <ul id="paginationrole" class="pagination"></ul>
+                                        <script id="data-templaterole" type="x-tmpl-mustache">
+                                            <tr>
+                                                <td>{{STT}}</td>
+                                                <td>{{UserRoleIDDisplay}}</td>
+                                                <td>{{Name}}</td>
+                                                <td>{{CreateDate}}</td>
+                                            </tr>
+                                        </script>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.card -->
+                </div>
+            </div>
+            <!-- /.card-body -->
+        </div>
+    </div>
+</div>
+
+<!-- Modal Thêm User -->
+<div class="modal fade" id="ModalCreateNewsCategory" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 1000px!important" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #01A65B;color:white">
+                <h5>THÊM TÀI KHOẢN</h5>
+            </div>
+            <div class="modal-body">
+                <!-- form start -->
+                <form class="form-horizontal" id="FromCreateNewsCategory" method="post">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-2 col-form-label">Tài khoản*</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="UserName" placeholder="Nhập tài khoản" required>
+                            </div>
+                            <label for="inputEmail3" class="col-sm-2 col-form-label">Mật khẩu*</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="Passsword" placeholder="Nhập mật khẩu" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-2 col-form-label">Họ tên*</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="FullName" placeholder="Nhập họ tên" required>
+                            </div>
+                            <label for="inputEmail3" class="col-sm-2 col-form-label">Địa chỉ*</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="Address" placeholder="Nhập nhập địa chỉ" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-2 col-form-label">SĐT*</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="Phone" placeholder="Nhập số điện thoại" required>
+                            </div>
+                            <label for="inputEmail3" class="col-sm-2 col-form-label">Ngày sinh*</label>
+                            <div class="col-sm-4">
+                                <input type="date" class="form-control" id="Birth" placeholder="Nhập ngày sinh" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword3" class="col-sm-2 col-form-label">Chức vụ*</label>
+                            <div class="col-sm-10">
+                                <select class="form-control select2" id="lstchucvu" style="width: 100%;" required>
+                                    <option selected="selected">Chọn chức vụ</option>
+                                </select>
+                            </div>
+
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer">
+                        <button class="btn btn-default float-right" style="margin-right:10px" data-dismiss="modal">Thoát</button>
+                        <button type="submit" class="btn btn-info float-right" style="margin-right:10px">Lưu</button>
+                    </div>
+                    <!-- /.card-footer -->
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal Sửa User -->
+<div class="modal fade" id="ModalEditNewsCategory" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 1000px!important" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #01A65B;color:white">
+                <h5>SỬA TÀI KHOẢN</h5>
+            </div>
+            <div class="modal-body">
+                <!-- form start -->
+                <form class="form-horizontal" id="FromEditNewsCategory" method="post">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-2 col-form-label">Mã nhân viên*</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="UserIDEdit" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-2 col-form-label">Tài khoản*</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="UserNameEdit" placeholder="Nhập tài khoản" readonly>
+                            </div>
+                            <label for="inputEmail3" class="col-sm-2 col-form-label">Mật khẩu*</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="PassswordEdit" placeholder="Nhập mật khẩu">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-2 col-form-label">Họ tên*</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="FullNameEdit" placeholder="Nhập họ tên" required>
+                            </div>
+                            <label for="inputEmail3" class="col-sm-2 col-form-label">Địa chỉ*</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="AddressEdit" placeholder="Nhập nhập địa chỉ" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-2 col-form-label">SĐT*</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="PhoneEdit" placeholder="Nhập số điện thoại" required>
+                            </div>
+                            <label for="inputEmail3" class="col-sm-2 col-form-label">Ngày sinh*</label>
+                            <div class="col-sm-4">
+                                <input type="date" class="form-control" id="BirthEdit" placeholder="Nhập ngày sinh" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword3" class="col-sm-2 col-form-label">Chức vụ*</label>
+                            <div class="col-sm-10">
+                                <select class="form-control" id="lstchucvuEdit" style="width: 100%;" required>
+                                </select>
+                            </div>
+
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer">
+                        <button class="btn btn-default float-right" style="margin-right:10px" data-dismiss="modal">Thoát</button>
+                        <button type="submit" class="btn btn-info float-right" style="margin-right:10px">Lưu</button>
+                    </div>
+                    <!-- /.card-footer -->
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Xác nhận xóa nhân viên-->
+<div class="modal fade" id="ModalDeleteProduct" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 1000px!important" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #01A65B;color:white">
+                <h5>XÁC NHẬN XÓA </h5>
+            </div>
+            <div class="modal-body">
+                <p id="NameProductDelete"></p><br />
+                <div class="alert alert-danger" id="ResultProductDelete" hidden role="alert">
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-default float-right" style="margin-right:10px" data-dismiss="modal"><i class="fas fa-sign-out-alt"></i>Thoát</button>
+                    <button type="button" class="btn btn-info float-right" id="btndeleteProduct" style="margin-right:10px"><i class="fas fa-trash-alt"></i>Xóa</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Thêm Chức vụ -->
+<div class="modal fade" id="ModalCreateChucvu" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 1000px!important" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #01A65B;color:white">
+                <h5>THÊM CHỨC VỤ</h5>
+            </div>
+            <div class="modal-body">
+                <!-- form start -->
+                <form class="form-horizontal" id="FromCreateChucvu" method="post">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-2 col-form-label">Tên chức vụ*</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="NameRoleGroup" placeholder="Nhập tên chức vụ" required>
+                            </div>
+                        </div>
+                        <div class="form-group row listrole">
+                        </div>
+
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer">
+                        <button class="btn btn-default float-right" style="margin-right:10px" data-dismiss="modal">Thoát</button>
+                        <button type="submit" class="btn btn-info float-right" style="margin-right:10px">Lưu</button>
+                    </div>
+                    <!-- /.card-footer -->
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal SỬA Chức vụ -->
+<div class="modal fade" id="ModalEditChucvu" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 1000px!important" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #01A65B;color:white">
+                <h5>SỬA CHỨC VỤ</h5>
+            </div>
+            <div class="modal-body">
+                <!-- form start -->
+                <form class="form-horizontal" id="FromEditChucvu" method="post">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-2 col-form-label">Mã chức vụ*</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="IDChucVu" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-2 col-form-label">Tên chức vụ*</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="NameChucVu" placeholder="Nhập tên chức vụ" required>
+                            </div>
+                        </div>
+                        <div class="form-group row listroleedit">
+                        </div>
+
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer">
+                        <button class="btn btn-default float-right" style="margin-right:10px" data-dismiss="modal">Thoát</button>
+                        <button type="submit" class="btn btn-info float-right" style="margin-right:10px">Lưu</button>
+                    </div>
+                    <!-- /.card-footer -->
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Xác nhận xóa chucvu-->
+<div class="modal fade" id="ModalDeleteChucVu" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 1000px!important" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #01A65B;color:white">
+                <h5>XÁC NHẬN XÓA </h5>
+            </div>
+            <div class="modal-body">
+                <p id="NameCVDelete"></p><br />
+                <div class="alert alert-danger" id="ResultCVDelete" hidden role="alert">
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-default float-right" style="margin-right:10px" data-dismiss="modal"><i class="fas fa-sign-out-alt"></i>Thoát</button>
+                    <button type="button" class="btn btn-info float-right" id="btndeletechucvu" style="margin-right:10px"><i class="fas fa-trash-alt"></i>Xóa</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section headerBig{
+    Quản lý nhân viên
+}
+
+@section headersmall{
+    Quản lý nhân viên
+}

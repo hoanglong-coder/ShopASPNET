@@ -1,0 +1,501 @@
+﻿@model PROJECT_WEBSITE.Data.EF.Customer
+@{
+    ViewBag.Title = "Thông tin tài khoản";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var checkdate = (DateTime?)Model.Birth;
+
+    var date = checkdate.HasValue ? checkdate.Value.ToString("yyyy-MM-dd") : "n/a";
+
+    string birth;
+    if (date != "n/a")
+    {
+        var datecusstomer = (DateTime)Model.Birth.Value;
+        string moth = "";
+        string day = "";
+        if (datecusstomer.Month < 10)
+        {
+            moth = "0" + datecusstomer.Month;
+        }
+        else
+        {
+            moth = datecusstomer.Month.ToString();
+        }
+        if (datecusstomer.Day < 10)
+        {
+            day = "0" + datecusstomer.Day;
+        }
+        else
+        {
+            day = datecusstomer.Day.ToString();
+        }
+
+        birth = datecusstomer.Year + "-" + moth + "-" + day;
+
+    }else
+    {
+        birth = null;
+    }
+    var checkgen = (bool?)Model.Gender;
+
+    var gen = "";
+    if (checkgen.HasValue)
+    {
+        gen = checkgen.Value == true ? "Nam" : "Nữ";
+    }else
+    {
+        gen = "n/a";
+    }
+
+    var address1 = (string)Model.Address;
+
+    var rs = "";
+    if (!string.IsNullOrEmpty(address1))
+    {
+        var address = address1.Split(',');
+        if (address[0] == "")
+        {
+            rs = address[1] + ", " + address[2] + ", " + address[3];
+        }
+        else
+        {
+            rs = address[0] + ", " + address[1] + ", " + address[2] + ", " + address[3];
+        }
+    }
+
+
+    var checkemail = (string)Model.Email;
+    var mail = "";
+    if (!string.IsNullOrEmpty(checkemail))
+    {
+        mail = checkemail;
+    }
+    else
+    {
+        mail = "n/a";
+    }
+
+}
+
+<!-- Breadcrumb Area start -->
+<section class="breadcrumb-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="breadcrumb-content">
+                    <h1 class="breadcrumb-hrading">Trang thông tin tài khoản</h1>
+                    <ul class="breadcrumb-links">
+                        <li><a href="/">Trang chủ</a></li>
+                        <li>Tài khoản của tôi</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Breadcrumb Area End -->
+<!-- account area start -->
+<div class="checkout-area mtb-60px">
+    <div class="container">
+        <div class="row">
+            <div class="ml-auto mr-auto col-lg-9">
+                <div class="checkout-wrapper">
+                    <div id="faq" class="panel-group">
+                        <div class="panel panel-default single-my-account">
+                            <div class="panel-heading my-account-title">
+                                <h3 class="panel-title"><span>1 .</span> <a data-toggle="collapse" data-parent="#faq" href="#my-account-1">Thông tin tài khoản</a></h3>
+                            </div>
+                            <div id="my-account-1" class="panel-collapse collapse show">
+                                <div class="panel-body">
+                                    <div class="myaccount-info-wrapper">
+                                        <div class="row">
+                                            <div class="col-lg-6 col-md-6">
+                                                <div class="billing-info">
+                                                    <label>Họ tên</label>
+                                                    <input type="text" value="@Model.Name" readonly="readonly" />
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6">
+                                                <div class="billing-info">
+                                                    <label>Số điện thoại</label>
+                                                    <input type="text" value="@Model.Phone" readonly="readonly" />
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6">
+                                                <div class="billing-info">
+                                                    <label>Email</label>
+                                                    <input type="email" value="@mail" readonly="readonly" />
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6">
+                                                <div class="billing-info">
+                                                    @if (birth != null)
+                                                    {<label>Ngày sinh</label>
+                                                        <input type="date" value="@birth" readonly="readonly" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <label>Ngày sinh</label>
+                                                        <input type="text" readonly ="readonly"/>
+                                                    }
+
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6">
+                                                <div class="billing-info">
+                                                    <label>giới tính</label>
+                                                    <input type="text" value="@gen" readonly />
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12 col-md-12">
+                                                <div class="billing-info">
+                                                    <label>Địa chỉ</label>
+                                                    <input type="text" value="@rs" readonly="readonly" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="billing-back-btn">
+                                            <div class="billing-btn">
+                                                <button id="btn-edit">Chỉnh sửa</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default single-my-account">
+                            <div class="panel-heading my-account-title">
+                                <h3 class="panel-title"><span>2 .</span> <a data-toggle="collapse" data-parent="#faq" href="#my-account-2">thay đổi mật khẩu </a></h3>
+                            </div>
+                            <div id="my-account-2" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <div class="myaccount-info-wrapper">
+                                        <div class="row">
+                                            <div class="col-lg-12 col-md-12">
+                                                <div class="billing-info">
+                                                    <label>Mật khẩu củ</label>
+                                                    <input type="password" id="passold" />
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12 col-md-12">
+                                                <div class="billing-info">
+                                                    <label>Mật khẩu mới</label>
+                                                    <input type="password" id="passnew" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="billing-back-btn">
+                                            <div class="billing-btn">
+                                                <button id="btnchangepass">Thay đổi</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default single-my-account">
+                            <div class="panel-heading my-account-title">
+                                <h3 class="panel-title"><span>3 .</span> <a data-toggle="collapse" data-parent="#faq" href="#my-account-3">Quản lý đơn hàng</a></h3>
+                            </div>
+                            <div id="my-account-3" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <div class="myaccount-info-wrapper">
+                                        <div class="row mb-3">
+                                            <div class="col-4 col-md-4">
+                                                <input class="form-control" placeholder="Tìm kiếm đơn hàng" />
+                                            </div>
+                                            <div class="col-4 col-md-4">
+                                                <select class="form-control ml-3" style="border-radius:unset" id="search-dropdown">
+                                                    <option value="" selected>Đơn hàng</option>
+                                                    <option value="0">Xác nhận</option>
+                                                    <option value="-1">Chưa xác nhận</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-4 col-md-4">
+                                                <button class="btn btn-success">Tìm kiêm</button>
+
+                                            </div>
+                                        </div>
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col"></th>
+                                                    <th scope="col">STT</th>
+                                                    <th scope="col">Mã hóa đơn</th>
+                                                    <th scope="col">Ngày đặt</th>
+                                                    <th scope="col">Tổng tiền</th>
+                                                    <th scope="col">Trạng thái</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tbOrder">
+                                            </tbody>
+                                        </table>
+                                        <ul id="pagination" class="pagination"></ul>
+                                        <script id="data-template" type="x-tmpl-mustache">
+                                            <tr>
+                                                <th><a class="modalshowsub" data-id="{{ID}}"><i class="fas fa-plus-circle"></i></a></th>
+                                                <td>{{STT}}</td>
+                                                <td>{{DIsplayID}}</td>
+                                                <td>{{Date}}</td>
+                                                <td>{{Price}}</td>
+                                                <td>{{{Status}}}</td>
+                                            </tr>
+                                        </script>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="suborderdetail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 1550px!important;" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Chi tiết đơn hàng</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered table-hover" id="tbl-data">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>STT</th>
+                            <th>Mã sản phẩm</th>
+                            <th>Tên sản phẩm</th>
+                            <th>Số lượng</th>
+                            <th>Đơn giá</th>
+                            <th>Thành tiền</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbOrderDetail">
+                    </tbody>
+                </table>
+                <script id="data-tbOrderDetail" type="x-tmpl-mustache">
+                            <tr>
+                                <td>{{STT}}</td>
+                                <td>{{ID}}</td>
+                                <td>{{Name}}</td>
+                                <td>{{Quantity}}</td>
+                                <td>{{Price}}</td>
+                                <td>{{{Totalprice}}}</td>
+                            </tr>
+                            </tr>
+                </script>
+                <div class="alert alert-success border-dark" role="alert">
+                    <div class="row">
+                        <div class="col-3 col-md-3" style="max-width:20%">
+                            <p><i class="fas fa-shopping-cart"></i> Số lượng: <strong id="quantitysub"></strong></p>
+                        </div>
+                        <div class="col-3 col-md-3" style="max-width:20%">
+                            <p><i class="fas fa-dollar-sign"></i> Tiền hàng: <strong id="total"></strong></p>
+                        </div>
+                        <div class="col-3 col-md-3" style="max-width:20%">
+                            <p><i class="fas fa-ticket-alt"></i> Tiền ship: <strong id="ship"></strong></p>
+                        </div>
+                        <div class="col-3 col-md-3" style="max-width:20%">
+                            <p><i class="fas fa-ticket-alt"></i> Giảm giá: <strong id="khuyenmai"></strong></p>
+                        </div>
+                        <div class="col-3 col-md-3" style="max-width:20%">
+                            <p><i class="fas fa-dollar-sign"></i> Tổng tiền: <strong id="totalprice"></strong></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- account area end -->
+@section scripts{
+    <script src="~/Assets/Admin/plugins/mustache.min.js"></script>
+    <script src="~/Assets/Admin/dist/js/jquery.twbsPagination.js"></script>
+    <script>
+
+        $(document).ready(function () {
+            var pg = {
+                pageSize: 4,
+                pageIndex: 1
+            }
+            listOrder();
+
+
+
+            function listOrder(changePageSize) {
+                $.ajax({
+                   url: '/Account/GetCartById',
+                    type: 'get',
+                    data: {
+                        id : @Model.CustomerID,
+                        page: pg.pageIndex,
+                        pageSize: pg.pageSize
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.code = 200) {
+                            var html = '';
+                            var template = $('#data-template').html();
+                            $.each(data.data, function (key, value) {
+                                html += Mustache.render(template, {
+                                    ID: value.OrderID,
+                                    DIsplayID: 'HD'+ChangeIDProduct(value.OrderID),
+                                    STT: value.STT,
+                                    Date: parseJsonDate(value.CreateDate),
+                                    Price: new Intl.NumberFormat().format(value.TotalPrice),
+                                    Status: Status(value.OrderStatus),
+                                });
+                            });
+                            $('#tbOrder').html(html);
+                            paging(data.total, function () {
+                                listOrder();
+                            }, changePageSize)
+                            listOrderDetail();
+
+
+                        }
+                    }
+                });
+                function ChangeIDProduct(id) {
+                    if (id <= 9) {
+                        return '000' + id;
+                    } else if (id <= 99) {
+                        return '00' + id;
+                    } else if (id <= 999) {
+                        return '0' + id;
+                    } else {
+                        return id;
+                    }
+                }
+                function parseJsonDate(jsonDate) {
+
+                    var dt = new Date(parseInt(jsonDate.substr(6)));
+
+                    return `${dt.getDate().toString().padStart(2, '0')} /${(dt.getMonth()+1).toString().padStart(2, '0')}/${dt.getFullYear().toString().padStart(4, '0')} ${dt.getHours().toString().padStart(2, '0')}: ${dt.getMinutes().toString().padStart(2, '0')}: ${dt.getSeconds().toString().padStart(2, '0')}`
+                };
+                function Status(value) {
+                    if (value == -1) {
+                        return "<span style=\"color:white\" class=\"badge bg-danger\">Chưa xác nhận</span>";
+                    }
+                    if (value == 0) {
+                        return "<span style=\"color:white\" class=\"badge bg-primary\">Đã xác nhận</span>";
+                    }
+                }
+            }
+            function paging(totalRow, callback, changePageSize) {
+                var totalPage = Math.ceil(totalRow / pg.pageSize)
+                if ($('#pagination a').length === 0 || changePageSize === true) {
+                    $('#pagination').empty();
+                    $('#pagination').removeData('twbs-pagination');
+                    $('#pagination').unbind("page");
+                }
+                $('#pagination').twbsPagination({
+                    totalPages: totalPage,
+                    visiblePages: 7,
+                    first: 'Đầu',
+                    next: 'Tiếp',
+                    last: 'Cuối',
+                    prev: 'Trước',
+                    onPageClick: function (event, page) {
+                        pg.pageIndex = page;
+                        setTimeout(callback, 100);
+                    }
+                });
+            }
+            function listOrderDetail() {
+                $('.modalshowsub').on('click', function () {
+                    var id = $(this).data('id');
+                    $('#suborderdetail').modal('show')
+                    $.ajax({
+                        url: '/Account/ListOrderDetail',
+                        type: 'get',
+                        data: {
+                            id: id
+                        },
+                        dataType: 'json',
+                        success: function (data) {
+                            if (data.code = 200) {
+                                console.log('ataaaa')
+                                var html = '';
+                                var template = $('#data-tbOrderDetail').html();
+                                var dem = 1;
+                                $.each(data.data, function (key, value) {
+                                    html += Mustache.render(template, {
+                                        STT: dem,
+                                        ID: 'SP' + ChangeIDProduct(value.Product.ProductID),
+                                        Name: value.Product.Name,
+                                        Price: new Intl.NumberFormat().format(value.Price),
+                                        Quantity: value.Quantity,
+                                        Totalprice: new Intl.NumberFormat().format(value.TotalPrice),
+                                    });
+                                    dem++;
+
+                                });
+                                $('#tbOrderDetail').html(html);
+
+                                var quantitysub = 0;
+                                var total = 0;
+                                $.each(data.data, function (key, value) {
+                                    quantitysub += value.Quantity;
+                                    total += value.TotalPrice
+                                })
+
+                                $('#quantitysub').text(quantitysub);
+                                $('#total').text(new Intl.NumberFormat().format(total));
+                                $('#totalprice').text(new Intl.NumberFormat().format((total - data.khuyenmai)+data.ship));
+                                $('#khuyenmai').text(new Intl.NumberFormat().format(data.khuyenmai));
+                                $('#ship').text(new Intl.NumberFormat().format(data.ship));
+                            }
+                        }
+                    });
+                    function ChangeIDProduct(id) {
+                        if (id <= 9) {
+                            return '000' + id;
+                        } else if (id <= 99) {
+                            return '00' + id;
+                        } else if (id <= 999) {
+                            return '0' + id;
+                        } else {
+                            return id;
+                        }
+                    }
+                });
+
+
+
+            }
+            $("#btn-edit").on('click', function () {
+
+                window.location.href = "/chinh-sua-tai-khoan/@Model.CustomerID";
+
+            })
+            $("#btnchangepass").on('click', function () {
+                $.ajax({
+                    url: '/Account/ChangePasswork',
+                    type: 'post',
+                    data: {
+                        passold: $("#passold").val(),
+                        passnew: $("#passnew").val(),
+                        ID:@Model.CustomerID
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.code == 200) {
+                            alert("Thành công");
+                            window.location.href = "/tai-khoan/@Model.CustomerID";
+                        } else {
+                            alert("Sai mật khẩu củ");
+                        }
+                    }
+
+                });
+            });
+        })
+
+
+    </script>
+
+}

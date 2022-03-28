@@ -1,0 +1,269 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@section scripts{
+    <script src="~/Assets/Admin/plugins/select2/js/select2.full.min.js"></script>
+    <script src="~/Assets/Admin/plugins/sweetalert2/sweetalert2.js"></script>
+    <script src="~/Assets/Admin/plugins/mustache.min.js"></script>
+    <script src="~/Assets/Admin/dist/js/jquery.twbsPagination.js"></script>
+    <script src="~/Assets/Admin/plugins/jquery-validation/jquery.validate.js"></script>
+    <script src="~/Assets/Admin/plugins/moment/moment.min.js"></script>
+    <link href="~/Assets/Admin/plugins/daterangepicker/daterangepicker.css" rel="stylesheet" />
+    <script src="~/Assets/Admin/plugins/daterangepicker/daterangepicker.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="~/Assets/Admin/dist/js/pages/admin-home-index.js"></script>
+}
+
+
+<!-- Main content -->
+<section class="content">
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-6">
+                <div class="row">
+                    <div class="col-5">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Từ ngày</span>
+                            </div>
+                            <input type="date" class="form-control float-right" id="TuNgay">
+                        </div>
+                    </div>
+                    <div class="col-5">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Đến ngày</span>
+                            </div>
+                            <input type="date" class="form-control float-right" id="DenNgay">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="button" id="btnTiemKiem" class="btn btn-primary"><i class="fas fa-eye"></i>Xem</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-2">
+                <select class="form-control" style="width: 224px; margin-bottom: 14px;" id="chonthoigian">
+                </select>
+            </div>
+            <div class="col-4">
+                <h3 id="ngaychon" style=" font-size: 21px; margin-top: 6px;">(1/12/2021 - 25/12/2021)</h3>
+            </div>
+
+        </div>
+        <!-- Small boxes (Stat box) -->
+        <div class="row">
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-success">
+                    <div class="inner">
+                        <h3 id="DoanhSo">0 VNĐ</h3>
+
+                        <p>DOANH SỐ</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-signal"></i>
+                    </div>
+                    <a href="/admin/statistic" class="small-box-footer">Xem thêm <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-info">
+                    <div class="inner">
+                        <h3 id="DonHang">0</h3>
+
+                        <p>ĐƠN HÀNG</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-shopping-bag"></i>
+                    </div>
+                    <a href="/admin/order" class="small-box-footer">Xem thêm <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            <!-- ./col -->
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-success">
+                    <div class="inner">
+                        <h3 id="Soluong">0</h3>
+
+                        <p>Số lượng bán</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <a href="/admin/order" class="small-box-footer">Xem thêm <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-warning">
+                    <div class="inner">
+                        <h3 id="laigop">0 VNĐ</h3>
+
+                        <p>Lãi gộp</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <a href="/admin/statisticLN" class="small-box-footer">Xem thêm <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            <!-- ./col -->
+        </div>
+        <!-- /.row -->
+        <!-- Main row -->
+        <div class="row">
+            <!-- Left col -->
+            <section class="col-lg-9 connectedSortable">
+                <!-- Custom tabs (Charts with tabs)-->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-chart-pie mr-1"></i>
+                            Biểu đồ doanh số
+                        </h3>
+                        <!-- card tools -->
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-info btn-sm" data-card-widget="collapse" title="Collapse">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                        <!-- /.card-tools -->
+                    </div><!-- /.card-header -->
+                    <div class="card-body">
+                        <div class="tab-content p-0" id="chart_box">
+                            <!-- Morris chart - Sales -->
+                            <canvas id="chartDoanhSo">
+                            </canvas>
+                        </div>
+                    </div><!-- /.card-body -->
+                </div>
+
+                <!-- Custom tabs (Charts with tabs)-->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-chart-pie mr-1"></i>
+                            Biểu đồ số lượng bán
+                        </h3>
+                        <!-- card tools -->
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-info btn-sm" data-card-widget="collapse" title="Collapse">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                        <!-- /.card-tools -->
+                    </div><!-- /.card-header -->
+                    <div class="card-body">
+                        <div class="tab-content p-0" id="chart_boxSoluong">
+                            <!-- Morris chart - Sales -->
+                            <canvas id="chartSoluong">
+                            </canvas>
+                        </div>
+                    </div><!-- /.card-body -->
+                </div>
+            </section>
+            <!-- /.Left col -->
+            <!-- right col (We are only adding the ID to make the widgets sortable)-->
+            <section class="col-lg-3 connectedSortable">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <!-- small box -->
+                        <div class="small-box bg-primary">
+                            <div class="inner">
+                                <h3 id="TongKho">0</h3>
+
+                                <p>TỔNG KHO</p>
+                            </div>
+                            <div class="icon">
+                                <i class="fas fa-shopping-bag"></i>
+                            </div>
+                            <a href="/admin/statistic" class="small-box-footer">Xem thêm<i class="fas fa-arrow-circle-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <!-- small box -->
+                        <div class="small-box bg-success">
+                            <div class="inner">
+                                <h3 id="TonKho">0</h3>
+
+                                <p>TỒN KHO</p>
+                            </div>
+                            <div class="icon">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            <a href="/admin/product" class="small-box-footer">Xem thêm<i class="fas fa-arrow-circle-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <!-- small box -->
+                        <div class="small-box bg-danger">
+                            <div class="inner">
+                                <h3 id="HangHet">0</h3>
+
+                                <p>HÀNG ĐÃ HẾT</p>
+                            </div>
+                            <div class="icon">
+                                <i class="far fa-circle"></i>
+                            </div>
+                            <a href="/admin/product" class="small-box-footer">Xem thêm<i class="fas fa-arrow-circle-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">
+                                    <i class="fas fa-chart-pie mr-1"></i>
+                                    Biểu đồ kho hàng
+                                </h3>
+                                <!-- card tools -->
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-info btn-sm" data-card-widget="collapse" title="Collapse">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                </div>
+                                <!-- /.card-tools -->
+                            </div><!-- /.card-header -->
+                            <div class="card-body">
+                                <div class="tab-content p-0" id="chartPie_box">
+                                    <!-- Morris chart - Sales -->
+                                    <canvas id="chartPie">
+                                    </canvas>
+                                </div>
+                            </div><!-- /.card-body -->
+                        </div>
+                        
+                    </div>
+                </div>
+            </section>
+            <!-- right col -->
+        </div>
+        <!-- /.row (main row) -->
+    </div><!-- /.container-fluid -->
+</section>
+
+
+
+
+
+@section headerBig{
+    Trang chủ
+}
+@section headersmall{
+    Trang chủ
+}
+
+

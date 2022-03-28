@@ -1,0 +1,145 @@
+﻿@model List<PROJECT_WEBSITE.Data.ModelCustom.MOrder>
+@using PROJECT_WEBSITE.Data.DAO;
+@{
+    Layout = null;
+    var Date = ViewData["Ngay"];
+    var nguoilap = ViewData["nguoilap"];
+    var nhanvien = ViewData["nhanvien"];
+    var total = 0;
+    var soluong = 0;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ExportPDFReceipt</title>
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="~/Assets/Admin/plugins/fontawesome-free/css/all.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/Assets/Admin/dist/css/adminlte.min.css">
+    <!-- PagedList-->
+    <link rel="stylesheet" href="~/Assets/Admin/dist/css/PagedList.css">
+    <!-- sweetleart2 -->
+    <link rel="stylesheet" href="~/Assets/Admin/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
+    <!-- Select2 -->
+    <link rel="stylesheet" href="~/Assets/Admin/plugins/select2/css/select2.min.css">
+    <link rel="stylesheet" href="~/Assets/Admin/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+    </style>
+</head>
+<body>
+    <div style="font-size: 22px; font-weight: bold;">
+        CỬA HÀNG CHUỔI THỰC PHẨM TH True Milk
+    </div>
+    <div style="font-size: 22px; font-weight: bold; margin-top: 15px ">
+        SĐT:028 3602 1133 - ĐC:204/16/5 Quốc Lộ 13, P.26, Q.Bình Thạnh, Tp.HCM
+    </div>
+    <center style="margin-top:15px"><h1>THỐNG KÊ DOANH SỐ NHÂN VIÊN: @nhanvien</h1></center>
+
+    <center style="margin-top:15px"><h4>@Date</h4></center>
+
+    <table class="table" width="100%" style="font-size: 20px; margin-top: 15px ">
+        <thead>
+            <tr>
+                <th>STT</th>
+                <th>Mã hóa đơn</th>
+                <th>Mã khách hàng</th>
+                <th>Khách hàng</th>
+                <th>Ngày tạo</th>
+                <th>Số lượng</th>
+                <th>Tổng tiền</th>
+                <th>Người xác nhận</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <th>@item.STT</th>
+                    @GetMaHoaDon(item.OrderID)
+                    @GetMaKH(item.CustomerID.Value)
+                    <td>@item.ShipName</td>
+                    <td>@item.CreateDate</td>
+                    <td style="text-align:right">@item.TotalCount</td>
+                    <td style="text-align:right">@((item.TotalPrice).Value.ToString("N0"))</td>
+                    <td>@item.UserName</td>
+                </tr>
+                total += (int)(item.TotalPrice).Value;
+                soluong += item.TotalCount.Value;
+            }
+        </tbody>
+        <tbody>
+            <tr>
+                <th></th>
+                <th style="text-align:center;font-weight:bold" colspan="3">Tổng cộng</th>
+                <th></th>
+                <th style="text-align:right;font-weight:bold">@soluong</th>
+                <th style="text-align:right;font-weight:bold">@total.ToString("N0") VNĐ </th>
+                <th></th>
+            </tr>
+        </tbody>
+    </table>
+    <div style="font-weight:bold;font-size:20px;margin-top:15px">Bằng chữ: @(new ConvertCurrency().ToUpper((double)total)) </div>
+
+    <div style="text-align: center; width: 150px; width: 370px; margin-left: 68%">
+        <p style="font-style: italic; font-size: 20px">@($"TP.HCM, ngày {DateTime.Now.Day} tháng {DateTime.Now.Month} năm {DateTime.Now.Year}")</p>
+        <p style="font-weight: bold; font-size: 20px; margin-top: -20px">Người lập phiếu</p>
+        <p style="font-style:italic;font-size:-20px;margin-top:-20px">(Ký, họ tên)</p>
+        <p style="margin-top: 50px; font-weight: bold; font-size: 20px">@nguoilap</p>
+    </div>
+</body>
+</html>
+<!-- jQuery -->
+@Scripts.Render("~/Assets/Admin/plugins/jquery/jquery.min.js")
+<!-- Bootstrap 4 -->
+@Scripts.Render("~/Assets/Admin/plugins/bootstrap/js/bootstrap.bundle.min.js")
+
+
+@helper GetMaHoaDon(int id)
+{
+    if (id <= 9)
+    {
+        <td> @($"HD000"+id)</td>
+    }
+    else if (id <= 99)
+    {
+        <td> @($"HD00"+id)</td>
+    }
+    else if (id <= 999)
+    {
+        <td> @($"HD0"+id)</td>
+    }
+    else
+    {
+        <td> @($"HD"+id)</td>
+    }
+}
+
+@helper GetMaKH(int id)
+{
+    if (id <= 9)
+    {
+        <td> @($"KH000"+id)</td>
+    }
+    else if (id <= 99)
+    {
+        <td> @($"KH00"+id)</td>
+    }
+    else if (id <= 999)
+    {
+        <td> @($"KH0"+id)</td>
+    }
+    else
+    {
+        <td> @($"KH"+id)</td>
+    }
+}
+

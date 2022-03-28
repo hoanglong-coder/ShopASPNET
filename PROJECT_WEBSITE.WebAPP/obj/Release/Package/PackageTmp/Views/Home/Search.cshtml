@@ -1,0 +1,32 @@
+﻿@model List<PROJECT_WEBSITE.Data.EF.ProductCategory>
+
+
+<div class="header_account_list search_list">
+    <a href="javascript:void(0)"><i class="ion-ios-search-strong"></i></a>
+    <div class="dropdown_search">
+        @using (Html.BeginForm("SearchPost", "Product"))
+        {
+            <input placeholder="Tìm kiếm sản phẩm..." type="text" name="query" />
+            <div class="search-category">
+                <select class="bootstrap-select" style="height:100%" name="category">
+                    @{
+                        var dm = Model.Where(t => t.ParentID == 0);
+                        foreach (var item in dm)
+                        {
+                            <option value="@item.ProductCategoryID">
+                                @item.Name
+                            </option>
+                        }
+                    }
+                </select>
+            </div>
+            <button id="submit" type="submit"><i class="ion-ios-search-strong"></i></button>
+        }
+    </div>
+</div>
+@section scripts{
+    <script>
+
+    </script>
+
+}

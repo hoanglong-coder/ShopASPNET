@@ -1,0 +1,278 @@
+﻿@model PROJECT_WEBSITE.Data.EF.Customer
+@{
+    ViewBag.Title = "Thanh toán";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var cart = (List<PROJECT_WEBSITE.WebAPP.Models.CartItem>)ViewBag.Cart;
+    var lst = (List<PROJECT_WEBSITE.WebAPP.Models.MDiscountCode>)ViewBag.KhuyenMai;
+    decimal totalprice = 0;
+    decimal totalOld = 0;
+
+    var address1 = (string)Model.Address;
+
+    int flag = 0;
+
+    string[] address = new string[10];
+
+    if (!string.IsNullOrEmpty(address1))
+    {
+        address = address1.Split(',');
+        flag = 1;
+    }
+}
+
+<!-- Breadcrumb Area start -->
+<section class="breadcrumb-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="breadcrumb-content">
+                    <h1 class="breadcrumb-hrading">Thông tin đơn hàng</h1>
+                    <ul class="breadcrumb-links">
+                        <li><a href="index.html">Trang chủ</a></li>
+                        <li>Đơn hàng</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Breadcrumb Area End -->
+<!-- checkout area start -->
+<div class="checkout-area mt-60px mb-40px">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-7">
+                <div class="billing-info-wrap">
+                    <h3>Chi tiết đơn hàng</h3>
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6">
+                            <div class="billing-info mb-20px">
+                                <label>Họ tên</label>
+                                <input type="text" id="txtName" value="@Model.Name" />
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6">
+                            <div class="billing-info mb-20px">
+                                <label>Số điện thoại</label>
+                                <input type="text" id="txtNumber" value="@Model.Phone" />
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="billing-info mb-20px">
+                                <label>Email</label>
+                                <input type="email" id="txtEmailShip" value="@Model.Email" />
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="mb-20px">
+                                <button class="btn btn-primary" id="getaddress" style="background-color: #4fb68b;">Lấy địa chỉ của khách hàng</button>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="mb-20px">
+                                <label>Tỉnh/Thành phố</label>
+                                <select class="form-control" id="tinh">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="mb-20px">
+                                <label>Quận/huyện</label>
+                                <select class="form-control" id="quan">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="mb-20px">
+                                <label>Xã/Phường</label>
+                                <select class="form-control" id="xa">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6">
+                            <div class="billing-info mb-20px">
+                                <label>Số nhà, tên đường</label>
+                                <input type="text" id="txtAddress" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="additional-info-wrap">
+                        <h4>Thông tin thêm</h4>
+                        <div class="additional-info">
+                            <label>Ghi chú</label>
+                            <textarea id="txtdescription" name="message"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div class="your-order-area">
+                    <h3>Tóm tắt đơn hàng</h3>
+                    <div class="your-order-wrap gray-bg-4">
+                        <div class="your-order-product-info">
+                            <div class="your-order-top">
+                                <ul>
+                                    <li>Sản phẩm</li>
+                                    <li>Tổng tiền</li>
+                                </ul>
+                            </div>
+                            <div class="your-order-middle">
+                                <ul>
+                                    @{
+                                        foreach (var item in cart)
+                                        {
+                                            decimal price = new decimal();
+                                            if (item.Quantity < 10)
+                                            {
+                                                if (item.Product.PricePromotion.HasValue)
+                                                {
+                                                    price = item.Product.PricePromotion.Value;
+                                                }
+                                                else
+                                                {
+                                                    price = item.Product.PriceOut.Value;
+
+                                                }
+                                            }
+                                            else
+                                            {
+                                                if (item.Product.PricewholesalePromotion.HasValue)
+                                                {
+                                                    price = item.Product.PricewholesalePromotion.Value;
+                                                }
+                                                else
+                                                {
+                                                    price = item.Product.Pricewholesale.Value;
+
+                                                }
+                                            }
+                                            <li>@GetName(item.Product.Name, item.Quantity) <span class="order-price">@((price * item.Quantity).ToString("N0") + "₫") </span></li>
+
+                                            totalprice += price * item.Quantity;
+
+                                            totalOld += price * item.Quantity;
+
+                                        }
+                                        if (lst != null)
+                                        {
+                                            if (lst.Count() != 0)
+                                            {
+                                                foreach (var m in lst)
+                                                {
+                                                    if (m.Percent.HasValue)
+                                                    {
+                                                        totalprice = totalprice - (totalprice * (decimal)((double)m.Percent.Value / 100));
+                                                    }
+                                                    else
+                                                    {
+                                                        totalprice = totalprice - m.Total.Value;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+
+
+                                </ul>
+                            </div>
+                            <div class="your-order-bottom">
+                                @{
+                                    if (lst != null)
+                                    {
+                                        if (lst.Count() != 0)
+                                        {
+                                            <ul>
+                                                <li class="your-order-shipping">Mã Khuyến Mãi</li>
+                                                <li>-@((totalOld - totalprice).ToString("N0") + "₫")</li>
+                                            </ul>
+                                        }
+
+                                    }
+                                }
+                                <ul>
+                                    <li class="your-order-shipping">Phí giao hàng</li>
+                                    @{
+                                        var t = 0;
+                                        if (totalprice < 300000)
+                                        {
+                                            <li>25,000đ</li>
+                                            t = 25000;
+                                        }
+                                        else
+                                        {
+                                            <li>0đ</li>
+                                        }
+                                    }
+                                </ul>
+                            </div>
+                            <div class="total-shipping" style="border-top: 1px solid #dee0e4; margin: 18px 0 -24px; padding: 17px 0 19px ">
+                                <h5 style=" font-size: 16px; color: #253237; font-weight: 600">Phương thức thanh toán</h5>
+                                <div class="form-check mt-3">
+                                    <input class="form-check-input" type="radio" name="Payment" id="onlinepay" value="1">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <label class="form-check-label" for="onlinepay">
+                                                Thanh toán online qua VNPAY
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="Payment" id="codpay" value="0" checked>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <label class="form-check-label" for="codpay">
+                                                Thanh toán khi nhận hàng
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="your-order-total">
+                                <ul>
+                                    <li class="order-total">Thành tiền</li>
+                                    <li>@(((totalprice) + t).ToString("N0"))đ</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="Place-order mt-25">
+                        <a class="btn-hover" id="btnSuccess">Đặt hàng</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- checkout area end -->
+@helper GetName(string name, int quantity)
+{
+    string rs = "";
+    if (name.Length > 35)
+    {
+        rs = name.Substring(0, 15) + "...";
+        <span class="order-middle-left" title="@name">@rs X @quantity</span>
+    }
+    else
+    {
+        rs = name;
+        <span class="order-middle-left" title="@name">@rs X @quantity</span>
+    }
+}
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $("#getaddress").off('click').on('click', function () {
+                if (@flag == 1) {
+                    $('#tinh').val(@address[6]).change();
+                    $('#quan').val(@address[5]).change();
+                    $('#xa').val(@address[4]).change();
+                    $('#txtAddress').val("@address[0]");
+                }
+            })
+
+        })
+    </script>
+    <script src="~/Assets/Client/js/Address.js"></script>
+}

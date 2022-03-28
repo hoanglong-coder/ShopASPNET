@@ -1,0 +1,151 @@
+﻿@model List<PROJECT_WEBSITE.Data.ModelCustom.MThongKeHangHoaChitiet>
+@using PROJECT_WEBSITE.Data.DAO;
+@{
+    Layout = null;
+    var Date = ViewData["Ngay"];
+    var nguoilap = ViewData["nguoilap"];
+    var nhanvien = ViewData["nhanvien"];
+    var total = 0;
+    var soluong = 0;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ExportPDFReceipt</title>
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="~/Assets/Admin/plugins/fontawesome-free/css/all.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/Assets/Admin/dist/css/adminlte.min.css">
+    <!-- PagedList-->
+    <link rel="stylesheet" href="~/Assets/Admin/dist/css/PagedList.css">
+    <!-- sweetleart2 -->
+    <link rel="stylesheet" href="~/Assets/Admin/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
+    <!-- Select2 -->
+    <link rel="stylesheet" href="~/Assets/Admin/plugins/select2/css/select2.min.css">
+    <link rel="stylesheet" href="~/Assets/Admin/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+    </style>
+</head>
+<body>
+    <div style="font-size: 22px; font-weight: bold;">
+        CỬA HÀNG CHUỔI THỰC PHẨM TH True Milk
+    </div>
+    <div style="font-size: 22px; font-weight: bold; margin-top: 15px ">
+        SĐT:028 3602 1133 - ĐC:204/16/5 Quốc Lộ 13, P.26, Q.Bình Thạnh, Tp.HCM
+    </div>
+    <center style="margin-top:15px"><h1>THỐNG KÊ DOANH SỐ SẢN PHẨM CHI TIẾT</h1></center>
+
+    <center style="margin-top:10px"><h4>@nhanvien</h4></center>
+
+    <center style="margin-top:10px"><h4>@Date</h4></center>
+
+    <table class="table" width="100%" style="font-size: 20px; margin-top: 15px ">
+        <thead>
+            <tr>
+                <th>STT</th>
+                <th>Mã hóa đơn</th>
+                <th>Ngày bán</th>
+                <th>Mã sản phẩm</th>
+                <th>Tên sản phẩm</th>
+                <th>ĐVT</th>
+                <th>SL</th>
+                <th>Đơn giá</th>
+                <th>Thành tiền</th>
+                <th>Người xác nhận</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+            <tr>
+                <th>@item.STT</th>
+                @GetMaHoaDon(item.OrderID)
+                <td>@item.CreateDate</td>
+                <td>@item.ProductIDDisplay</td>
+                <td>@item.ProductName</td>
+                <td>@item.DVT</td>
+                <td style="text-align:right">@item.SoLuong</td>
+                <td style="text-align:right">@item.DonGia.Value.ToString("N0")</td>
+                <td style="text-align:right">@((item.ThanhTien).Value.ToString("N0"))</td>
+                <td>@item.NguoiBan</td>
+            </tr>
+                total += (int)(item.ThanhTien).Value;
+                soluong += item.SoLuong;
+            }
+        </tbody>
+        <tbody>
+            <tr>
+                <th></th>
+                <th style="text-align:center;font-weight:bold" colspan="6">Tổng cộng</th>
+                <th style="text-align:right;font-weight:bold">@soluong</th>
+                <th></th>
+                <th style="text-align:right;font-weight:bold">@total.ToString("N0") VNĐ </th>
+                <th></th>
+            </tr>
+        </tbody>
+    </table>
+    <div style="font-weight:bold;font-size:20px;margin-top:15px">Bằng chữ: @(new ConvertCurrency().ToUpper((double)total)) </div>
+
+    <div style="text-align: center; width: 150px; width: 370px; margin-left: 68%">
+        <p style="font-style: italic; font-size: 20px">@($"TP.HCM, ngày {DateTime.Now.Day} tháng {DateTime.Now.Month} năm {DateTime.Now.Year}")</p>
+        <p style="font-weight: bold; font-size: 20px; margin-top: -20px">Người lập phiếu</p>
+        <p style="font-style:italic;font-size:-20px;margin-top:-20px">(Ký, họ tên)</p>
+        <p style="margin-top: 50px; font-weight: bold; font-size: 20px">@nguoilap</p>
+    </div>
+</body>
+</html>
+<!-- jQuery -->
+@Scripts.Render("~/Assets/Admin/plugins/jquery/jquery.min.js")
+<!-- Bootstrap 4 -->
+@Scripts.Render("~/Assets/Admin/plugins/bootstrap/js/bootstrap.bundle.min.js")
+
+
+@helper GetMaHoaDon(int id)
+{
+    if (id <= 9)
+    {
+        <td> @($"HD000"+id)</td>
+    }
+    else if (id <= 99)
+    {
+        <td> @($"HD00"+id)</td>
+    }
+    else if (id <= 999)
+    {
+        <td> @($"HD0"+id)</td>
+    }
+    else
+    {
+        <td> @($"HD"+id)</td>
+    }
+}
+
+@helper GetMaSP(int id,string kytu)
+{
+    if (id <= 9)
+    {
+        <td> @($"SP{kytu}000"+id)</td>
+    }
+    else if (id <= 99)
+    {
+        <td> @($"SP{kytu}00"+id)</td>
+    }
+    else if (id <= 999)
+    {
+        <td> @($"SP{kytu}0"+id)</td>
+    }
+    else
+    {
+        <td> @($"SP{kytu}" +id)</td>
+    }
+}
+

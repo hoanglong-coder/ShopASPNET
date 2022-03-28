@@ -1,0 +1,146 @@
+﻿@model List<PROJECT_WEBSITE.Data.EF.News>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var link = "";
+    var lstnewCateogry = (List<PROJECT_WEBSITE.Data.EF.CategoryNew>)ViewBag.lstnew;
+}
+
+<!-- Breadcrumb Area start -->
+<section class="breadcrumb-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="breadcrumb-content">
+                    <h1 class="breadcrumb-hrading">Tin tức</h1>
+                    <ul class="breadcrumb-links">
+                        <li><a href="index.html">Trang chủ</a></li>
+                        <li>Tin tức</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Breadcrumb Area End -->
+<!-- Shop Category Area End -->
+<div class="shop-category-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-9 order-lg-last col-md-12 order-md-first">
+                @foreach (var item in Model)
+                {
+                    <div class="row mt-50">
+                        <div class="col-lg-5 col-md-6">
+                            <div class="single-blog-post blog-grid-post">
+                                <div class="blog-post-media">
+                                    <div class="blog-gallery">
+                                        <div class="gallery-item">
+                                            <a href="/tin-tuc-chi-tiet/@item.NewsID"><img src="@item.Image" alt="blog" /></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-7 col-md-6 align-self-center align-items-center">
+                            <div class="blog-post-content-inner">
+                                <h4 class="blog-title"><a href="/tin-tuc-chi-tiet/@item.NewsID">@item.Name</a></h4>
+                                <ul class="blog-page-meta">
+                                    <li>
+                                        <a href="/tin-tuc-chi-tiet/@item.NewsID"><i class="ion-person"></i> @item.User.FullName</a>
+                                    </li>
+                                    <li>
+                                        <a href="/tin-tuc-chi-tiet/@item.NewsID"><i class="ion-calendar"></i> @item.CreateDate.Value.Date.Date</a>
+                                    </li>
+                                </ul>
+                                <a class="read-more-btn" href="/tin-tuc-chi-tiet/@item.NewsID"> Đọc thêm <i class="ion-android-arrow-dropright-circle"></i></a>
+                            </div>
+                        </div>
+                        <!-- single blog post -->
+                    </div>
+                }
+                <!--Phân trang-->
+                @if (ViewBag.TotalPage > 1)
+                {
+                    var pageDisplay = (int)ViewBag.MaxPage;
+                    int totalPage = (int)ViewBag.TotalPage;
+                    int currentPage = (int)ViewBag.Page;
+
+                    var startPageIndex = Math.Max(1, currentPage - pageDisplay / 2);
+                    var endPageIndex = Math.Min(totalPage, currentPage + pageDisplay / 2);
+
+                    <!--  Pagination Area Start -->
+                    <div class="pro-pagination-style text-center">
+                        <ul>
+                            @if (currentPage > ViewBag.Firts)
+                            {
+                                <li><a href="@link?page=@ViewBag.Firts" title="Trang đầu" class="first"><i class=" ion-ios-arrow-thin-left"></i></a></li>
+                                <li>
+                                    <a class="prev" href="@link?page=@ViewBag.Prev" title="Trang trước"><i class="ion-ios-arrow-left"></i></a>
+                                </li>
+                            }
+                            @for (int i = startPageIndex; i <= endPageIndex; i++)
+                            {
+                                if (currentPage == i)
+                                {
+                                    <li><a class="active" title="Trang @i" href="@link?page=@i">@i</a></li>
+                                }
+                                else
+                                {
+                                    <li><a title="Trang @i" href="@link?page=@i">@i</a></li>
+                                }
+                            }
+                            @if (currentPage < totalPage)
+                            {
+                                <li>
+                                    <a class="next" href="@link?page=@ViewBag.Next" title="Trang sau"><i class="ion-ios-arrow-right"></i></a>
+                                </li>
+                                <li> <a href="@link?page=@ViewBag.Last" class="last" title="Trang cuối"><i class="ion-ios-arrow-thin-right"></i></a></li>
+                            }
+                        </ul>
+                    </div>
+                    <!--  Pagination Area End -->
+                }
+            </div>
+            <!-- Sidebar Area Start -->
+            <div class="col-lg-3 order-lg-first col-md-12 order-md-last mb-res-md-60px mb-res-sm-60px">
+                <div class="left-sidebar">
+                    <!-- Sidebar single item -->
+                    <div class="sidebar-widget">
+                        <div class="main-heading">
+                            <h2>Tìm kiếm</h2>
+                        </div>
+                        <div class="search-widget">
+                            @if (Model.Count != 0)
+                            {
+                                using (Html.BeginForm("SearchNews", "News"))
+                                {
+                                    <input placeholder="Nhập tiêu đề tin tức..." type="text" name="query" />
+                                    <input hidden value="@Model.FirstOrDefault().CategoryNewID" name="id" />
+                                    <button type="submit"><i class="ion-ios-search-strong"></i></button>
+                                }
+                            }
+                        </div>
+                    </div>
+                    <!-- Sidebar single item -->
+                    <!-- Sidebar single item -->
+                    <div class="sidebar-widget mt-40">
+                        <div class="main-heading">
+                            <h2>Loại tin tức</h2>
+                        </div>
+                        <div class="category-post">
+                            <ul>
+                                @foreach (var item in lstnewCateogry)
+                                {
+                                    <li><a href="/tin-tuc/@item.CategoryNewID">@item.Name</a></li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Sidebar Area End -->
+        </div>
+    </div>
+</div>
+

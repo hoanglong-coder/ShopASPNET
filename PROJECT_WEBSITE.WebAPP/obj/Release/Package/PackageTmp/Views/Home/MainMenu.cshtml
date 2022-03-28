@@ -1,0 +1,44 @@
+﻿@model List<PROJECT_WEBSITE.Data.EF.ProductCategory>
+@{ 
+
+    var lstnewCateogry = (List<PROJECT_WEBSITE.Data.EF.CategoryNew>)ViewBag.lstnew;
+}
+
+<li class="menu-dropdown">
+    <a href="/">Trang chủ @*<i class="ion-ios-arrow-down"></i>*@</a>
+</li>
+<li class="menu-dropdown">
+    <a href="#">Sản phẩm <i class="ion-ios-arrow-down"></i></a>
+    <ul class="sub-menu" style="min-width: 270px;">
+        @{
+            var dm = Model.Where(t => t.ParentID == 0);
+            foreach (var item in dm)
+            {
+                var subdm = Model.Where(t => t.ParentID == item.ProductCategoryID);
+                <li class="menu-dropdown position-static">
+                    <a href="/san-pham/@item.MetaTitle-@item.ProductCategoryID">@item.Name<i class="ion-ios-arrow-down"></i></a>
+                    <ul class="sub-menu sub-menu-2">
+                        @foreach (var item1 in subdm)
+                        {
+                            <li><a href="/san-pham/@item1.MetaTitle-@item1.ProductCategoryID">@item1.Name</a></li>
+                        }
+                    </ul>
+                </li>
+            }
+        }
+    </ul>
+</li>
+<li class="menu-dropdown">
+    <a href="#">Tin tức <i class="ion-ios-arrow-down"></i></a>
+    <ul class="sub-menu">
+        @foreach (var item in lstnewCateogry)
+        {
+            <li class="menu-dropdown position-static">
+                <a href="/tin-tuc/@item.CategoryNewID">@item.Name<i class="ion-ios-arrow-down"></i></a>
+            </li>
+
+        }
+    </ul>
+</li>
+<li><a href="@Url.Action("Index","GioiThieu")">Giới thiệu</a></li>
+

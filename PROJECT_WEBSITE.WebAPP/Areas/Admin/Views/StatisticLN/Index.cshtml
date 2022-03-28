@@ -1,0 +1,568 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@section scripts{
+    <script src="~/Assets/Admin/plugins/select2/js/select2.full.min.js"></script>
+    <script src="~/Assets/Admin/plugins/sweetalert2/sweetalert2.js"></script>
+    <script src="~/Assets/Admin/plugins/mustache.min.js"></script>
+    <script src="~/Assets/Admin/dist/js/jquery.twbsPagination.js"></script>
+    <script src="~/Assets/Admin/plugins/jquery-validation/jquery.validate.js"></script>
+    <script src="~/Assets/Admin/plugins/moment/moment.min.js"></script>
+    <link href="~/Assets/Admin/plugins/daterangepicker/daterangepicker.css" rel="stylesheet" />
+    <script src="~/Assets/Admin/plugins/daterangepicker/daterangepicker.js"></script>
+    <script src="~/Assets/Admin/dist/js/pages/admin-statisticLN-index.js"></script>
+
+}
+<div class="row">
+    <div class="col-12">
+        <div class="card card-default card-primary">
+            <div class="card-header">
+                <h3 class="card-title">LỢI NHUẬN BÁN HÀNG</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <div class="card card-primary card-tabs">
+                    <div class="card-header p-0 pt-1">
+                        <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-QLSP" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">Theo ngày</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="custom-tabs-one-profile-tab" data-toggle="pill" href="#custom-tabs-one-QLDonViTinh" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Khách hàng</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="custom-tabs-one-settings-tab" data-toggle="pill" href="#custom-tabs-one-PhieuQuyDoi" role="tab" aria-controls="custom-tabs-one-settings" aria-selected="false">Báo cáo lãi lỗ</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body">
+                        <div class="tab-content" id="custom-tabs-one-tabContent">
+                            <div class="tab-pane fade show active" id="custom-tabs-one-QLSP" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
+                                <div class="list">
+                                    <!--header Table-->
+                                    <div class="row mb-3">
+                                        <div class="col-3 col-md-3">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">Từ ngày</span>
+                                                </div>
+                                                <input type="date" class="form-control float-right" id="TuNgayThongKeThang">
+                                            </div>
+                                        </div>
+                                        <div class="col-3 col-md-3">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">Đến ngày</span>
+                                                </div>
+                                                <input type="date" class="form-control float-right" id="DenNgaThongKeThangy">
+                                            </div>
+                                        </div>
+                                        <div class="col-6 col-md-1">
+                                            <button type="button" id="btnTiemKiemTheoNgay" class="btn btn-primary"><i class="fas fa-search"></i>Xem</button>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-primary"><i class="fas fa-arrow-down"></i>Xuất DS</button>
+                                                <button type="button" class="btn btn-primary dropdown-toggle dropdown-icon" data-toggle="dropdown">
+                                                    <span class="sr-only">Toggle Dropdown</span>
+                                                </button>
+                                                <div class="dropdown-menu" role="menu">
+                                                    <a id="ExportPDFOrderDSNgay" class="dropdown-item"><i class="fas fa-file-pdf"></i>Xuất PDF danh sách</a>
+                                                    <a id="ExportExcelOrderDSNgay" class="dropdown-item"><i class="far fa-file-excel"></i>Xuất Excel danh sách</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--Table-->
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <table class="table table-bordered table-hover" id="tbl-data">
+                                                <thead class="thead-light">
+                                                    <tr>
+                                                        <th>Xem</th>
+                                                        <th>STT</th>
+                                                        <th>Ngày</th>
+                                                        <th>Tiền hàng</th>
+                                                        <th>Doanh thu</th>
+                                                        <th>Vốn</th>
+                                                        <th>Lãi gộp</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td colspan="3" style="font-weight:bold;text-align:center">Tổng cộng:</td>
+                                                        <td style="text-align:right;font-weight:bold" id="TienHang">3</td>
+                                                        <td style="text-align:right;font-weight:bold" id="DoanhThu">3</td>
+                                                        <td style="text-align:right;font-weight:bold" id="Von">3</td>
+                                                        <td style="text-align:right;font-weight:bold" id="Laigop">3</td>
+                                                    </tr>
+                                                </tbody>
+                                                <tbody id="tbtheothang">
+                                                </tbody>
+                                            </table>
+                                            <ul id="paginationtheothang" class="pagination"></ul>
+                                            <script id="data-templatetheothang" type="x-tmpl-mustache">
+                                            <tr>
+                                                <td><a class="shownoidung" data-date="{{Date}}"><i class="fas fa-eye"></i></a></td>
+                                                <td>{{STT}}</td>
+                                                <td>{{Date}}</td>
+                                                <td style="text-align:right;">{{TienHang}}</td>
+                                                <td style="text-align:right;">{{DoanhThu}}</td>
+                                                <td style="text-align:right;">{{Von}}</td>
+                                                <td style="text-align:right;">{{LaiGop}}</td>
+                                            </tr>
+                                            </script>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="list" style="display:none">
+                                    <div class="row mb-3">
+                                        <div class="col-1">
+                                            <button class="btn btn-primary shownoidung"><i class="fas fa-long-arrow-alt-left"></i>&nbsp; Thoát</button>
+                                        </div>
+                                        <div class="col-1">
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-primary"><i class="fas fa-arrow-down"></i>Xuất DS</button>
+                                                <button type="button" class="btn btn-primary dropdown-toggle dropdown-icon" data-toggle="dropdown">
+                                                    <span class="sr-only">Toggle Dropdown</span>
+                                                </button>
+                                                <div class="dropdown-menu" role="menu">
+                                                    <a id="ExportPDFOrderNgay" class="dropdown-item"><i class="fas fa-file-pdf"></i>Xuất PDF danh sách</a>
+                                                    <a id="ExportExcelOrderNgay" class="dropdown-item"><i class="far fa-file-excel"></i>Xuất Excel danh sách</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-5">
+                                            <h3 id="DoanhSoNgay"></h3>
+                                        </div>
+                                    </div>
+                                    <!--Table-->
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <table class="table table-bordered table-hover" id="tbl-data">
+                                                <thead class="thead-light">
+                                                    <tr>
+                                                        <th>Xem</th>
+                                                        <th>STT</th>
+                                                        <th>Mã đơn hàng</th>
+                                                        <th>Ngày tạo</th>
+                                                        <th>Khách hàng</th>
+                                                        <th>Tiền hàng</th>
+                                                        <th>Doanh thu</th>
+                                                        <th>Vốn</th>
+                                                        <th>Lãi gộp</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="group">
+                                                    <tr>
+                                                        <th colspan="5" style="font-weight:bold;text-align:center">Tổng cộng:</th>
+                                                        <th style="font-weight:bold;text-align:right" id="TienHangOrderNgay"></th>
+                                                        <th style="font-weight: bold; text-align: right" id="DoanhThuOrderNgay"></th>
+                                                        <th style="font-weight: bold; text-align: right" id="VonOrderNgay"></th>
+                                                        <th style="font-weight: bold; text-align: right" id="LaiOrderNgay"></th>
+                                                    </tr>
+                                                </tbody>
+                                                <tbody id="tbOrderNgay">
+                                                </tbody>
+                                            </table>
+                                            <ul id="paginationOrderNgay" class="pagination"></ul>
+                                            <script id="data-templateOrderNgay" type="x-tmpl-mustache">
+                                            <tr>
+                                                <td><a class="modalshowsub" data-id="{{ID}}" data-status={{st}} data-ghichu="{{Ghichu}}" data-createdate="{{CREATEDATE}}" data-username="{{UserName}}" data-customername="{{Name}}" data-phone="{{Phone}}" data-address="{{Address}}" data-email="{{Email}}" data-toggle="tooltip" data-placement="top" title="Xem chi tiết phiếu"><i class="fas fa-eye"></i></a></td>
+                                                <td>{{STT}}</td>
+                                                <td>{{DisplayID}}</td>
+                                                 <td>{{CREATEDATE}}</td>
+                                                <td>{{Name}}</td>
+                                                <td  style=" text-align: right">{{TienHang}}</td>
+                                                <td  style=" text-align: right">{{DoanhThu}}</td>
+                                                <td  style=" text-align: right">{{Von}}</td>
+                                                <td  style=" text-align: right">{{LaiGop}}</td>
+                                            </tr>
+                                            </script>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="custom-tabs-one-QLDonViTinh" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab">
+                                <div class="list3">
+                                    <!--header Table-->
+                                    <div class="row mb-3">
+                                        <div class="col-3 col-md-3">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">Từ ngày</span>
+                                                </div>
+                                                <input type="date" class="form-control float-right" id="TuNgayThongKeKhachhang">
+                                            </div>
+                                        </div>
+                                        <div class="col-3 col-md-3">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">Đến ngày</span>
+                                                </div>
+                                                <input type="date" class="form-control float-right" id="DenNgaThongKeKhachhang">
+                                            </div>
+                                        </div>
+                                        <div class="col-6 col-md-1">
+                                            <button type="button" id="btnTiemKiemTheoKhachhang" class="btn btn-primary"><i class="fas fa-search"></i>Xem</button>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-primary"><i class="fas fa-arrow-down"></i>Xuất DS</button>
+                                                <button type="button" class="btn btn-primary dropdown-toggle dropdown-icon" data-toggle="dropdown">
+                                                    <span class="sr-only">Toggle Dropdown</span>
+                                                </button>
+                                                <div class="dropdown-menu" role="menu">
+                                                    <a id="ExportPDFOrderDSKhachhang" class="dropdown-item"><i class="fas fa-file-pdf"></i>Xuất PDF danh sách</a>
+                                                    <a id="ExportExcelOrderDSKhachhang" class="dropdown-item"><i class="far fa-file-excel"></i>Xuất Excel danh sách</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--Table-->
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <table class="table table-bordered table-hover" id="tbl-data">
+                                                <thead class="thead-light">
+                                                    <tr>
+                                                        <th>Xem</th>
+                                                        <th>STT</th>
+                                                        <th>Mã Khách hàng</th>
+                                                        <th>Khách hàng</th>
+                                                        <th>Tiền hàng</th>
+                                                        <th>Doanh Thu</th>
+                                                        <th>Vốn</th>
+                                                        <th>Lãi gộp</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td colspan="4" style="font-weight:bold;text-align:center">Tổng cộng:</td>
+                                                        <td style="text-align:right;font-weight:bold" id="TienHangTheokhachhang">3</td>
+                                                        <td style="text-align:right;font-weight:bold" id="DoanhThuTheokhachhang">3</td>
+                                                        <td style="text-align:right;font-weight:bold" id="VonTheokhachhang">3</td>
+                                                        <td style="text-align:right;font-weight:bold" id="LaiTheokhachhang">3</td>
+                                                    </tr>
+                                                </tbody>
+                                                <tbody id="tbtheoKhachhang">
+                                                </tbody>
+                                            </table>
+                                            <ul id="paginationtheoKhachhang" class="pagination"></ul>
+                                            <script id="data-templatetheoKhachhang" type="x-tmpl-mustache">
+                                            <tr>
+                                                <td><a class="shownoidungkhachhang" data-id="{{CustomerID}}" data-name="{{CustomerName}}"><i class="fas fa-eye"></i></a></td>
+                                                <td>{{STT}}</td>
+                                                <td>{{CustomerIDDisplay}}</td>
+                                                <td>{{CustomerName}}</td>
+                                                <td style="text-align:right;">{{TienHang}}</td>
+                                                <td style="text-align:right;">{{DoanhThu}}</td>
+                                                <td style="text-align:right;">{{Von}}</td>
+                                                <td style="text-align:right;">{{Lai}}</td>
+                                            </tr>
+                                            </script>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="list3" style="display:none">
+                                    <div class="row mb-3">
+                                        <div class="col-1">
+                                            <button class="btn btn-primary shownoidungkhachhang"><i class="fas fa-long-arrow-alt-left"></i>&nbsp; Thoát</button>
+                                        </div>
+                                        <div class="col-1">
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-primary"><i class="fas fa-arrow-down"></i>Xuất DS</button>
+                                                <button type="button" class="btn btn-primary dropdown-toggle dropdown-icon" data-toggle="dropdown">
+                                                    <span class="sr-only">Toggle Dropdown</span>
+                                                </button>
+                                                <div class="dropdown-menu" role="menu">
+                                                    <a id="ExportPDFOrderKhachHang" class="dropdown-item"><i class="fas fa-file-pdf"></i>Xuất PDF danh sách</a>
+                                                    <a id="ExportExcelOrderKhachHang" class="dropdown-item"><i class="far fa-file-excel"></i>Xuất Excel danh sách</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-5">
+                                            <h3 id="DoanhSoKhachHang"></h3>
+                                        </div>
+                                    </div>
+                                    <!--Table-->
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <table class="table table-bordered table-hover" id="tbl-data">
+                                                <thead class="thead-light">
+                                                    <tr>
+                                                        <th>Xem</th>
+                                                        <th>STT</th>
+                                                        <th>Mã đơn hàng</th>
+                                                        <th>Ngày tạo</th>
+                                                        <th>Mã Khách hàng</th>
+                                                        <th>Khách hàng</th>
+                                                        <th>Tiền hàng</th>
+                                                        <th>Doanh thu</th>
+                                                        <th>Vốn</th>
+                                                        <th>Lãi gộp</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="group">
+                                                    <tr>
+                                                        <th colspan="6" style="font-weight:bold;text-align:center">Tổng cộng:</th>
+                                                        <th style="font-weight:bold;text-align:right" id="TienHangKhachHang"></th>
+                                                        <th style="font-weight: bold; text-align: right" id="DoanhThuKhachHang"></th>
+                                                        <th style="font-weight: bold; text-align: right" id="VonKhachHang"></th>
+                                                        <th style="font-weight: bold; text-align: right" id="LaiKhachHang"></th>
+                                                    </tr>
+                                                </tbody>
+                                                <tbody id="tbOrderkhachhangdetail">
+                                                </tbody>
+                                            </table>
+                                            <ul id="paginationOrderkhachhangDetail" class="pagination"></ul>
+                                            <script id="data-templateOrderKhachhangDetail" type="x-tmpl-mustache">
+                                            <tr>
+                                                <td><a class="modalshowsub" data-id="{{ID}}" data-status={{st}} data-ghichu="{{Ghichu}}" data-createdate="{{CREATEDATE}}" data-username="{{UserName}}" data-customername="{{Name}}" data-phone="{{Phone}}" data-address="{{Address}}" data-email="{{Email}}" data-toggle="tooltip" data-placement="top" title="Xem chi tiết phiếu"><i class="fas fa-eye"></i></a></td>
+                                                <td>{{STT}}</td>
+                                                <td>{{DisplayID}}</td>
+                                                <td>{{CREATEDATE}}</td>
+                                                <td>{{NameID}}</td>
+                                                <td>{{Name}}</td>
+                                                <td  style=" text-align: right">{{Tienhang}}</td>
+                                                <td  style=" text-align: right">{{Doanhthu}}</td>
+                                                <td  style=" text-align: right">{{Von}}</td>
+                                                <td  style=" text-align: right">{{Laigop}}</td>
+                                            </tr>
+                                            </script>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="custom-tabs-one-PhieuQuyDoi" role="tabpanel" aria-labelledby="custom-tabs-one-settings-tab">
+
+                                <!--Table-->
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <!--header Table-->
+                                        <div class="row mb-3">
+                                            <div class="col-3 col-md-3">
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">Từ ngày</span>
+                                                    </div>
+                                                    <input type="date" class="form-control float-right" id="TuNgayThongKeBaoCao">
+                                                </div>
+                                            </div>
+                                            <div class="col-3 col-md-3">
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">Đến ngày</span>
+                                                    </div>
+                                                    <input type="date" class="form-control float-right" id="DenNgayThongKeBaoCao">
+                                                </div>
+                                            </div>
+                                            <div class="col-6 col-md-1">
+                                                <button type="button" id="btnTiemKiemTheoBaoCao" class="btn btn-primary"><i class="fas fa-search"></i>Xem</button>
+                                            </div>
+                                            <div class="col-md-1">
+                                                <button type="button" id="ExportExcelBaoCao" class="btn btn-primary"><i class="far fa-file-excel"></i>Xuất Excel</button>
+                                            </div>
+                                        </div>
+                                        <table class="table table-bordered table-hover" id="tbl-data">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th>Hạng mục</th>
+                                                    <th id="KyTruocBaoCao" >Kỳ trước</th>
+                                                    <th id="KySauBaoCao" >Kỳ báo cáo</th>
+                                                    <th>Thay đổi</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tbtheobaocao">
+                                            </tbody>
+                                        </table>
+                                        <script id="data-templatebaocao" type="x-tmpl-mustache">
+                                            <tr>
+                                                <th>{{DoanhSoBanHang}}</th>
+                                                {{{KyTruocDoanhSoBanHang}}}
+                                                {{{KyBaoCaoDoanhSoBanHang}}}
+                                                {{{ThaydoiDoanhSoBanHang}}}
+                                            </tr>
+                                            <tr>
+                                                <th>{{GiamGia}}</th>
+                                                {{{KyTruocGiamGia}}}
+                                                {{{KyBaoCaoGiamGia}}}
+                                                {{{ThaydoiGiamGia}}}
+                                            </tr>
+                                            <tr>
+                                                <th>{{PhiVanChuyen}}</th>
+                                                {{{KyTruocPhiVanChuyen}}}
+                                                {{{KyBaoCaoPhiVanChuyen}}}
+                                                {{{ThaydoiPhiVanChuyen}}}
+                                            </tr>
+                                             <tr>
+                                                <th>{{DoanhThu}}</th>
+                                                {{{KyTruocDoanhThu}}}
+                                                {{{KyBaoCaoDoanhThu}}}
+                                                {{{ThaydoiDoanhThu}}}
+                                            </tr>
+                                            <tr>
+                                                <th>{{VonHangHoa}}</th>
+                                                {{{KyTruocVonHangHoa}}}
+                                                {{{KyBaoCaoVonHangHoa}}}
+                                                {{{ThaydoiVonHangHoa}}}
+                                            </tr>
+                                            <tr>
+                                                <th>{{LaiGop}}</th>
+                                                {{{KyTruocLaiGop}}}
+                                                {{{KyBaoCaoLaiGop}}}
+                                                {{{ThaydoiLaigop}}}
+                                            </tr>
+                                            <tr>
+                                                <th>{{TienGiamChiaDoanhThu}}</th>
+                                                {{{KyTruocTienGiamChiaDoanhThu}}}
+                                                {{{KyBaoCaoTienGiamChiaDoanhThu}}}
+                                                {{{ThaydoiTienGiamChiaDoanhThu}}}
+                                            </tr>
+                                            <tr>
+                                                <th>{{LaiGopChiaDoanhThu}}</th>
+                                                {{{KyTruocTienGiamChiaLaiGop}}}
+                                                {{{KyBaoCaoTienGiamChiaLaiGop}}}
+                                                {{{ThaydoiLaiGopChiaDoanhThu}}}
+                                            </tr>
+                                        </script>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.card -->
+                </div>
+            </div>
+            <!-- /.card-body -->
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="suborderdetail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 1350px!important;" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Chi tiết đơn hàng</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <label for="inputEmail3" class="col-2 col-form-label">Mã đơn hàng</label>
+                    <div class="col-4">
+                        <input type="text" class="form-control" id="OrderID" readonly>
+                    </div>
+                    <label for="inputEmail3" class="col-2 col-form-label">Ngày tạo</label>
+                    <div class="col-4">
+                        <input type="text" class="form-control" id="OrderCreateDate" readonly>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputEmail3" class="col-2 col-form-label">Người xác nhận</label>
+                    <div class="col-4">
+                        <input type="text" class="form-control" id="OrderUserName" readonly>
+                    </div>
+                    <label for="inputEmail3" class="col-2 col-form-label">Người nhận hàng</label>
+                    <div class="col-4">
+                        <input type="text" class="form-control" id="OrderCustomerName" readonly>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputEmail3" class="col-2 col-form-label">Số điện thoại</label>
+                    <div class="col-4">
+                        <input type="text" class="form-control" id="OrderPhone" readonly>
+                    </div>
+                    <label for="inputEmail3" class="col-2 col-form-label">Email</label>
+                    <div class="col-4">
+                        <input type="text" class="form-control" id="OrderEmail" readonly>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputEmail3" class="col-sm-2 col-form-label">Địa chỉ</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="OrderDiaChi" readonly>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputEmail3" class="col-sm-2 col-form-label">Ghi chú</label>
+                    <div class="col-sm-10">
+                        <textarea type="text" class="form-control" id="OrderGhichu" readonly></textarea>
+                    </div>
+                </div>
+                <div style="height:310px;width:100%;overflow-y:scroll">
+                    <table class="table table-bordered table-hover" id="tbl-data">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>STT</th>
+                                <th>Mã sản phẩm</th>
+                                <th>Tên sản phẩm</th>
+                                <th>ĐVT</th>
+                                <th>Số lượng</th>
+                                <th>Đơn giá</th>
+                                <th>Thành tiền</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbOrderDetail">
+                        </tbody>
+                        <tbody>
+                            <tr>
+                                <th colspan="4" style="text-align:center">Tổng tiền hàng:</th>
+                                <th style="text-align:right" id="TongSoLuong"></th>
+                                <th></th>
+                                <th style="text-align:right" id="TongTienHang"></th>
+                            </tr>
+                            <tr>
+                                <th colspan="4" style="text-align:center">Khuyễn mãi:</th>
+                                <th colspan="2"></th>
+                                <th style="text-align:right" id="KhuyenMai"></th>
+                            </tr>
+                            <tr>
+                                <th colspan="4" style="text-align:center">Tiền ship:</th>
+                                <th colspan="2"></th>
+                                <th style="text-align:right" id="TienShip"></th>
+                            </tr>
+                            <tr>
+                                <th colspan="4" style="text-align:center">Tổng cộng:</th>
+                                <th colspan="2"></th>
+                                <th style="text-align:right" id="TongTienTatCa"></th>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <script id="data-tbOrderDetail" type="x-tmpl-mustache">
+                            <tr>
+                                <td>{{STT}}</td>
+                                <td>{{ID}}</td>
+                                <td>{{Name}}</td>
+                                <td>{{DVT}}</td>
+                                <td style="text-align:right">{{Quantity}}</td>
+                                <td style="text-align:right">{{Price}}</td>
+                                <td style="text-align:right">{{{Totalprice}}}</td>
+                            </tr>
+                            </tr>
+                    </script>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Thoát</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section headerBig{
+    Lợi nhuận
+}
+
+@section headersmall{
+    Lợi nhuận
+}
+

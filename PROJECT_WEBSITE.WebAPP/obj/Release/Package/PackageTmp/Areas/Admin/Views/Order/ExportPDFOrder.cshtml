@@ -1,0 +1,148 @@
+﻿@model List<PROJECT_WEBSITE.WebAPP.Areas.Admin.Models.OrderDetailModel>
+@using PROJECT_WEBSITE.Data.DAO;
+@{
+    Layout = null;
+
+    var MaHD = ViewData["MaHD"];
+    var CreateDate = ViewData["CreateDate"];
+    var ShipName = ViewData["ShipName"];
+    var ShipAddress = (string)ViewData["ShipAddress"];
+    var ShipPhone = ViewData["ShipPhone"];
+    var UserName = ViewData["UserName"];
+    var PriceShip = (decimal)ViewData["PriceShip"];
+    var TotalPrice = (decimal)ViewData["TotalPrice"];
+    var PriceDiscount = (decimal)ViewData["PriceDiscount"];
+
+    var dem = 1;
+    var total = 0;
+    var soluong = 0;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Demo</title>
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="~/Assets/Admin/plugins/fontawesome-free/css/all.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/Assets/Admin/dist/css/adminlte.min.css">
+    <!-- PagedList-->
+    <link rel="stylesheet" href="~/Assets/Admin/dist/css/PagedList.css">
+    <!-- sweetleart2 -->
+    <link rel="stylesheet" href="~/Assets/Admin/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
+    <!-- Select2 -->
+    <link rel="stylesheet" href="~/Assets/Admin/plugins/select2/css/select2.min.css">
+    <link rel="stylesheet" href="~/Assets/Admin/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+    </style>
+</head>
+<body>
+    @DateTime.Now
+    <div style="font-size: 22px; font-weight: bold;">
+        CỬA HÀNG CHUỔI THỰC PHẨM TH True Milk
+    </div>
+    <div style="font-size: 22px; font-weight: bold; margin-top: 15px ">
+        SĐT:028 3602 1133 - ĐC:204/16/5 Quốc Lộ 13, P.26, Q.Bình Thạnh, Tp.HCM
+    </div>
+    <center style="margin-top:15px"><h1>Hóa đơn bán hàng</h1></center>
+    <div class="row mt-5">
+        <div class="col-6" style="font-size: 20px; font-weight: bold; margin-top: 15px ">
+            Mã hóa đơn:@MaHD
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-6" style="font-size: 20px; font-weight: bold; margin-top: 15px ">
+            Ngày: @CreateDate
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-6" style="font-size: 20px; font-weight: bold; margin-top: 15px ">
+            Khách hàng: @ShipName
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-6" style="font-size: 20px; font-weight: bold; margin-top: 15px ">
+            ĐT: @ShipPhone - ĐC: @ShipAddress.Replace('+', ',').Trim(',')
+        </div>
+    </div>
+    <table class="table" width="100%" style="font-size: 20px; margin-top: 15px ">
+        <thead>
+            <tr>
+                <th>STT</th>
+                <th>Tên sản phẩm</th>
+                <th>ĐVT</th>
+                <th>Số lượng</th>
+                <th>Đơn giá</th>
+                <th>Thành tiền</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <th>@dem</th>
+                    <td>@item.Product.Name</td>
+                    <td>@item.DVT</td>
+                    <td style="text-align:right">@item.Quantity</td>
+                    <td style="text-align:right">@item.Price.ToString("N0")</td>
+                    <td style="text-align:right">@item.TotalPrice.ToString("N0")</td>
+                </tr>
+                total += (int)item.TotalPrice;
+                soluong += item.Quantity;
+                dem++;
+            }
+        </tbody>
+        <tbody>
+            <tr>
+                <th></th>
+                <th style="text-align:center;font-weight:bold">Tổng cộng</th>
+                <th></th>
+                <th style="text-align:right;font-weight:bold">@soluong</th>
+                <th></th>
+                <th style="text-align:right;font-weight:bold">@TotalPrice.ToString("N0") </th>
+            </tr>
+        </tbody>
+    </table>
+    <table style="font-size: 20px; margin-top: 15px; float: right; border: none; ">
+        <thead>
+            <tr>
+                <th style="text-align: left; border: none; ">Tổng tiền hàng:</th>
+                <th style="text-align: right; border: none;">@total.ToString("N0")</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th style="text-align: left; border: none;">Khuyến mãi:</th>
+                <th style="text-align: right; border: none;">-@PriceDiscount.ToString("N0")</th>
+            </tr>
+            <tr>
+                <th style="text-align: left; border: none;">Tiền ship:</th>
+                <th style="text-align: right; border: none;">@PriceShip.ToString("N0")</th>
+            </tr>
+            <tr>
+                <th style="text-align: left; border: none;">Tổng cộng:</th>
+                <th style="text-align: right; border: none;">@(((TotalPrice- PriceDiscount) + PriceShip).ToString("N0")) VNĐ</th>
+            </tr>
+        </tbody>
+    </table>
+    <div style="font-weight:bold;font-size:20px;margin-top:180px">Bằng chữ: @(new ConvertCurrency().ToUpper((double)((TotalPrice - PriceDiscount) + PriceShip))) </div>
+    <div style="text-align:center;width:370px;margin-left:68%">
+        <p style="font-style: italic; font-size: 20px">@($"TP.HCM, ngày {DateTime.Now.Day} tháng {DateTime.Now.Month} năm {DateTime.Now.Year}")</p>
+        <p style="font-weight: bold; font-size: 20px; margin-top: -20px">Người lập phiếu</p>
+        <p style="font-style:italic;font-size:20px;margin-top:-20px">(Ký, họ tên)</p>
+        <p style="margin-top: 50px; font-weight: bold; font-size: 20px">@UserName</p>
+    </div>
+</body>
+</html>
+<!-- jQuery -->
+@Scripts.Render("~/Assets/Admin/plugins/jquery/jquery.min.js")
+<!-- Bootstrap 4 -->
+@Scripts.Render("~/Assets/Admin/plugins/bootstrap/js/bootstrap.bundle.min.js")

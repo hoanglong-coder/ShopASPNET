@@ -1,0 +1,1738 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@section scripts{
+    <script src="~/Assets/Admin/plugins/select2/js/select2.full.min.js"></script>
+    <script src="~/Assets/Admin/plugins/sweetalert2/sweetalert2.js"></script>
+    <script src="~/Assets/Admin/plugins/mustache.min.js"></script>
+    <script src="~/Assets/Admin/dist/js/jquery.twbsPagination.js"></script>
+    <script src="~/Assets/Admin/plugins/jquery-validation/jquery.validate.js"></script>
+    <script src="~/Assets/Admin/plugins/moment/moment.min.js"></script>
+    <link href="~/Assets/Admin/plugins/daterangepicker/daterangepicker.css" rel="stylesheet" />
+    <script src="~/Assets/Admin/plugins/daterangepicker/daterangepicker.js"></script>
+
+    <script src="~/Assets/Admin/dist/js/pages/admin-product-index.js"></script>
+    <script src="~/Assets/Admin/dist/js/pages/admin-product-unit-index.js"></script>
+    <script src="~/Assets/Admin/dist/js/pages/admin-product-category-index.js"></script>
+    <script src="~/Assets/Admin/dist/js/pages/admin-product-exchangeunit-index.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            $(".ProductDVT").select2({
+                theme: 'bootstrap4'
+            });
+            $(".select2").select2({
+                theme: 'bootstrap4'
+            });
+        })
+        $('#reservationtime').daterangepicker({
+            timePicker: true,
+            timePickerIncrement: 30,
+            locale: {
+                format: 'DD/MM/YYYY hh:mm A'
+            }
+        })
+        /*Search Gía*/
+        $('.PriceSearch').keyup(function (event) {
+
+            // skip for arrow keys
+            if (event.which >= 37 && event.which <= 40) return;
+
+            // format number
+            $(this).val(function (index, value) {
+                return value
+                    .replace(/[^0-9]/g, "")
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+                    ;
+            });
+        });
+
+        /*Thêm sản phẩm*/
+        $('#PriceOutProduct').keyup(function (event) {
+
+            // skip for arrow keys
+            if (event.which >= 37 && event.which <= 40) return;
+
+            // format number
+            $(this).val(function (index, value) {
+                return value
+                    .replace(/[^0-9]/g, "")
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+                    ;
+            });
+        });
+        $('#PricewholesaleProduct').keyup(function (event) {
+
+            // skip for arrow keys
+            if (event.which >= 37 && event.which <= 40) return;
+
+            // format number
+            $(this).val(function (index, value) {
+                return value
+                    .replace(/[^0-9]/g, "")
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+                    ;
+            });
+        });
+
+        $('#PriceOutProductDVT').keyup(function (event) {
+
+            // skip for arrow keys
+            if (event.which >= 37 && event.which <= 40) return;
+
+            // format number
+            $(this).val(function (index, value) {
+                return value
+                    .replace(/[^0-9]/g, "")
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+                    ;
+            });
+        });
+        $('#PricewholesaleProductDVT').keyup(function (event) {
+
+            // skip for arrow keys
+            if (event.which >= 37 && event.which <= 40) return;
+
+            // format number
+            $(this).val(function (index, value) {
+                return value
+                    .replace(/[^0-9]/g, "")
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+                    ;
+            });
+        });
+
+        /*Sửa sản phẩm*/
+        $('#PriceOutProductUpdate').keyup(function (event) {
+
+            // skip for arrow keys
+            if (event.which >= 37 && event.which <= 40) return;
+
+            // format number
+            $(this).val(function (index, value) {
+                return value
+                    .replace(/[^0-9]/g, "")
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+                    ;
+            });
+        });
+        $('#PricewholesaleProductUpdate').keyup(function (event) {
+
+            // skip for arrow keys
+            if (event.which >= 37 && event.which <= 40) return;
+
+            // format number
+            $(this).val(function (index, value) {
+                return value
+                    .replace(/[^0-9]/g, "")
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+                    ;
+            });
+        });
+
+        $('#PriceOutProductDVTUpdate').keyup(function (event) {
+
+            // skip for arrow keys
+            if (event.which >= 37 && event.which <= 40) return;
+
+            // format number
+            $(this).val(function (index, value) {
+                return value
+                    .replace(/[^0-9]/g, "")
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+                    ;
+            });
+        });
+        $('#PricewholesaleProductDVTUpdate').keyup(function (event) {
+
+            // skip for arrow keys
+            if (event.which >= 37 && event.which <= 40) return;
+
+            // format number
+            $(this).val(function (index, value) {
+                return value
+                    .replace(/[^0-9]/g, "")
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+                    ;
+            });
+        });
+
+    </script>
+}
+<div class="row">
+    <div class="col-12">
+        <div class="card card-default card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Quản lý sản phẩm</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <div class="card card-primary card-tabs">
+                    <div class="card-header p-0 pt-1">
+                        <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-QLSP" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">Danh sách sản phẩm</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="custom-tabs-one-profile-tab" data-toggle="pill" href="#custom-tabs-one-QLDonViTinh" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Quản lý đơn vị tính</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="custom-tabs-one-messages-tab" data-toggle="pill" href="#custom-tabs-one-LoaiSanPham" role="tab" aria-controls="custom-tabs-one-messages" aria-selected="false">Quản lý loại sản phẩm</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="custom-tabs-one-settings-tab" data-toggle="pill" href="#custom-tabs-one-PhieuQuyDoi" role="tab" aria-controls="custom-tabs-one-settings" aria-selected="false">Phiếu quy đổi đơn vị tính</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body">
+                        <div class="tab-content" id="custom-tabs-one-tabContent">
+                            <div class="tab-pane fade show active" id="custom-tabs-one-QLSP" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
+                                .<!--header Table-->
+                                <div class="row mb-3">
+                                    <div class="col-2">
+                                        <div class="input-group">
+                                            <input type="search" id="search-querysearch" class="form-control" placeholder="Nhập tên sản phẩm, mả sản phẩm" />
+                                        </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="input-group">
+                                            <select class="form-control ml-3" id="search-TinhTrang">
+                                                <option value="" selected>Tình trạng sản phẩm</option>
+                                                <option value="true">Đang bán</option>
+                                                <option value="false">Dừng/Chưa bán</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="input-group">
+                                            <select class="form-control ml-3 select2" id="search-productcategory">
+                                                <option value="" selected>Chọn loại sản phẩm</option>
+
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-1">
+                                        <button id="BtnSearchProduct" class="btn btn-primary"><i class="fas fa-search"></i>Tìm kiếm</button>
+                                    </div>
+                                    <div class="col-2">
+                                        <button id="btnSearchNangCao" class="btn btn-primary"><i class="fas fa-arrow-down"></i>Tìm kiếm nâng cao</button>
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-primary" id="CreateSanPham"><i class="fas fa-plus"></i>Thêm sản phẩm</button>
+                                            <button type="button" class="btn btn-primary dropdown-toggle dropdown-icon" data-toggle="dropdown">
+                                                <span class="sr-only">Toggle Dropdown</span>
+                                            </button>
+                                            <div class="dropdown-menu" role="menu">
+                                                <a class="dropdown-item" id="CreateSanPhamDVT" href="#"><i class="fas fa-plus"></i>Thêm hàng hóa khác đơn vị tính</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3" id="SearchNangCao" style="display:none">
+                                    <div class="col-2">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">Giá lẻ từ</span>
+                                            </div>
+                                            <input type="text" class="form-control float-right PriceSearch" id="GiaLeTu">
+                                        </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">Giá lẻ đến</span>
+                                            </div>
+                                            <input type="text" class="form-control float-right PriceSearch" id="GiaLeDen">
+                                        </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">Giá sỉ từ</span>
+                                            </div>
+                                            <input type="text" class="form-control float-right PriceSearch" id="GiaSiTu">
+                                        </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">Giá sỉ đến</span>
+                                            </div>
+                                            <input type="text" class="form-control float-right PriceSearch" id="GiaSiDen">
+                                        </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="input-group">
+                                            <select class="form-control ml-3" id="search-SoLuong">
+                                                <option value="" selected>Số lượng</option>
+                                                <option value="true">Còn hàng</option>
+                                                <option value="false">Hết hàng</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="input-group">
+                                            <select class="form-control ml-3 select2" style="border-radius:unset" id="search-productUnit">
+                                                <option value="" selected>Đơn vị tính</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Table-->
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <table class="table table-bordered table-hover" id="tbl-data">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th>STT</th>
+                                                    <th>Mã sản phẩm</th>
+                                                    <th>Tên sản phẩm</th>
+                                                    <th>ĐVT</th>
+                                                    <th>SL tồn</th>
+                                                    <th>Giá bán lẻ</th>
+                                                    <th>Giá bán lẻ <i class="fas fa-arrow-down"></i></th>
+                                                    <th>Giá bán sỉ</th>
+                                                    <th>Giá bán sỉ <i class="fas fa-arrow-down"></i></th>
+                                                    <th>Nhà cung cấp</th>
+                                                    <th>Loại sản phẩm</th>
+                                                    <th>#</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td colspan="3" style="font-weight:bold">Tổng kho:</td>
+                                                    <td colspan="2" style="text-align:right;font-weight:bold" id="TongKho">3</td>
+                                                </tr>
+                                            </tbody>
+                                            <tbody id="tbProduct">
+                                            </tbody>
+                                        </table>
+                                        <ul id="paginationproduct" class="pagination"></ul>
+                                        <script id="data-templateProduct" type="x-tmpl-mustache">
+                                            <tr>
+                                                <td>{{STT}}</td>
+                                                <td>{{ProductID}}</td>
+                                                <td>{{ProductName}}</td>
+                                                <td>{{UnitName}}<i data-id="{{ID}}" style="margin-left:10px" class="{{IconQuyDoi}}" data-toggle="tooltip" data-placement="top" title="Quy đổi đơn vị tính"></i></td>
+                                                <td style="text-align: right;">{{Count}}</td>
+                                                <td style="text-align: right;">{{PriceOutput}}</td>
+                                                <td style="text-align: right;">{{PricePromotion}}</td>
+                                                <td style="text-align: right;">{{Pricewholesale}}</td>
+                                                <td style="text-align: right;">{{PricewholesalePromotion}}</td>
+                                                <td>{{SupplierName}}</td>
+                                                <td>{{CategoryName}}</td>
+                                                <th>
+                                                    <a class="modalshowEdit" data-id="{{ID}}" data-unitid={{Unit}} data-toggle="tooltip" data-placement="top" title="Sửa sản phẩm"><i class="far fa-edit"></i></a>
+                                                    <a class="actiondisplayProduct" data-id="{{ID}}" style="margin-left:5px" data-toggle="tooltip" data-placement="top" title="Dừng/Bán sản phẩm"><i class="{{DisplayProduct}}"></i></a>
+                                                    <a class="actiondeleteProduct" data-id="{{ID}}" data-name="{{ProductName}}" style="margin-left:5px"data-toggle="tooltip" data-placement="top" title="Xóa sản phẩm"><i class="far fa-trash-alt"></i></a>
+                                                </th>
+                                            </tr>
+                                        </script>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="custom-tabs-one-QLDonViTinh" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab">
+                                <!--header Table-->
+                                <div class="row mb-3">
+                                    <div class="col-4">
+                                        <div class="input-group">
+                                            <input type="search" id="search-queryUnit" class="form-control" placeholder="Nhập tên, mã đơn vị tính" />
+                                            <select class="form-control ml-3" id="search-SelectUnit">
+                                                <option value="" selected>Chọn loại đơn vị tính</option>
+                                                <option value="true">Đơn vị tính cơ bản</option>
+                                                <option value="false">Đơn vị tính nâng cao</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">Giá trị</span>
+                                            </div>
+                                            <input type="number" class="form-control float-right PriceSearch" min="1" id="search-giatri">
+                                        </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <button class="btn btn-primary" id="btnsearchUnit"><i class="fas fa-search"></i>Tìm kiếm</button>
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-primary" id="CreateUnit"><i class="fas fa-plus"></i>Thêm đơn vị tính</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Table-->
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <table class="table table-bordered table-hover" id="tbl-data">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th>STT</th>
+                                                    <th>Mã đơn vị tính</th>
+                                                    <th>Tên đơn vị tính</th>
+                                                    <th>Giá trị quy đổi</th>
+                                                    <th>#</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tbProductUnit">
+                                            </tbody>
+                                        </table>
+                                        <ul id="paginationproductUnit" class="pagination"></ul>
+                                        <script id="data-templateProductUnit" type="x-tmpl-mustache">
+                                            <tr>
+                                                <td>{{STT}}</td>
+                                                <td>{{UnitID}}</td>
+                                                <td>{{Name}}</td>
+                                                <td>{{ValueUnit}}</td>
+                                                <th>
+                                                    <a class="modalshowEditUnit" data-iddisplay="{{UnitID}}" data-id={{ID}}><i class="far fa-edit"></i></a>
+                                                    <a class="actiondeleteUnit" data-id="{{ID}}"  data-value="{{ValueUnit}}" data-name ="{{Name}}" style="margin-left:5px"><i class="far fa-trash-alt"></i></a>
+                                                </th>
+                                            </tr>
+                                        </script>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="tab-pane fade" id="custom-tabs-one-LoaiSanPham" role="tabpanel" aria-labelledby="custom-tabs-one-messages-tab">
+                                <!--header Table-->
+                                <div class="row mb-3">
+                                    <div class="col-6 col-md-3">
+                                        <div class="input-group">
+                                            <input type="search" id="search-querycategory" class="form-control" placeholder="Nhập tên, mã loại" />
+                                        </div>
+                                    </div>
+                                    <div class="col-3 col-md-3">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">Từ ngày</span>
+                                            </div>
+                                            <input type="date" class="form-control float-right" id="TuNgayCategoryProduct">
+                                        </div>
+                                    </div>
+                                    <div class="col-3 col-md-3">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">Đến ngày</span>
+                                            </div>
+                                            <input type="date" class="form-control float-right" id="DenNgayCategoryProduct">
+                                        </div>
+                                    </div>
+                                    <div class="col-6 col-md-1">
+                                        <button type="button" id="btnTiemKiemCategory" class="btn btn-primary"><i class="fas fa-search"></i>Tìm kiếm</button>
+                                    </div>
+                                    <div class="col-6 col-md-2">
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-primary" id="CreateCategoryBase"><i class="fas fa-plus"></i>Thêm loại sản phẩm</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Table-->
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <table class="table table-bordered table-hover" id="tbl-data">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th></th>
+                                                    <th>STT</th>
+                                                    <th>Mã loại sản phẩm</th>
+                                                    <th>Tên loại sản phẩm</th>
+                                                    <th>Giá trị hiển thị</th>
+                                                    <th>Ngày tạo</th>
+                                                    <th>SL sản phẩm</th>
+                                                    <th>#</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="Group">
+                                                <tr>
+                                                    <td colspan="7" style="text-align:right;font-weight:bold" id="TongSoLuong"></td>
+                                                </tr>
+                                            </tbody>
+                                            <tbody id="tbcategory">
+                                            </tbody>
+                                        </table>
+                                        <ul id="paginationcategory" class="pagination"></ul>
+                                        <script id="data-templatecategory" type="x-tmpl-mustache">
+                                            <tr>
+                                                <td><a class="modalshowcategory" data-id="{{ProductCategoryID}}"><i class="fas fa-plus-circle"></i></a></td>
+                                                <td>{{STT}}</td>
+                                                <td>{{ProductCategoryIDDisplay}}</td>
+                                                <td>{{Name}}</td>
+                                                <td style="text-align:right;">{{Display}}</td>
+                                                <td>{{CreateDate}}</td>
+                                                <td style="text-align:right;">{{CountCategory}}</td>
+                                                <th>
+                                                    <a class="modalshowEditcCategory" data-id={{ProductCategoryID}}><i class="far fa-edit"></i></a>
+                                                    <a class="actiondeleteCateogry1" data-id="{{ProductCategoryID}}" data-name="{{Name}}" style="margin-left:5px"><i class="far fa-trash-alt"></i></a>
+                                                </th>
+                                            </tr>
+                                        </script>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="custom-tabs-one-PhieuQuyDoi" role="tabpanel" aria-labelledby="custom-tabs-one-settings-tab">
+                                <!--header Table-->
+                                <div class="row mb-3">
+                                    <div class="col-6 col-md-3">
+                                        <div class="input-group">
+                                            <input type="search" id="search-queryexchangeunit" class="form-control" placeholder="Nhập tên, mã phiếu quy đổi" />
+                                        </div>
+                                    </div>
+                                    <div class="col-3 col-md-2">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">Từ ngày</span>
+                                            </div>
+                                            <input type="date" class="form-control float-right" id="TuNgayexchangeunit">
+                                        </div>
+                                    </div>
+                                    <div class="col-3 col-md-2">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">Đến ngày</span>
+                                            </div>
+                                            <input type="date" class="form-control float-right" id="DenNgayexchangeunit">
+                                        </div>
+                                    </div>
+                                    <div class="col-6 col-md-1">
+                                        <button type="button" id="btnTiemKiemexchangeunit" class="btn btn-primary"><i class="fas fa-search"></i>Tìm kiếm</button>
+                                    </div>
+                                    <div class="col-6 col-md-3">
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-primary"><i class="fas fa-arrow-down"></i>Xuất DS</button>
+                                            <button type="button" class="btn btn-primary dropdown-toggle dropdown-icon" data-toggle="dropdown">
+                                                <span class="sr-only">Toggle Dropdown</span>
+                                            </button>
+                                            <div class="dropdown-menu" role="menu">
+                                                <a id="ExportPDFExchange" class="dropdown-item"><i class="fas fa-file-pdf"></i>Xuất PDF danh sách</a>
+                                                <a id="ExportExcelExchange" class="dropdown-item"><i class="far fa-file-excel"></i>Xuất Excel danh sách</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Table-->
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <table class="table table-bordered table-hover" id="tbl-data">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th>STT</th>
+                                                    <th>Mã phiếu quy đổi</th>
+                                                    <th>Ngày tạo</th>
+                                                    <th>Tên hàng quy đổi(vào)</th>
+                                                    <th>Tên hàng quy đổi(ra)</th>
+                                                    <th>Kết quả quy đổi</th>
+                                                    <th>Người lập</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tbExchangeUnit">
+                                            </tbody>
+                                        </table>
+                                        <ul id="paginationExchangeUnit" class="pagination"></ul>
+                                        <script id="data-templateExchangeUnit" type="x-tmpl-mustache">
+                                            <tr>
+                                                <td>{{STT}}</td>
+                                                <td>{{ExchangeUnitIDDisplay}}</td>
+                                                <td>{{Createdate}}</td>
+                                                <td>{{ProductNameIn}}</td>
+                                                <td>{{ProductNameOut}}</td>
+                                                <td>{{Result}}</td>
+                                                <td>{{UserName}}</td>
+                                            </tr>
+                                        </script>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.card -->
+                </div>
+            </div>
+            <!-- /.card-body -->
+        </div>
+    </div>
+</div>
+
+<!-- Modal Thêm sản phẩm -->
+<div class="modal fade" id="ModalCreateSP" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 880px!important" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #01A65B;color:white">
+                <h5>THÊM SẢN PHẨM</h5>
+            </div>
+            <div class="modal-body">
+                <div class="card card-primary card-tabs">
+                    <div class="card-header p-0 pt-1">
+                        <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-ThemSP" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">Thêm sản phẩm</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="custom-tabs-one-profile-tab" data-toggle="pill" href="#custom-tabs-one-ThemCTSP" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Chi tiết sản phẩm</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body">
+                        <div class="tab-content" id="custom-tabs-one-tabContent">
+                            <div class="tab-pane fade show active" id="custom-tabs-one-ThemSP" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
+                                <!-- form start -->
+                                <form class="form-horizontal" id="FromCreateProduct" method="post">
+                                    <div class="card-body">
+                                        <div class="form-group row">
+                                            <label for="inputEmail3" class="col-sm-2 col-form-label">Tên sản phẩm*</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" class="form-control" id="NameProduct" placeholder="Nhập tên sản phẩm" required>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="inputPassword3" class="col-sm-2 col-form-label">Đơn vị tính*</label>
+                                            <div class="col-sm-10">
+                                                <select class="form-control" id="UnitProduct" style="width: 100%;" required>
+                                                    <option selected="selected">Chọn đơn vị tính</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="inputPassword3" class="col-sm-2 col-form-label">Giá bán lẻ*</label>
+                                            <div class="col-sm-4">
+                                                <div class="input-group mb-3">
+                                                    <input type="text" class="form-control" id="PriceOutProduct" min="1000" required>
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-text">VNĐ</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <label for="inputPassword3" class="col-sm-2 col-form-label">Giá bán sỉ*</label>
+                                            <div class="col-sm-4">
+                                                <div class="input-group mb-3">
+                                                    <input type="text" class="form-control" id="PricewholesaleProduct" min="1000" required>
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-text">VNĐ</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="inputPassword3" class="col-sm-2 col-form-label">Hình ảnh</label>
+                                            <div class="col-sm-6">
+                                                <div class="input-group mb-3">
+                                                    <input type="text" class="form-control rounded-0" id="ImageProduct">
+                                                    <div class="input-group-append">
+                                                        <button type="button" class="btn btn-info btn-info" id="ImageProductChoose">Chọn ảnh đại diện!</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <button class="btn btn-default" style="width:100%" id="ImageMoreProductChoose"><i class="far fa-images"></i>Chọn nhiều hình ảnh</button>
+                                            </div>
+
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="inputPassword3" class="col-sm-2 col-form-label">Loại sản phẩm*</label>
+                                            <div class="col-sm-10">
+                                                <select class="form-control select2" id="productcategory" style="width: 100%;" required>
+                                                    <option selected="selected">Chọn loại sản phẩm</option>
+                                                </select>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-4"><img id="ImageShowProduct" width="200" /><div><label style="margin-left:51px">ảnh đại diện</label></div></div>
+                                        <div class="col-8">
+                                            <div class="row" id="ImageList">
+                                                <div id="ImageList">
+
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- /.card-body -->
+                                    <div class="card-footer">
+                                        <button class="btn btn-default float-right" style="margin-right:10px" data-dismiss="modal">Thoát</button>
+                                        <button type="submit" class="btn btn-info float-right" style="margin-right:10px">Lưu</button>
+                                    </div>
+                                    <!-- /.card-footer -->
+                                </form>
+                            </div>
+                            <div class="tab-pane fade" id="custom-tabs-one-ThemCTSP" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab">
+                                <div class="card-body">
+                                    <div class="form-group row">
+                                        <label for="inputEmail3" class="col-sm-2 col-form-label">Thương hiệu</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="TradeMarkProduct" placeholder="Nhập thương hiệu sản phẩm sản phẩm">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="inputPassword3" class="col-sm-2 col-form-label">Xuất xứ thương hiệu</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="TradeOriginProduct" placeholder="Nhập xuất sứ thương hiệu">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="inputPassword3" class="col-sm-2 col-form-label">Nơi sản xuất</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="ProductionProduct" placeholder="Nhập nơi sản xuất">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="inputPassword3" class="col-sm-2 col-form-label">Thành phần</label>
+                                        <div class="col-sm-10">
+                                            <textarea class="form-control" id="IngredientProduct" placeholder="Nhập thành phần sản phẩm"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="inputPassword3" class="col-sm-2 col-form-label">Hạn sử dụng</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="ExpiryProduct" placeholder="Nhập hạn sử dụng">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="inputPassword3" class="col-sm-2 col-form-label">Hướng dẩn sử dụng</label>
+                                        <div class="col-sm-10">
+                                            <textarea class="form-control" id="UserManualProduct" placeholder="Nhập hướng dẩn sử dụng"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="inputPassword3" class="col-sm-2 col-form-label">Hướng dẩn bảo quản</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="CareInstructionsProduct" placeholder="Nhập hướng dẩn bảo quản">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="inputPassword3" class="col-sm-2 col-form-label">Quy cách đóng gói</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="PackingProduct" placeholder="Nhập quy cách đóng gói">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="inputPassword3" class="col-sm-2 col-form-label">Chi tiết sản phẩm</label>
+                                        <div class="col-sm-10">
+                                            <textarea class="form-control" id="DiscriptionProduct" rows="5" placeholder="Nhập chi tiết sản phẩm"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- /.card-body -->
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.card -->
+                </div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Thêm cùng sản phẩm khác đơn vị tính -->
+<div class="modal fade" id="ModalCreateSPDVT" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 880px!important" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #d0f14a; color: black">
+                <h5>THÊM SẢN PHẨM ĐƠN VỊ TÍNH</h5>
+            </div>
+            <div class="modal-body">
+                <!-- form start -->
+                <form class="form-horizontal" id="FromCreateProductUnit" method="post">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-2 col-form-label">ĐVT cơ bản*</label>
+                            <div class="col-sm-10">
+                                <select class="form-control select2" id="ProductDVT" style="width: 100%;" required>
+                                    <option selected="selected">Chọn sản phẩm có đơn vị tính cơ bản</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword3" class="col-sm-2 col-form-label">Tên sản phẩm*</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="NameProductDVT" placeholder="Nhập tên sản phẩm" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword3" class="col-sm-2 col-form-label">ĐVT mới*</label>
+                            <div class="col-sm-4">
+                                <select class="form-control select2" id="UnitProductDVT" style="width: 100%;" required>
+                                    <option selected="selected">Chọn đơn vị tính</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword3" class="col-sm-2 col-form-label">Giá bán lẻ*</label>
+                            <div class="col-sm-4">
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control" id="PriceOutProductDVT" required min="1000">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">VNĐ</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <label for="inputPassword3" class="col-sm-2 col-form-label">Giá bán sỉ*</label>
+                            <div class="col-sm-4">
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control" id="PricewholesaleProductDVT" required min="=1000">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">VNĐ</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword3" class="col-sm-2 col-form-label">Hình ảnh</label>
+                            <div class="col-sm-6">
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control rounded-0" id="ImageProductDVT">
+                                    <div class="input-group-append">
+                                        <button type="button" class="btn btn-info btn-info" id="ImageProductChooseDVT">Chọn ảnh đại diện!</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <button class="btn btn-default" style="width:100%" id="ImageMoreProductDVTChoose"><i class="far fa-images"></i>Chọn nhiều hình ảnh</button>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4"><img id="ImageShowProductDVT" width="200" /><div><label style="margin-left:51px">ảnh đại diện</label></div></div>
+                        <div class="col-8">
+                            <div class="row" id="ImageListDVT">
+                                <div id="ImageListDVT">
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer">
+                        <button class="btn btn-default float-right" style="margin-right:10px" data-dismiss="modal">Thoát</button>
+                        <button type="submit" class="btn btn-info float-right" style="margin-right:10px">Lưu</button>
+                    </div>
+                    <!-- /.card-footer -->
+                </form>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Chỉnh sửa cùng sản phẩm khác đơn vị tính -->
+<div class="modal fade" id="ModalUpdatePDVT" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 1000px!important" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color:#d0f14a;color:black">
+                <h5>CẬP NHẬT ĐƠN VỊ TÍNH</h5>
+            </div>
+            <div class="modal-body">
+                <div class="card card-primary card-tabs">
+                    <div class="card-header p-0 pt-1">
+                        <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="custom-tabs-one-UpdateDVT-tab" data-toggle="pill" href="#custom-tabs-one-UpdateDVT" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">Chỉnh sửa sản phẩm</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="custom-tabs-one-QLGiamGiaDVT-tab" data-toggle="pill" href="#custom-tabs-one-QLGiamGiaDVT" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Quản lý giảm giá sản phẩm</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body">
+                        <div class="tab-content" id="custom-tabs-one-tabContent">
+                            <div class="tab-pane fade show active" id="custom-tabs-one-UpdateDVT" role="tabpanel" aria-labelledby="custom-tabs-one-UpdateDVT-tab">
+                                <!-- form start -->
+                                <form class="form-horizontal" id="FromUpdateProductUnit" method="post">
+                                    <div class="card-body">
+                                        <div class="form-group row">
+                                            <label for="inputEmail3" class="col-sm-2 col-form-label">Mã sản phẩm</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" class="form-control" id="IDProductDVTUpdate" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="inputPassword3" class="col-sm-2 col-form-label">Tên sản phẩm*</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" class="form-control" id="NameProductDVTUpdate" placeholder="Nhập tên sản phẩm" required>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="inputPassword3" class="col-sm-2 col-form-label">ĐVT mới*</label>
+                                            <div class="col-sm-4">
+                                                <select class="form-control select2" id="UnitProductDVTUpdate" style="width: 100%;" required>
+                                                    <option selected="selected">Chọn đơn vị tính</option>
+                                                </select>
+                                            </div>
+                                            <label for="inputPassword3" class="col-sm-2 col-form-label" id="GiaTriQuyDoi"></label>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="inputPassword3" class="col-sm-2 col-form-label">Giá bán lẻ*</label>
+                                            <div class="col-sm-4">
+                                                <div class="input-group mb-3">
+                                                    <input type="text" class="form-control" id="PriceOutProductDVTUpdate" required min="1000">
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-text">VNĐ</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <label for="inputPassword3" class="col-sm-2 col-form-label">Giá bán sỉ*</label>
+                                            <div class="col-sm-4">
+                                                <div class="input-group mb-3">
+                                                    <input type="text" class="form-control" id="PricewholesaleProductDVTUpdate" required min="1000">
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-text">VNĐ</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="inputPassword3" class="col-sm-2 col-form-label">Hình ảnh</label>
+                                            <div class="col-sm-6">
+                                                <div class="input-group mb-3">
+                                                    <input type="text" class="form-control rounded-0" id="ImageProductDVTUpdate">
+                                                    <div class="input-group-append">
+                                                        <button type="button" class="btn btn-info btn-info" id="ImageProductChooseDVTUpdate">Chọn ảnh đại diện!</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <button class="btn btn-default" style="width:100%" id="ImageMoreProductDVTChooseUpdate"><i class="far fa-images"></i>Chọn nhiều hình ảnh</button>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-4"><img id="ImageShowProductDVTUpdate" width="200" /><div><label style="margin-left:51px">ảnh đại diện</label></div></div>
+                                        <div class="col-8">
+                                            <div class="row" id="ImageListDVTUpdate">
+                                                <div id="ImageListDVTUpdate">
+
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- /.card-body -->
+                                    <div class="card-footer">
+                                        <button class="btn btn-default float-right" style="margin-right:10px" data-dismiss="modal">Thoát</button>
+                                        <button type="submit" class="btn btn-info float-right" style="margin-right:10px">Lưu</button>
+
+                                    </div>
+                                    <!-- /.card-footer -->
+                                </form>
+                            </div>
+                            <div id="custom-tabs-one-QLGiamGiaDVT" class="tab-pane fade" aria-labelledby="custom-tabs-one-QLGiamGiaDVT-tab">
+                                <form class="form-horizontal" id="FormQLGiamGiaDVT" method="post">
+                                    <div class="card-body">
+                                        <div class="form-group row">
+                                            <label for="inputEmail3" class="col-sm-2 col-form-label">Giá bán lẻ giảm</label>
+                                            <div class="col-sm-4">
+                                                <div class="input-group mb-3">
+                                                    <input type="number" class="form-control" id="PricePromotionDVT" required min="1000">
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-text">VNĐ</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <label for="inputEmail3" class="col-sm-2 col-form-label">Giá bán sỉ giảm</label>
+                                            <div class="col-sm-4">
+                                                <div class="input-group mb-3">
+                                                    <input type="number" class="form-control" id="PricewholesalePromotionDVT" required min="1000">
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-text">VNĐ</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="inputEmail3" class="col-sm-2 col-form-label">Ngày bắt đầu</label>
+                                            <div class="col-sm-4">
+                                                <input type="datetime-local" class="form-control" required id="StartDateDVT" />
+                                            </div>
+                                            <label for="inputEmail3" class="col-sm-2 col-form-label">Ngày kết thúc</label>
+                                            <div class="col-sm-4">
+                                                <input type="datetime-local" class="form-control" required id="EndDateDVT" />
+                                            </div>
+                                        </div>
+                                        <div class="card-footer">
+                                            <button type="submit" id="CreatePromotionDVT" class="btn btn-info float-right" style="margin-right:10px">Thêm</button>
+                                            <button type="submit" id="UpdatePromotionDVT" class="btn btn-info float-right" style="margin-right:10px" disabled>Cập nhật</button>
+                                        </div>
+                                    </div>
+                                </form>
+                                <!--Table-->
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <table class="table table-bordered table-hover" id="tbl-data">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th>STT</th>
+                                                    <th>Ngày tạo</th>
+                                                    <th>Giá bán lẻ <i class="fas fa-arrow-down"></i></th>
+                                                    <th>Giá bán sỉ <i class="fas fa-arrow-down"></i></th>
+                                                    <th>Ngày bắt đầu</th>
+                                                    <th>Ngày kết thúc</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tbProductPromotionDVT">
+                                            </tbody>
+                                        </table>
+                                        <ul id="paginationpromotionDVT" class="pagination"></ul>
+                                        <script id="data-templateProductPromotionDVT" type="x-tmpl-mustache">
+                                            <tr {{{PromotionStatus}}}>
+                                                <td>{{STT}}</td>
+                                                <td>{{CreateDate}}</td>
+                                                <td>{{PricePromotion}}</td>
+                                                <td>{{PricewholesalePromotion}}</td>
+                                                <td>{{StartDate}}</td>
+                                                <td>{{EndDate}}</td>
+                                                <th>
+                                                    <a class="EditPromotionDVT" data-id="{{ProductID}}" data-idprice="{{ID}}"><i class="far fa-edit"></i></a>
+                                                    <a class="DeletePromotionDVT" data-id="{{ProductID}}" style="margin-left:5px"><i class="far fa-trash-alt"></i></a>
+                                                </th>
+                                            </tr>
+                                        </script>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.card -->
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Chỉnh sửa sản phẩm -->
+<div class="modal fade" id="ModalUpdateSP" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 1000px!important" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #01A65B;color:white">
+                <h5>CHỈNH SỬA SẢN PHẨM</h5>
+            </div>
+            <div class="modal-body">
+                <div class="card card-primary card-tabs">
+                    <div class="card-header p-0 pt-1">
+                        <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-SuaSP" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">Chỉnh sửa sản phẩm</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="custom-tabs-one-profile-tab" data-toggle="pill" href="#custom-tabs-one-SuaCTSP" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Chi tiết sản phẩm</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="custom-tabs-one-QLGiamGia-tab" data-toggle="pill" href="#custom-tabs-one-QLGiamGia" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Quản lý giảm giá sản phẩm</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body">
+                        <div class="tab-content" id="custom-tabs-one-tabContent">
+                            <div class="tab-pane fade show active" id="custom-tabs-one-SuaSP" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
+                                <!-- form start -->
+                                <form class="form-horizontal" id="FromUpdateProduct" method="post">
+                                    <div class="card-body">
+                                        <div class="form-group row">
+                                            <label for="inputEmail3" class="col-sm-2 col-form-label">Mả sản phẩm</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" class="form-control" id="IDProductUpdate" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="inputEmail3" class="col-sm-2 col-form-label">Tên sản phẩm*</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" class="form-control" id="NameProductUpdate" placeholder="Nhập tên sản phẩm" required>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="inputPassword3" class="col-sm-2 col-form-label">Đơn vị tính*</label>
+                                            <div class="col-sm-10">
+                                                <select class="form-control" id="UnitProductUpdate" style="width: 100%;" required>
+                                                    <option selected="selected">Chọn đơn vị tính</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="inputPassword3" class="col-sm-2 col-form-label">Giá bán lẻ*</label>
+                                            <div class="col-sm-4">
+                                                <div class="input-group mb-3">
+                                                    <input type="text" class="form-control" id="PriceOutProductUpdate" required min="1000">
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-text">VNĐ</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <label for="inputPassword3" class="col-sm-2 col-form-label">Giá bán sỉ*</label>
+                                            <div class="col-sm-4">
+                                                <div class="input-group mb-3">
+                                                    <input type="text" class="form-control" id="PricewholesaleProductUpdate" required min="1000">
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-text">VNĐ</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="inputPassword3" class="col-sm-2 col-form-label">Hình ảnh</label>
+                                            <div class="col-sm-6">
+                                                <div class="input-group mb-3">
+                                                    <input type="text" class="form-control rounded-0" id="ImageProductUpdate">
+                                                    <div class="input-group-append">
+                                                        <button type="button" class="btn btn-info btn-info" id="ImageProductChooseUpdate">Chọn ảnh đại diện!</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <button class="btn btn-default" style="width:100%" id="ImageMoreProductChooseUpdate"><i class="far fa-images"></i>Chọn nhiều hình ảnh</button>
+                                            </div>
+
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="inputPassword3" class="col-sm-2 col-form-label">Loại sản phẩm*</label>
+                                            <div class="col-sm-10">
+                                                <select class="form-control" id="productcategoryUpdate" style="width: 100%;">
+                                                    <option selected="selected">Chọn loại sản phẩm</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-4"><img id="ImageShowProductUpdate" width="200" /><div><label style="margin-left:51px">ảnh đại diện</label></div></div>
+                                        <div class="col-8">
+                                            <div class="row" id="ImageListUpdate">
+                                                <div id="ImageListUpdate">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- /.card-body -->
+                                    <div class="card-footer">
+                                        <button class="btn btn-default float-right" style="margin-right:10px" data-dismiss="modal">Thoát</button>
+                                        <button type="submit" class="btn btn-info float-right" style="margin-right:10px">Lưu</button>
+
+                                    </div>
+                                    <!-- /.card-footer -->
+                                </form>
+
+                            </div>
+                            <div class="tab-pane fade" id="custom-tabs-one-SuaCTSP" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab">
+                                <div class="card-body">
+                                    <div class="form-group row">
+                                        <label for="inputEmail3" class="col-sm-2 col-form-label">Thương hiệu</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="TradeMarkProductUpdate" placeholder="Nhập thương hiệu sản phẩm sản phẩm">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="inputPassword3" class="col-sm-2 col-form-label">Xuất xứ thương hiệu</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="TradeOriginProductUpdate" placeholder="Nhập xuất sứ thương hiệu">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="inputPassword3" class="col-sm-2 col-form-label">Nơi sản xuất</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="ProductionProductUpdate" placeholder="Nhập nơi sản xuất">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="inputPassword3" class="col-sm-2 col-form-label">Thành phần</label>
+                                        <div class="col-sm-10">
+                                            <textarea class="form-control" id="IngredientProductUpdate" placeholder="Nhập thành phần sản phẩm"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="inputPassword3" class="col-sm-2 col-form-label">Hạn sử dụng</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="ExpiryProductUpdate" placeholder="Nhập hạn sử dụng">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="inputPassword3" class="col-sm-2 col-form-label">Hướng dẩn sử dụng</label>
+                                        <div class="col-sm-10">
+                                            <textarea class="form-control" id="UserManualProductUpdate" placeholder="Nhập hướng dẩn sử dụng"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="inputPassword3" class="col-sm-2 col-form-label">Hướng dẩn bảo quản</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="CareInstructionsProductUpdate" placeholder="Nhập hướng dẩn bảo quản">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="inputPassword3" class="col-sm-2 col-form-label">Quy cách đóng gói</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="PackingProductUpdate" placeholder="Nhập quy cách đóng gói">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="inputPassword3" class="col-sm-2 col-form-label">Chi tiết sản phẩm</label>
+                                        <div class="col-sm-10">
+                                            <textarea class="form-control" id="DiscriptionProductUpdate" rows="5" placeholder="Nhập chi tiết sản phẩm"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- /.card-body -->
+                            </div>
+                            <div id="custom-tabs-one-QLGiamGia" class="tab-pane fade" aria-labelledby="custom-tabs-one-QLGiamGia-tab">
+                                <!-- form start -->
+                                <form class="form-horizontal" id="FormQLGiamGia" method="post">
+                                    <div class="card-body">
+                                        <div class="form-group row">
+                                            <label for="inputEmail3" class="col-sm-2 col-form-label">Giá bán lẻ giảm</label>
+                                            <div class="col-sm-4">
+                                                <div class="input-group mb-3">
+                                                    <input type="number" class="form-control" id="PricePromotion" required min="1000">
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-text">VNĐ</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <label for="inputEmail3" class="col-sm-2 col-form-label">Giá bán sỉ giảm</label>
+                                            <div class="col-sm-4">
+                                                <div class="input-group mb-3">
+                                                    <input type="number" class="form-control" id="PricewholesalePromotion" required min="1000">
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-text">VNĐ</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="inputEmail3" class="col-sm-2 col-form-label">Ngày bắt đầu</label>
+                                            <div class="col-sm-4">
+                                                <input type="datetime-local" class="form-control" required id="StartDate" />
+                                            </div>
+                                            <label for="inputEmail3" class="col-sm-2 col-form-label">Ngày kết thúc</label>
+                                            <div class="col-sm-4">
+                                                <input type="datetime-local" class="form-control" required id="EndDate" />
+                                            </div>
+                                        </div>
+                                        <div class="card-footer">
+                                            <button type="submit" id="CreatePromotion" class="btn btn-info float-right" style="margin-right:10px">Thêm</button>
+                                            <button type="submit" id="UpdatePromotion" class="btn btn-info float-right" style="margin-right:10px" disabled>Cập nhật</button>
+                                        </div>
+                                    </div>
+                                </form>
+                                <!--Table-->
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <table class="table table-bordered table-hover" id="tbl-data">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th>STT</th>
+                                                    <th>Ngày tạo</th>
+                                                    <th>Giá bán lẻ <i class="fas fa-arrow-down"></i></th>
+                                                    <th>Giá bán sỉ <i class="fas fa-arrow-down"></i></th>
+                                                    <th>Ngày bắt đầu</th>
+                                                    <th>Ngày kết thúc</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tbProductPromotion">
+                                            </tbody>
+                                        </table>
+                                        <ul id="paginationpromotion" class="pagination"></ul>
+                                        <script id="data-templateProductPromotion" type="x-tmpl-mustache">
+                                            <tr {{{PromotionStatus}}}>
+                                                <td>{{STT}}</td>
+                                                <td>{{CreateDate}}</td>
+                                                <td>{{PricePromotion}}</td>
+                                                <td>{{PricewholesalePromotion}}</td>
+                                                <td>{{StartDate}}</td>
+                                                <td>{{EndDate}}</td>
+                                                <th>
+                                                    <a class="EditPromotion" data-id="{{ProductID}}" data-idprice="{{ID}}"><i class="far fa-edit"></i></a>
+                                                    <a class="DeletePromotion" data-id="{{ProductID}}" style="margin-left:5px"><i class="far fa-trash-alt"></i></a>
+                                                </th>
+                                            </tr>
+                                        </script>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.card -->
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Quy đổi đơn vị tính -->
+<div class="modal fade" id="ModalExChangeUnit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 880px!important" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #01A65B;color:white">
+                <h5>QUY ĐỔI ĐƠN VỊ TÍNH HÀNG HÓA</h5>
+            </div>
+            <div class="modal-body">
+                <!-- form start -->
+                <form class="form-horizontal" id="FromAddExchangeUnit" method="post">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-2 col-form-label">Mả sản phẩm</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="ProductIDDisplayExchange" readonly>
+                                <input type="text" class="form-control" id="ProductIDExchange" readonly hidden>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-2 col-form-label">Tên sản phẩm</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="ProductNameExchange" placeholder="Nhập tên sản phẩm" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword3" class="col-sm-2 col-form-label">Đơn vị tính</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="ProductUnitExchange" placeholder="Đơn vị tính" readonly>
+                            </div>
+                            <label for="inputPassword3" class="col-sm-2 col-form-label">Giá nhập</label>
+                            <div class="col-sm-4">
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control" id="ProductPriceInputExchange" readonly min="1000">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">VNĐ</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword3" class="col-sm-2 col-form-label">Giá trị quy đổi</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="ProductValueUnitExchange" readonly min="1000">
+                            </div>
+                            <label for="inputPassword3" class="col-sm-2 col-form-label">SL tồn</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="ProductCountExchange" readonly min="1000">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword3" class="col-sm-2 col-form-label">Chọn DVT cần đổi ra với số lượng</label>
+                            <div class="col-sm-4">
+                                <input type="number" class="form-control" id="ProductValueCountUnit" value="1" required>
+                            </div>
+                            <label for="inputPassword3" class="col-sm-2 col-form-label">Kết quả đổi ra</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="ProductExchangeUnitResult" readonly>
+                                <input type="text" class="form-control" id="ProductExchangeUnitResultCheck" hidden readonly>
+                            </div>
+                        </div>
+                        <div class="form-group row" style="margin-left:128px">
+                            <div class="col-3" id="checkradio">
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer">
+                        <button class="btn btn-default float-right" style="margin-right:10px" data-dismiss="modal">Thoát</button>
+                        <button type="submit" class="btn btn-info float-right" style="margin-right:10px">Lưu</button>
+                    </div>
+                    <!-- /.card-footer -->
+                </form>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Thêm đơn vị tính -->
+<div class="modal fade" id="ModalCreateUnit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 600px!important" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: green; color: white">
+                <h5>THÊM ĐƠN VỊ TÍNH</h5>
+            </div>
+            <div class="modal-body">
+                <!-- form start -->
+                <form class="form-horizontal" id="FromCreateUnit" method="post">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <label for="inputPassword3" class="col-sm-2 col-form-label">Tên đơn vị tính*</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="NameUnit" placeholder="Nhập tên đơn vị tính" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword3" class="col-sm-2 col-form-label">Giá trị*</label>
+                            <div class="col-sm-4">
+                                <input type="number" class="form-control" id="ValueUnit" required min="1">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer">
+                        <button class="btn btn-default float-right" style="margin-right:10px" data-dismiss="modal">Thoát</button>
+                        <button type="submit" class="btn btn-info float-right" style="margin-right:10px">Lưu</button>
+                    </div>
+                    <!-- /.card-footer -->
+                </form>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Sửa đơn vị tính -->
+<div class="modal fade" id="ModalUpdateUnit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 600px!important" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: green; color: white">
+                <h5>SỬA ĐƠN VỊ TÍNH</h5>
+            </div>
+            <div class="modal-body">
+                <!-- form start -->
+                <form class="form-horizontal" id="FromUpdateUnit" method="post">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <label for="inputPassword3" class="col-sm-2 col-form-label">Mã đơn vị tính*</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="UnitIDUpdate" placeholder="Nhập tên đơn vị tính" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword3" class="col-sm-2 col-form-label">Tên đơn vị tính*</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="NameUnitUpdate" placeholder="Nhập tên đơn vị tính" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword3" class="col-sm-2 col-form-label">Giá trị*</label>
+                            <div class="col-sm-4">
+                                <input type="number" class="form-control" id="ValueUnitUpdate" required readonly min="1">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer">
+                        <button class="btn btn-default float-right" style="margin-right:10px" data-dismiss="modal">Thoát</button>
+                        <button type="submit" class="btn btn-info float-right" style="margin-right:10px">Lưu</button>
+                    </div>
+                    <!-- /.card-footer -->
+                </form>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal xem loại sản phẩm cấp 2-->
+<div class="modal fade" id="ModalCategory2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 1000px!important" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #01A65B;color:white">
+                <h5 id="CategoryDisplayID"></h5>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" id="FromCreateCategory2" method="post">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <label for="inputPassword3" class="col-sm-4 col-form-label">Mã loại loại sản phẩm*</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="CategoryIDDisplay" placeholder="Mã loại sản phẩm(Tự động sinh)" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword3" class="col-sm-4 col-form-label">Tên loại sản phẩm*</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="UpdateNameCategory2" placeholder="Nhập tên loại sản phẩm" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword3" class="col-sm-4 col-form-label">Giá trị hiển thị*</label>
+                            <div class="col-sm-8">
+                                <input type="number" class="form-control" id="UpdateDisplayCategory2" required min="1">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-info float-right" id="BtnCreateCategory2" style="margin-right:10px">Thêm</button>
+                        <button type="reset" class="btn btn-info float-right" id="BtnUpdateCategory2" style="margin-right:10px" disabled>Cập nhật</button>
+                    </div>
+                    <!-- /.card-footer -->
+                </form>
+                <!--header Table-->
+                <div class="row mb-3 mt-3">
+                    <div class="col-6 col-md-3">
+                        <div class="input-group">
+                            <input type="search" id="search-querycategory2" class="form-control" placeholder="Nhập tên, mã loại" />
+                        </div>
+                    </div>
+                    <div class="col-3 col-md-3">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Từ ngày</span>
+                            </div>
+                            <input type="date" class="form-control float-right" id="TuNgayCategoryProduct2">
+                        </div>
+                    </div>
+                    <div class="col-3 col-md-3">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Đến ngày</span>
+                            </div>
+                            <input type="date" class="form-control float-right" id="DenNgayCategoryProduct2">
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <button type="button" id="btnTiemKiemCategory2" class="btn btn-primary"><i class="fas fa-search"></i>Tìm kiếm</button>
+                    </div>
+                </div>
+                <!--Table-->
+                <div class="row">
+                    <div class="col-sm-12">
+                        <table class="table table-bordered table-hover" id="tbl-data">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Mã loại sản phẩm</th>
+                                    <th>Tên loại sản phẩm</th>
+                                    <th>Giá trị hiển thị</th>
+                                    <th>Ngày tạo</th>
+                                    <th>SL sản phẩm</th>
+                                    <th>#</th>
+                                </tr>
+                            </thead>
+                            <tbody id="Group">
+                                <tr>
+                                    <td colspan="6" style="text-align:right;font-weight:bold" id="TongSoLuong2"></td>
+                                </tr>
+                            </tbody>
+                            <tbody id="tbcategory2">
+                            </tbody>
+                        </table>
+                        <ul id="paginationcategory2" class="pagination"></ul>
+                        <script id="data-templatecategory2" type="x-tmpl-mustache">
+                                            <tr>
+                                                <td>{{STT}}</td>
+                                                <td>{{ProductCategoryIDDisplay}}</td>
+                                                <td>{{Name}}</td>
+                                                <td style="text-align:right;">{{Display}}</td>
+                                                <td>{{CreateDate}}</td>
+                                                <td style="text-align:right;">{{CountCategory}}</td>
+                                                <th>
+                                                    <a class="modalshowEditcCategory2" data-id={{ProductCategoryID}}><i class="far fa-edit"></i></a>
+                                                    <a class="actiondeleteCategory2" data-id="{{ProductCategoryID}}" style="margin-left:5px"><i class="far fa-trash-alt"></i></a>
+                                                </th>
+                                            </tr>
+                        </script>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal thêm loại sản phẩm-->
+<div class="modal fade" id="ModalCreateCategory" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 700px!important" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #01A65B;color:white">
+                <h5>THÊM LOẠI SẢN PHẨM CƠ BẢN</h5>
+            </div>
+            <div class="modal-body">
+                <!-- form start -->
+                <form class="form-horizontal" id="FromCreateCategory" method="post">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <label for="inputPassword3" class="col-sm-2 col-form-label">Tên loại sản phẩm*</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="NameCategory" placeholder="Nhập tên loại sản phẩm" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword3" class="col-sm-2 col-form-label">Giá trị hiển thị*</label>
+                            <div class="col-sm-10">
+                                <input type="number" class="form-control" id="DisplayCategory" required min="1">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword3" class="col-sm-2 col-form-label">Hình ảnh</label>
+                            <div class="col-sm-10">
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control rounded-0" id="ImageCategory">
+                                    <div class="input-group-append">
+                                        <button type="button" class="btn btn-info btn-info" id="ImageCategoryChoose">Chọn ảnh đại diện!</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4"><img id="ImageShowCategory" width="200" /><div><label style="margin-left:51px">ảnh đại diện</label></div></div>
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer">
+                        <button class="btn btn-default float-right" style="margin-right:10px" data-dismiss="modal">Thoát</button>
+                        <button type="submit" class="btn btn-info float-right" style="margin-right:10px">Lưu</button>
+                    </div>
+                    <!-- /.card-footer -->
+                </form>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal chỉnh sửa loại sản phẩm-->
+<div class="modal fade" id="ModalUpdateCategory" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 700px!important" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #01A65B;color:white">
+                <h5>CHỈNH SỬA SẢN PHẨM</h5>
+            </div>
+            <div class="modal-body">
+                <!-- form start -->
+                <form class="form-horizontal" id="FromUpdateCategory" method="post">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <label for="inputPassword3" class="col-sm-2 col-form-label">Mã loại loại sản phẩm*</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="CategoryIDDisplayBase" placeholder="Nhập tên loại sản phẩm" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword3" class="col-sm-2 col-form-label">Tên loại sản phẩm*</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="NameCategoryUpdate" placeholder="Nhập tên loại sản phẩm" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword3" class="col-sm-2 col-form-label">Giá trị hiển thị*</label>
+                            <div class="col-sm-10">
+                                <input type="number" class="form-control" id="DisplayCategoryUpdate" required min="1">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword3" class="col-sm-2 col-form-label">Hình ảnh</label>
+                            <div class="col-sm-10">
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control rounded-0" id="ImageCategoryUpdate">
+                                    <div class="input-group-append">
+                                        <button type="button" class="btn btn-info btn-info" id="ImageCategoryChooseUpdate">Chọn ảnh đại diện!</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4"><img id="ImageShowCategoryUpdate" width="200" /><div><label style="margin-left:51px">ảnh đại diện</label></div></div>
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer">
+                        <button class="btn btn-default float-right" style="margin-right:10px" data-dismiss="modal">Thoát</button>
+                        <button type="submit" class="btn btn-info float-right" style="margin-right:10px">Lưu</button>
+                    </div>
+                    <!-- /.card-footer -->
+                </form>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Xác nhận xóa sản phẩm -->
+<div class="modal fade" id="ModalDeleteProduct" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 1000px!important" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #01A65B;color:white">
+                <h5>XÁC NHẬN XÓA </h5>
+            </div>
+            <div class="modal-body">
+                <p id="NameProductDelete"></p><br />
+                <div class="alert alert-danger" id="ResultProductDelete" hidden role="alert">
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-default float-right" style="margin-right:10px" data-dismiss="modal"><i class="fas fa-sign-out-alt"></i>Thoát</button>
+                    <button type="button" class="btn btn-info float-right" id="btndeleteProduct" style="margin-right:10px"><i class="fas fa-trash-alt"></i>Xóa</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Xác nhận xóa đơn vị tính -->
+<div class="modal fade" id="ModalDeleteUnit" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 1000px!important" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #01A65B;color:white">
+                <h5>XÁC NHẬN XÓA </h5>
+            </div>
+            <div class="modal-body">
+                <p id="NameUnitDelete"></p><br />
+                <div class="alert alert-danger" id="ResultUnitDelete" hidden role="alert">
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-default float-right" style="margin-right:10px" data-dismiss="modal"><i class="fas fa-sign-out-alt"></i>Thoát</button>
+                    <button type="button" class="btn btn-info float-right" id="btndeleteUnit" style="margin-right:10px"><i class="fas fa-trash-alt"></i>Xóa</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Xác nhận xóa loại sản phẩm base -->
+<div class="modal fade" id="ModalDeleteProductCategory" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 1000px!important" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #01A65B;color:white">
+                <h5>XÁC NHẬN XÓA </h5>
+            </div>
+            <div class="modal-body">
+                <p id="NameProductCategoryDelete"></p><br />
+                <div class="alert alert-danger" id="ResultProductCategoryDelete" hidden role="alert">
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-default float-right" style="margin-right:10px" data-dismiss="modal"><i class="fas fa-sign-out-alt"></i>Thoát</button>
+                    <button type="button" class="btn btn-info float-right" id="btndeleteProductCategory" style="margin-right:10px"><i class="fas fa-trash-alt"></i>Xóa</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section headerBig{
+    Quản lý sản phẩm
+}
+
+@section headersmall{
+    Quản lý sản phẩm
+}
+
+

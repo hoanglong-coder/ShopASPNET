@@ -1,0 +1,613 @@
+﻿
+@{
+    ViewBag.Title = "Combo sản phẩm";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@section scripts{
+    <script src="~/Assets/Admin/plugins/select2/js/select2.full.min.js"></script>
+    <script src="~/Assets/Admin/plugins/sweetalert2/sweetalert2.js"></script>
+    <script src="~/Assets/Admin/plugins/mustache.min.js"></script>
+    <script src="~/Assets/Admin/dist/js/jquery.twbsPagination.js"></script>
+    <script src="~/Assets/Admin/plugins/jquery-validation/jquery.validate.js"></script>
+    <script src="~/Assets/Admin/plugins/moment/moment.min.js"></script>
+    <link href="~/Assets/Admin/plugins/daterangepicker/daterangepicker.css" rel="stylesheet" />
+    <script src="~/Assets/Admin/plugins/daterangepicker/daterangepicker.js"></script>
+    <script src="~/Assets/Admin/dist/js/pages/admin-productcombo-index.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(".select2").select2({
+                theme: 'bootstrap4'
+            });
+        })
+        /*Thêm sản phẩm*/
+        $('#PriceOutProduct').keyup(function (event) {
+
+            // skip for arrow keys
+            if (event.which >= 37 && event.which <= 40) return;
+
+            // format number
+            $(this).val(function (index, value) {
+                return value
+                    .replace(/[^0-9]/g, "")
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+                    ;
+            });
+        });
+        $('#PricewholesaleProduct').keyup(function (event) {
+
+            // skip for arrow keys
+            if (event.which >= 37 && event.which <= 40) return;
+
+            // format number
+            $(this).val(function (index, value) {
+                return value
+                    .replace(/[^0-9]/g, "")
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+                    ;
+            });
+        });
+
+        /*Search Gía*/
+        $('.PriceSearch').keyup(function (event) {
+
+            // skip for arrow keys
+            if (event.which >= 37 && event.which <= 40) return;
+
+            // format number
+            $(this).val(function (index, value) {
+                return value
+                    .replace(/[^0-9]/g, "")
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+                    ;
+            });
+        });
+
+    </script>
+
+}
+
+
+<div class="row">
+    <div class="col-12">
+        <div class="card card-default card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Danh sách combo sản phẩm</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <!--header Table-->
+                <div class="row mb-3">
+                    <div class="col-2">
+                        <div class="input-group">
+                            <input type="search" id="search-querysearch" class="form-control" placeholder="Nhập tên sản phẩm, mả sản phẩm" />
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="input-group">
+                            <select class="form-control ml-3" id="search-TinhTrang">
+                                <option value="" selected>Tình trạng combo</option>
+                                <option value="true">Đang bán</option>
+                                <option value="false">Dừng/Chưa bán</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="input-group">
+                            <select class="form-control ml-3" id="search-TrangThai">
+                                <option value="" selected>Trạng thái combo</option>
+                                <option value="true">Hoạt động</option>
+                                <option value="false">Dừng</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-1">
+                        <button id="BtnSearchProductCombo" class="btn btn-primary"><i class="fas fa-search"></i>Tìm kiếm</button>
+                    </div>
+                    <div class="col-2">
+                        <button id="btnSearchNangCao" class="btn btn-primary"><i class="fas fa-arrow-down"></i>Tìm kiếm nâng cao</button>
+                    </div>
+                    <div class="col-2">
+                        <button type="button" class="btn btn-primary" id="CreateSanPhamCombo"><i class="fas fa-plus"></i>Thêm combo</button>
+                    </div>
+                </div>
+                <div class="row mb-3" id="SearchNangCao" style="display:none">
+                    <div class="col-2">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Giá lẻ từ</span>
+                            </div>
+                            <input type="text" class="form-control float-right PriceSearch" id="GiaLeTu">
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Giá lẻ đến</span>
+                            </div>
+                            <input type="text" class="form-control float-right PriceSearch" id="GiaLeDen">
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Giá sỉ từ</span>
+                            </div>
+                            <input type="text" class="form-control float-right PriceSearch" id="GiaSiTu">
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Giá sỉ đến</span>
+                            </div>
+                            <input type="text" class="form-control float-right PriceSearch" id="GiaSiDen">
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="input-group">
+                            <select class="form-control ml-3" id="search-SoLuong">
+                                <option value="" selected>Số lượng</option>
+                                <option value="true">Còn hàng</option>
+                                <option value="false">Hết hàng</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <!--Table-->
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div style="width:100%; overflow-x: scroll">
+                            <table class="table table-bordered table-hover table-responsive" style="width:130%" id="tbl-data">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th></th>
+                                        <th>STT</th>
+                                        <th>Mã combo</th>
+                                        <th>Tên combo</th>
+                                        <th>Ngày tạo</th>
+                                        <th>Giá trị hiển thị</th>
+                                        <th>Giá bán lẻ</th>
+                                        <th>Giá bán lẻ <i class="fas fa-arrow-down"></i></th>
+                                        <th>Giá bán sỉ</th>
+                                        <th>Giá bán sỉ <i class="fas fa-arrow-down"></i></th>
+                                        <th>Ngày bắt đầu</th>
+                                        <th>Ngày kết thúc</th>
+                                        <th>Số lượng</th>
+                                        <th>Trạng thái</th>
+                                        <th>#</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbProductcombo">
+                                </tbody>
+                            </table>
+                        </div>
+                        <ul id="paginationProductcombo" class="pagination"></ul>
+                        <script id="data-templateProductcombo" type="x-tmpl-mustache">
+                                            <tr>
+                                                <td><a class="modalshowsub" data-id="{{ProductComboID}}" data-start="{{StartDate}}" data-end="{{EndDate}}"><i class="fas fa-eye"></i><a/></td>
+                                                <td>{{STT}}</td>
+                                                <td>{{ProductComboIDDisplay}}</td>
+                                                <td>{{Name}}</td>
+                                                <td>{{CreateDate}}</td>
+                                                <td style=" text-align: right">{{DisplayProductComBo}}</td>
+                                                <td style=" text-align: right">{{PriceOut}}</td>
+                                                <td style=" text-align: right">{{PricePromotion}}</td>
+                                                <td style=" text-align: right">{{Pricewholesale}}</td>
+                                                <td style=" text-align: right">{{PricewholesalePromotion}}</td>
+                                                <td>{{StartDate}}</td>
+                                                <td>{{EndDate}}</td>
+                                                <td>{{CountProduct}}</td>
+                                                <th>{{{ComboStatus}}}</th>
+                                                <th>
+                                                    <a class="modalshowEdit" data-id="{{ProductComboID}}"  data-toggle="tooltip" data-placement="top" title="Sửa tin tức"><i class="far fa-edit"></i></a>
+                                                    <a class="actiondisplayProduct" data-id="{{ProductID}}" style="margin-left:5px" data-toggle="tooltip" data-placement="top" title="Dừng/Bán sản phẩm"><i class="{{DisplayProduct}}"></i></a>
+                                                    <a class="actiondelete" data-id="{{ProductComboID}}" data-name="{{Name}}" style="margin-left:5px"data-toggle="tooltip" data-placement="top" title="Xóa tin tức"><i class="far fa-trash-alt"></i></a>
+                                                </th>
+                                            </tr>
+                        </script>
+                    </div>
+                </div>
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <div class="card card-default card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Danh sách TOP-K</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <!--header Table-->
+                <div class="row mb-3">
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label for="exampleFormControlFile1">Đọc file</label>
+                            <input type="file" class="form-control-file" id="outputpath">
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <button type="button" class="btn btn-primary" id="readfile"><i class="fas fa-plus"></i>Đọc file txt</button>
+                    </div>
+                </div>
+                <!--Table-->
+                <div class="row">
+                    <div class="col-sm-12">
+                        <table class="table table-bordered table-hover" id="tbl-data">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>#</th>
+                                    <th>STT</th>
+                                    <th>Độ hữu ích</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbtopk">
+                            </tbody>
+                        </table>
+                        <ul id="paginationproducttopk" class="pagination"></ul>
+                        <script id="data-templatetopk" type="x-tmpl-mustache">
+                                            <tr>
+                                                <td><a class="actionViewTOPKDetail" data-id="{{STT}}" style="margin-left:5px" data-toggle="tooltip" data-placement="top" title="Xem chi tiết phiếu nhập"><i class="fas fa-eye"></i></a></td>
+                                                <td>{{STT}}</td>
+                                                <td>{{PU}}</td>
+                                            </tr>
+                        </script>
+                    </div>
+                </div>
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <div class="card card-default card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Chi tiết combo sản phẩm</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <!--header Table-->
+                <div class="row mb-3">
+                    <div class="col-2">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Mã combo</span>
+                            </div>
+                            <input type="text" id="ComBoIDDisplay" class="form-control" readonly />
+                            <input type="text" id="ComBoID" hidden class="form-control" readonly />
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Ngày bắt đầu</span>
+                            </div>
+                            <input type="text" id="ComboStartDate" class="form-control" readonly />
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Ngày kết thúc</span>
+                            </div>
+                            <input type="text" id="ComboEndDate" class="form-control" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <select class="form-control select2" id="productcomboadd" style="width: 100%;" required>
+                            <option selected="selected">Chọn sản phẩm</option>
+                        </select>
+                    </div>
+                    <div class="col-2">
+                        <button type="button" class="btn btn-primary" id="AddProductCombo"><i class="fas fa-plus"></i>Thêm sản phẩm</button>
+                    </div>
+                </div>
+                <!--Table-->
+                <div class="row">
+                    <div class="col-sm-12">
+                        <table class="table table-bordered table-hover" id="tbl-data">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Mã sản phẩm</th>
+                                    <th>Tên sản phẩm</th>
+                                    <th>ĐVT</th>
+                                    <th>SL tồn</th>
+                                    <th>Giá bán lẻ</th>
+                                    <th>Giá bán lẻ <i class="fas fa-arrow-down"></i></th>
+                                    <th>Giá bán sỉ</th>
+                                    <th>Giá bán sỉ <i class="fas fa-arrow-down"></i></th>
+                                    <th>Nhà cung cấp</th>
+                                    <th>Loại sản phẩm</th>
+                                    <th>#</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbProduct">
+                            </tbody>
+                        </table>
+                        <ul id="paginationproduct" class="pagination"></ul>
+                        <script id="data-templateProduct" type="x-tmpl-mustache">
+                                            <tr>
+                                                <td>{{STT}}</td>
+                                                <td>{{ProductID}}</td>
+                                                <td>{{ProductName}}</td>
+                                                <td>{{UnitName}}</td>
+                                                <td style="text-align: right;">{{Count}}</td>
+                                                <td style="text-align: right;">{{PriceOutput}}</td>
+                                                <td style="text-align: right;">{{PricePromotion}}</td>
+                                                <td style="text-align: right;">{{Pricewholesale}}</td>
+                                                <td style="text-align: right;">{{PricewholesalePromotion}}</td>
+                                                <td>{{SupplierName}}</td>
+                                                <td>{{CategoryName}}</td>
+                                                <th>
+                                                    <a class="actiondeleteProduct" data-id="{{ID}}" data-name="{{ProductName}}" style="margin-left:5px"data-toggle="tooltip" data-placement="top" title="Xóa sản phẩm"><i class="far fa-trash-alt"></i></a>
+                                                </th>
+                                            </tr>
+                        </script>
+                    </div>
+                </div>
+            </div>
+            <!-- /.card-body -->
+        </div>
+    </div>
+</div>
+
+<!-- Modal Thêm sản phẩm combo -->
+<div class="modal fade" id="ModalCreateSPCombo" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 880px!important" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #01A65B;color:white">
+                <h5>THÊM SẢN PHẨM COMBO</h5>
+            </div>
+            <div class="modal-body">
+                <div class="card card-primary card-tabs">
+                    <div class="card-header p-0 pt-1">
+                        <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-ThemSP" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">Thêm sản phẩm combo</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="custom-tabs-one-profile-tab" data-toggle="pill" href="#custom-tabs-one-ThemCTSP" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Chi tiết sản phẩm combo</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body">
+                        <div class="tab-content" id="custom-tabs-one-tabContent">
+                            <div class="tab-pane fade show active" id="custom-tabs-one-ThemSP" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
+                                <!-- form start -->
+                                <form class="form-horizontal" id="FromCreateProductCombo" method="post">
+                                    <div class="card-body">
+                                        <div class="form-group row">
+                                            <label for="inputEmail3" class="col-sm-2 col-form-label">Tên combo*</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" class="form-control" id="NameProduct" placeholder="Nhập tên combo" required>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="inputPassword3" class="col-sm-2 col-form-label">Ngày bắt đầu*</label>
+                                            <div class="col-sm-4">
+                                                <input type="datetime-local" class="form-control" id="StartDate" required>
+                                            </div>
+                                            <label for="inputPassword3" class="col-sm-2 col-form-label">Ngày kết thúc*</label>
+                                            <div class="col-sm-4">
+                                                <input type="datetime-local" class="form-control" id="EndDate" required>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="inputEmail3" class="col-sm-2 col-form-label">Số lượng*</label>
+                                            <div class="col-sm-4">
+                                                <input type="number" class="form-control" id="CountCombo" min="1" placeholder="Nhập số lượng" required>
+                                            </div>
+                                            <label for="inputEmail3" class="col-sm-2 col-form-label">Giá trị hiển thị*</label>
+                                            <div class="col-sm-4">
+                                                <input type="number" class="form-control" id="DisplayCombo" min="1" placeholder="Nhập giá trị" required>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="inputPassword3" class="col-sm-2 col-form-label">Giá bán lẻ*</label>
+                                            <div class="col-sm-4">
+                                                <div class="input-group mb-3">
+                                                    <input type="text" class="form-control" id="PriceOutProduct" min="1000" required>
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-text">VNĐ</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <label for="inputPassword3" class="col-sm-2 col-form-label">Giá bán sỉ*</label>
+                                            <div class="col-sm-4">
+                                                <div class="input-group mb-3">
+                                                    <input type="text" class="form-control" id="PricewholesaleProduct" min="1000" required>
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-text">VNĐ</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="inputPassword3" class="col-sm-2 col-form-label">Hình ảnh</label>
+                                            <div class="col-sm-6">
+                                                <div class="input-group mb-3">
+                                                    <input type="text" class="form-control rounded-0" id="ImageProduct">
+                                                    <div class="input-group-append">
+                                                        <button type="button" class="btn btn-info btn-info" id="ImageProductChoose">Chọn ảnh đại diện!</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <button class="btn btn-default" style="width:100%" id="ImageMoreProductChoose"><i class="far fa-images"></i>Chọn nhiều hình ảnh</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-4"><img id="ImageShowProduct" width="200" /><div><label style="margin-left:51px">ảnh đại diện</label></div></div>
+                                        <div class="col-8">
+                                            <div class="row" id="ImageList">
+                                                <div id="ImageList">
+
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- /.card-body -->
+                                    <div class="card-footer">
+                                        <button class="btn btn-default float-right" style="margin-right:10px" data-dismiss="modal">Thoát</button>
+                                        <button type="submit" class="btn btn-info float-right" style="margin-right:10px">Lưu</button>
+                                    </div>
+                                    <!-- /.card-footer -->
+                                </form>
+                            </div>
+                            <div class="tab-pane fade" id="custom-tabs-one-ThemCTSP" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab">
+                                <div class="card-body">
+                                    <div class="form-group row">
+                                        <label for="inputEmail3" class="col-sm-2 col-form-label">Thương hiệu</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="TradeMarkProduct" placeholder="Nhập thương hiệu sản phẩm sản phẩm">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="inputPassword3" class="col-sm-2 col-form-label">Xuất xứ thương hiệu</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="TradeOriginProduct" placeholder="Nhập xuất sứ thương hiệu">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="inputPassword3" class="col-sm-2 col-form-label">Nơi sản xuất</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="ProductionProduct" placeholder="Nhập nơi sản xuất">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="inputPassword3" class="col-sm-2 col-form-label">Thành phần</label>
+                                        <div class="col-sm-10">
+                                            <textarea class="form-control" id="IngredientProduct" placeholder="Nhập thành phần sản phẩm"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="inputPassword3" class="col-sm-2 col-form-label">Hạn sử dụng</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="ExpiryProduct" placeholder="Nhập hạn sử dụng">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="inputPassword3" class="col-sm-2 col-form-label">Hướng dẩn sử dụng</label>
+                                        <div class="col-sm-10">
+                                            <textarea class="form-control" id="UserManualProduct" placeholder="Nhập hướng dẩn sử dụng"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="inputPassword3" class="col-sm-2 col-form-label">Hướng dẩn bảo quản</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="CareInstructionsProduct" placeholder="Nhập hướng dẩn bảo quản">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="inputPassword3" class="col-sm-2 col-form-label">Quy cách đóng gói</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="PackingProduct" placeholder="Nhập quy cách đóng gói">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="inputPassword3" class="col-sm-2 col-form-label">Chi tiết sản phẩm</label>
+                                        <div class="col-sm-10">
+                                            <textarea class="form-control" id="DiscriptionProduct" rows="5" placeholder="Nhập chi tiết sản phẩm"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- /.card-body -->
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.card -->
+                </div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal danh sách sản phẩm -->
+<div class="modal fade" id="Modaldetailtopk" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 1300px!important" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #01A65B;color:white">
+                <h5>DANH SÁCH SẢN PHẨM</h5>
+            </div>
+            <div class="modal-body">
+                <!--Table-->
+                <div class="row">
+                    <div class="col-sm-12">
+                        <table class="table table-bordered table-hover" id="tbl-data">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Mã sản phẩm</th>
+                                    <th>Tên sản phẩm</th>
+                                    <th>ĐVT</th>
+                                    <th>SL tồn</th>
+                                    <th>Giá bán lẻ</th>
+                                    <th>Giá bán lẻ <i class="fas fa-arrow-down"></i></th>
+                                    <th>Giá bán sỉ</th>
+                                    <th>Giá bán sỉ <i class="fas fa-arrow-down"></i></th>
+                                    <th>Nhà cung cấp</th>
+                                    <th>Loại sản phẩm</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="3" style="font-weight:bold">Tổng kho:</td>
+                                    <td colspan="2" style="text-align:right;font-weight:bold" id="TongKho">3</td>
+                                </tr>
+                            </tbody>
+                            <tbody id="tbProducttopk">
+                            </tbody>
+                        </table>
+                        <script id="data-templateProducttopk" type="x-tmpl-mustache">
+                                            <tr id="bodyproduct">
+                                                <td>{{STT}}</td>
+                                                <td>{{ProductID}}</td>
+                                                <td>{{ProductName}}</td>
+                                                <td>{{UnitName}}</td>
+                                                <td style="text-align: right;">{{Count}}</td>
+                                                <td style="text-align: right;">{{PriceOutput}}</td>
+                                                <td style="text-align: right;">{{PricePromotion}}</td>
+                                                <td style="text-align: right;">{{Pricewholesale}}</td>
+                                                <td style="text-align: right;">{{PricewholesalePromotion}}</td>
+                                                <td>{{SupplierName}}</td>
+                                                <td>{{CategoryName}}</td>
+                                                <td><input class="form-check-input checkproduct" type="checkbox" name="{{ID}}"></td>
+                                            </tr>
+                        </script>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button  id="addproductincombo" class="btn btn-info float-right" style="margin-right:10px">Thêm</button>
+                <button class="btn btn-info float-right" style="margin-right:10px" data-dismiss="modal">Thoát</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section headerBig{
+    Quản lý Combo sản phẩm
+}
+
+@section headersmall{
+    Quản lý Combo sản phẩm
+}
+

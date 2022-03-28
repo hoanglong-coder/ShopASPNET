@@ -1,0 +1,119 @@
+﻿@model List<PROJECT_WEBSITE.Data.ModelCustom.MReceipt>
+@using PROJECT_WEBSITE.Data.DAO;
+@{
+    Layout = null;
+    decimal soluong = 0;
+    decimal total = 0;
+    var Date = ViewData["Date"];
+    var UserName = ViewData["Username"];
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ExportPDFReceipt</title>
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="~/Assets/Admin/plugins/fontawesome-free/css/all.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/Assets/Admin/dist/css/adminlte.min.css">
+    <!-- PagedList-->
+    <link rel="stylesheet" href="~/Assets/Admin/dist/css/PagedList.css">
+    <!-- sweetleart2 -->
+    <link rel="stylesheet" href="~/Assets/Admin/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
+    <!-- Select2 -->
+    <link rel="stylesheet" href="~/Assets/Admin/plugins/select2/css/select2.min.css">
+    <link rel="stylesheet" href="~/Assets/Admin/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+    </style>
+</head>
+<body>
+    @DateTime.Now
+    <div style="font-size: 22px; font-weight: bold;">
+        CỬA HÀNG CHUỔI THỰC PHẨM TH True Milk
+    </div>
+    <div style="font-size: 22px; font-weight: bold; margin-top: 15px ">
+        SĐT:028 3602 1133 - ĐC:204/16/5 Quốc Lộ 13, P.26, Q.Bình Thạnh, Tp.HCM
+    </div>
+    <center style="margin-top:15px"><h1>DANH SÁCH PHIẾU NHẬP HÀNG</h1></center>
+
+    <center style="margin-top:15px"><h4>@Date</h4></center>
+
+    <table class="table" width="100%" style="font-size: 20px; margin-top: 15px ">
+        <thead>
+            <tr>
+                <th>STT</th>
+                <th>Mã phiếu nhập</th>
+                <th>Ngày nhập</th>
+                <th>Nhà cung cấp</th>
+                <th>Số lượng</th>
+                <th>Tổng tiền(VNĐ)</th>
+                <th>Người nhập</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <th>@item.STT</th>
+                    @GetMaPhieuNhap(item.ReceiptID)
+                    <td>@item.CreateDate</td>
+                    <td>@item.SupplierName</td>
+                    <td style="text-align:right">@item.TotalCount</td>
+                    <td style="text-align:right">@item.TotalReceiptPrice.Value.ToString("N0")</td>
+                    <td>@item.UserName</td>
+                </tr>
+                total += item.TotalReceiptPrice.Value;
+                soluong += item.TotalCount.Value;
+            }
+        </tbody>
+        <tbody>
+            <tr>
+                <th></th>
+                <th style="text-align:center;font-weight:bold" colspan="3">Tổng cộng</th>
+                <th style="text-align:right;font-weight:bold">@soluong</th>
+                <th style="text-align:right;font-weight:bold">@total.ToString("N0") </th>
+                <th></th>
+            </tr>
+        </tbody>
+    </table>
+    <div style="font-weight:bold;font-size:20px;margin-top:15px">Bằng chữ: @(new ConvertCurrency().ToUpper((double)total)) </div>
+
+    <div style="text-align:center;width:150px;margin-left:80%">
+        <p style="font-weight: bold;font-size:20px">Người lập phiếu</p>
+        <p style="font-style:italic;font-size:20px;margin-top:-20px">(Ký, họ tên)</p>
+        <p style="margin-top: 50px; font-weight: bold; font-size: 20px">@UserName</p>
+    </div>
+</body>
+</html>
+<!-- jQuery -->
+@Scripts.Render("~/Assets/Admin/plugins/jquery/jquery.min.js")
+<!-- Bootstrap 4 -->
+@Scripts.Render("~/Assets/Admin/plugins/bootstrap/js/bootstrap.bundle.min.js")
+
+@helper GetMaPhieuNhap(int id)
+{
+    if (id <= 9)
+    {
+        <td> @($"PN000"+id)</td>
+    }
+    else if (id <= 99)
+    {
+        <td> @($"PN00"+id)</td>
+    }
+    else if (id <= 999)
+    {
+        <td> @($"PN0"+id)</td>
+    }
+    else
+    {
+        <td> @($"PN"+id)</td>
+    }
+}

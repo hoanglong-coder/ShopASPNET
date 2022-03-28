@@ -1,0 +1,386 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .table-fixed {
+        width: 100%;
+    }
+        .table-fixed tbody {
+            height: 150px;
+            overflow-y: auto;
+            width: 100%;
+        }
+
+        .table-fixed thead,
+        .table-fixed tbody,
+        .table-fixed tr,
+        .table-fixed td,
+        .table-fixed th {
+            display: block;
+        }
+
+            .table-fixed tbody td {
+                float: left;
+            }
+
+            .table-fixed thead tr th {
+                float: left;
+            }
+</style>
+
+@section scripts{
+    <script src="~/Assets/Admin/plugins/select2/js/select2.full.min.js"></script>
+    <script src="~/Assets/Admin/plugins/sweetalert2/sweetalert2.js"></script>
+    <script src="~/Assets/Admin/plugins/mustache.min.js"></script>
+    <script src="~/Assets/Admin/dist/js/jquery.twbsPagination.js"></script>
+    <script src="~/Assets/Admin/plugins/jquery-validation/jquery.validate.js"></script>
+    <script src="~/Assets/Admin/plugins/moment/moment.min.js"></script>
+    <link href="~/Assets/Admin/plugins/daterangepicker/daterangepicker.css" rel="stylesheet" />
+    <script src="~/Assets/Admin/plugins/daterangepicker/daterangepicker.js"></script>
+    <script src="~/Assets/Admin/dist/js/pages/admin-receipt-index.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            $(".select2").select2({
+                theme: 'bootstrap4'
+            });
+        })
+
+        $('#PriceInput').keyup(function (event) {
+
+            // skip for arrow keys
+            if (event.which >= 37 && event.which <= 40) return;
+
+            // format number
+            $(this).val(function (index, value) {
+                return value
+                    .replace(/[^0-9]/g, "")
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+                    ;
+            });
+        });
+
+
+    </script>
+}
+<div class="row">
+    <div class="col-12">
+        <div class="card card-default card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Quản lý nhập hàng</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <div class="card card-primary card-tabs">
+                    <div class="card-header p-0 pt-1">
+                        <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="custom-tabs-one-PhieuNhap-tab" data-toggle="pill" href="#custom-tabs-one-PhieuNhap" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">Phiếu nhập</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="custom-tabs-one-DSPN-tab" data-toggle="pill" href="#custom-tabs-one-DSPN" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Danh sách phiếu nhập</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body">
+                        <div class="tab-content" id="custom-tabs-one-tabContent">
+                            <div class="tab-pane active" id="custom-tabs-one-PhieuNhap" role="tabpanel" aria-labelledby="custom-tabs-one-PhieuNhap-tab">
+
+                                <div class="row">
+                                    <div class="col-8">
+                                        .<!--header Table-->
+                                        <div class="row mb-3">
+                                            <div class="col-12">
+                                                <!-- form start -->
+                                                <form class="form-horizontal" id="FromAddProduct" method="post">
+                                                    <div class="card-body">
+                                                        <div class="form-group row">
+                                                            <label for="inputEmail3" class="col-sm-2 col-form-label">Chọn sản phẩm*</label>
+                                                            <div class="col-sm-10">
+                                                                <select class="form-control select2" id="ProductAll" style="width: 100%;" required>
+                                                                    <option selected="selected">Chọn sản phẩm</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group row">
+                                                            <label for="inputPassword3" class="col-sm-2 col-form-label">Giá nhập*</label>
+                                                            <div class="col-sm-10">
+                                                                <input type="text" class="form-control" id="PriceInput" placeholder="Nhập giá sản phẩm" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group row">
+                                                            <label for="inputPassword3" class="col-sm-2 col-form-label">Số lượng*</label>
+                                                            <div class="col-sm-4">
+                                                                <input type="text" class="form-control" id="CountProduct" placeholder="Nhập số lượng" min="1" required>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- /.card-body -->
+                                                    <div class="card-footer">
+                                                        <button type="submit" id="Addproduct"class="btn btn-info float-right" style="margin-right:10px"><i class="fas fa-plus"></i>Thêm</button>
+                                                        <button type="submit" id="Updateproduct" class="btn btn-info float-right" style="margin-right:10px" disabled><i class="fas fa-exchange-alt"></i>Cập nhật</button>
+                                                    </div>
+                                                    <!-- /.card-footer -->
+                                                </form>
+                                            </div>
+                                        </div>
+                                        <!--Table-->
+                                        <div class="row">
+                                            <div class="col-sm-12" style="height:150px;width:100%;overflow-y:scroll">
+                                                <table class="table  table-bordered table-hover" id="tbl-dataProduct">
+                                                    <thead class="thead-light">
+                                                        <tr>
+                                                            <th>STT</th>
+                                                            <th>Mã sản phẩm</th>
+                                                            <th>Tên sản phẩm</th>
+                                                            <th>Số Lượng</th>
+                                                            <th>Giá nhập</th>
+                                                            <th>Thành Tiền</th>
+                                                            <th>#</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="tbProductReceipt">
+                                                    </tbody>
+                                                </table>
+                                                <script id="data-templateProductReciept" type="x-tmpl-mustache">
+                                                    <tr>
+                                                        <td>{{STT}}</td>
+                                                        <td>{{ProductIDDisplay}}</td>
+                                                        <td>{{ProductName}}</td>
+                                                        <td style="text-align:right">{{ReceiptCount}}</td>
+                                                        <td style="text-align:right">{{PriceIput}}</td>
+                                                        <td style="text-align:right">{{TotalPrice}}</td>
+                                                        <th>
+                                                            <a class="actioneEdit" data-id="{{ProductID}}" data-toggle="tooltip" data-placement="top" title="Sửa sản phẩm"><i class="far fa-edit"></i></a>
+                                                            <a class="actiondelete" data-id="{{ProductID}}" style="margin-left:5px"data-toggle="tooltip" data-placement="top" title="Xóa sản phẩm"><i class="far fa-trash-alt"></i></a>
+                                                        </th>
+                                                    </tr>
+                                                </script>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <!-- form start -->
+                                        <form class="form-horizontal" id="FromCreateReceipt" method="post" style="margin-top:20px">
+                                            <div class="card-body">
+                                                <div class="form-group row">
+                                                    <label for="inputPassword3" class="col-sm-5 col-form-label">Nhà cung cấp*</label>
+                                                    <div class="col-sm-7">
+                                                        <select class="form-control select2" id="LstSupplier" style="width: 100%;" required disabled>
+                                                            <option selected="selected">Chọn nhà cung cấp</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label for="inputPassword3" class="col-sm-5 col-form-label">Ngày nhập*</label>
+                                                    <div class="col-sm-7">
+                                                        <input type="datetime-local" class="form-control" required id="CreateDateReceipt" />
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label for="inputPassword3" class="col-sm-5 col-form-label">Người nhập*</label>
+                                                    <div class="col-sm-7">
+                                                        <input type="text" class="form-control" id="UserName" readonly/>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label for="inputPassword3" class="col-sm-5 col-form-label">Ghi chú</label>
+                                                    <div class="col-sm-7">
+                                                        <textarea class="form-control" style="width:100%" id="DescriptionReceipt"></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label for="inputPassword3" class="col-sm-5 col-form-label">Tổng tiền hàng</label>
+                                                    <div class="col-sm-7">
+                                                        <input type="text" class="form-control" required id="TotalPrice" readonly />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- /.card-body -->
+                                            <div class="card-footer">
+                                                <button class="btn btn-default float-right" style="margin-right:10px">Thoát</button>
+                                                <button type="submit" class="btn btn-info float-right" style="margin-right:10px"><i class="far fa-save"></i>Lưu</button>                                         
+                                            </div>
+                                            <!-- /.card-footer -->
+                                        </form>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="tab-pane fade" id="custom-tabs-one-DSPN" role="tabpanel" aria-labelledby="custom-tabs-one-DSPN-tab">
+                                <!--header Table-->
+                                <div class="row mb-3">
+                                    <div class="col-2">
+                                        <div class="input-group">
+                                            <input type="search" id="search-receipt" class="form-control" placeholder="Nhập mã phiếu nhập, tên người nhập" />
+                                        </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">Từ ngày</span>
+                                            </div>
+                                            <input type="date" class="form-control float-right" id="TuNgayreceipt">
+                                        </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">Đến ngày</span>
+                                            </div>
+                                            <input type="date" class="form-control float-right" id="DenNgayreceipt">
+                                        </div>
+                                    </div>
+                                    <div class="col-1">
+                                        <button class="btn btn-primary" id="btnreceipt" ><i class="fas fa-search"></i>Tìm kiếm</button>
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-primary"><i class="fas fa-arrow-down"></i>Xuất DS</button>
+                                            <button type="button" class="btn btn-primary dropdown-toggle dropdown-icon" data-toggle="dropdown">
+                                                <span class="sr-only">Toggle Dropdown</span>
+                                            </button>
+                                            <div class="dropdown-menu" role="menu">
+                                                <a id="ExportPDFReceipt" class="dropdown-item"><i class="fas fa-file-pdf"></i>Xuất PDF danh sách</a>
+                                                <a id="ExportExcelReceipt" class="dropdown-item"><i class="far fa-file-excel"></i>Xuất Excel danh sách</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Table-->
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <table class="table table-bordered table-hover" id="tbl-data">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th>STT</th>
+                                                    <th>Mã phiếu nhập</th>
+                                                    <th>Ngày nhập</th>
+                                                    <th>Nhà cung cấp</th>
+                                                    <th>Tổng SL</th>
+                                                    <th>Tổng tiền</th>
+                                                    <th>Người lập</th>
+                                                    <th>#</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td colspan="4" style="font-weight:bold">Tổng cộng:</td>
+                                                    <td colspan="1" style="text-align:right;font-weight:bold" id="Count"></td>
+                                                    <td colspan="1" style="text-align:right;font-weight:bold" id="TotalPriceReceipt"></td>
+                                                </tr>
+                                            </tbody>
+                                            <tbody id="tbReceipt">
+                                            </tbody>
+                                        </table>
+                                        <ul id="paginationReceipt" class="pagination"></ul>
+                                        <script id="data-templateReceipt" type="x-tmpl-mustache">
+                                            <tr>
+                                                <td>{{STT}}</td>
+                                                <td>{{ReceiptIDDisplay}}</td>
+                                                <td>{{CreateDate}}</td>
+                                                <td>{{SupplierName}}</td>
+                                                <td style="text-align: right;">{{CountProduct}}</td>
+                                                <td style="text-align: right;">{{TotalPriceInput}}</td>
+                                                <td>{{UserName}}</td>
+                                                <th>
+                                                    <a class="reportexcel" data-id="{{ReceiptID}}" style="margin-left:5px" data-toggle="tooltip" data-placement="top" title="Xuất Excel"><i class="far fa-file-excel"></i></a>
+                                                    <a class="reportpdf" data-id="{{ReceiptID}}" style="margin-left:5px"  data-toggle="tooltip" data-placement="top" title="Xuất PDF"><i class="fas fa-file-pdf"></i></a>
+                                                    <a class="actionViewReceiptDetail" data-id="{{ReceiptID}}" style="margin-left:5px" data-toggle="tooltip" data-placement="top" title="Xem chi tiết phiếu nhập"><i class="fas fa-eye"></i></a>
+                                                </th>
+                                            </tr>
+                                        </script>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.card -->
+                </div>
+            </div>
+            <!-- /.card-body -->
+        </div>
+    </div>
+</div>
+
+
+
+
+<!-- Modal Xem chi tiết phiếu nhập -->
+<div class="modal fade" id="ModalViewReceiptDetail" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 1000px!important" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #d0f14a; color: black">
+                <div class="row">
+                    <div class="col-12"><h5 id="headerReceiptDetail"></h5></div>
+                </div>
+            </div>
+            <div class="modal-header" style="background-color: #d0f14a; color: black;margin-top:-38px">
+                <div class="row">
+                    <div class="col-12"><div><h6 id="bottomReceiptDetail"></h6></div></div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <!--Table-->
+                <div class="row">
+                    <div class="col-sm-12">
+                            <table class="table table-bordered table-hover" id="tbl-data">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>STT</th>
+                                        <th>Mã sản phẩm</th>
+                                        <th>Tên sản phẩm</th>
+                                        <th>ĐVT</th>
+                                        <th>Số lượng</th>
+                                        <th>Giá nhập</th>
+                                        <th>Thành tiền</th>
+                                    </tr>
+                                </thead>                               
+                                <tbody id="tbReceiptDetail">
+                                </tbody>
+                                <tbody id="tbReceiptDetail">
+                                    <tr>
+                                        <th colspan="4" style="text-align:center">Tổng tiền hàng</th>
+                                        <th id="TongSoluongReceiptDetail" style="text-align:right"></th>
+                                        <th></th>
+                                        <th id="TotalPriceReceiptDetail" style="text-align:right"></th>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        <script id="data-templateReceiptDetail" type="x-tmpl-mustache">
+                                            <tr>
+                                                <td>{{STT}}</td>
+                                                <td>{{ProductIDDisplay}}</td>
+                                                <td>{{ProductName}}</td>
+                                                <td>{{ProductDVT}}</td>
+                                                <td style="text-align: right;">{{CountProduct}}</td>
+                                                <td style="text-align: right;">{{PriceInput}}</td>
+                                                <td style="text-align: right;">{{TotalPrice}}</td>
+                                            </tr>
+                        </script>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+@section headerBig{
+    Quản lý Nhập hàng
+}
+
+@section headersmall{
+    Quản lý Nhập hàng
+}
+
+

@@ -1,0 +1,296 @@
+﻿@model List<PROJECT_WEBSITE.WebAPP.Models.CartItem>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    decimal totalprice = 0;
+}
+<!-- Breadcrumb Area start -->
+<section class="breadcrumb-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="breadcrumb-content">
+                    <h1 class="breadcrumb-hrading">Trang Giỏ hàng</h1>
+                    <ul class="breadcrumb-links">
+                        <li><a href="/">Trang chủ</a></li>
+                        <li>Giỏ hàng</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Breadcrumb Area End -->
+<!-- cart area start -->
+<div class="cart-main-area mtb-60px">
+    <div class="container">
+        <h3 class="cart-page-title">Sản phẩm trong giỏ</h3>
+        <div class="row">
+            @if (Model.Count > 0)
+            {
+                <div class="col-lg-12 col-md-12 col-sm-12 col-12">
+                    <form action="#">
+                        <div class="table-content table-responsive cart-table-content">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Hình</th>
+                                        <th>Tên sản phẩm</th>
+                                        <th>Đơn giá</th>
+                                        <th>Số lượng</th>
+                                        <th>Tổng tiền</th>
+                                        <th>#</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        var url = "/chi-tiet/" + item.Product.MetaTitle + "-" + item.Product.ProductID;
+                                        decimal price = new decimal();
+                                        if (item.Quantity < 10)
+                                        {
+                                            if (item.Product.PricePromotion.HasValue)
+                                            {
+                                                price = item.Product.PricePromotion.Value;
+                                            }
+                                            else
+                                            {
+                                                price = item.Product.PriceOut.Value;
+
+                                            }
+                                        }else
+                                        {
+                                            if (item.Product.PricewholesalePromotion.HasValue)
+                                            {
+                                                price = item.Product.PricewholesalePromotion.Value;
+                                            }
+                                            else
+                                            {
+                                                price = item.Product.Pricewholesale.Value;
+
+                                            }
+                                        }
+
+                                        <tr>
+                                            <td class="product-thumbnail">
+                                                <a href="#"><img src="@item.Product.Image" alt="" width="98" /></a>
+                                            </td>
+                                            <td class="product-name"><a href="@url">@item.Product.Name</a></td>
+                                            <td class="product-price-cart"><span class="amount">@price.ToString("N0")đ</span></td>
+                                            <td class="product-quantity">
+                                                <div class="cart-plus-minus">
+                                                    <input class="cart-plus-minus-box txtquan" type="text" data-id="@item.Product.ProductID" name="qtybutton" value="@item.Quantity" />
+                                                </div>
+                                            </td>
+                                            <td class="product-subtotal">@((price * item.Quantity).ToString("N0") + "₫")</td>
+                                            <td class="product-remove">
+                                                <a href="@Url.Action("DeleteItem", new { id = item.Product.ProductID })"><i class="fa fa-times"></i></a>
+                                            </td>
+                                            @{
+                                                totalprice += price * item.Quantity;
+                                            }
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="cart-shiping-update-wrapper">
+                                    <div class="cart-shiping-update">
+                                        <a href="/">Tiếp tục mua sắm</a>
+                                    </div>
+                                    <div class="cart-clear">
+                                        <button id="btnupdate">Cập nhật giỏ hàng</button>
+                                        <a href="@Url.Action("DeleteAll")">Xóa giỏ hàng</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="row">
+                        <div class="col-lg-4 col-md-6">
+                            <div class="grand-totall">
+                                <div class="title-wrap">
+                                    <h4 class="cart-bottom-title section-bg-gary-cart">Thanh toán giỏ hàng</h4>
+                                </div>
+                                <h5>Tổng giá tất cả sản phẩm <span>@(totalprice.ToString("N0") + "đ")</span></h5>
+                                <div id="khuyenmai">
+                                    
+                                    
+                                </div>
+                                <p>Mã khuyến mãi(nếu có)</p>
+                                <form id="FromKhuyenMai" method="post">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control"  placeholder="Nhập mã khuyến mãi..." id="CodeDiscount" required/>
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-secondary" style="background-color: rgb(79,182,141);color:white" type="submit">Áp dụng</button>
+                                        </div>
+                                    </div>
+                                </form>
+                                
+                                <h4 class="grand-totall-title mt-5">Thành tiền <span id="Thanhtien">@((totalprice).ToString("N0") + "đ")</span></h4>
+                                <a href="/thanh-toan/">Thanh toán</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            }
+            else
+            {
+                <div class="alert alert-warning" role="alert">
+                    Bạn không có sản phẩm nào
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<!-- cart area end -->
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            var CartPlusMinus = $('.cart-plus-minus');
+            CartPlusMinus.prepend('<div class="dec qtybutton">-</div>');
+            CartPlusMinus.append('<div class="inc qtybutton">+</div>');
+            $(".qtybutton").on("click", function () {
+                var $button = $(this);
+                var oldValue = $button.parent().find("input").val();
+                if ($button.text() === "+") {
+                    var newVal = parseFloat(oldValue) + 1;
+
+                } else {
+                    // Don't allow decrementing below zero
+                    if (oldValue > 1) {
+                        var newVal = parseFloat(oldValue) - 1;
+                    } else {
+                        newVal = 3;
+                    }
+                }
+                $button.parent().find("input").val(newVal);
+            });
+            $("#btnupdate").off('click').on('click', function () {
+                var lst = $(".txtquan");
+                var cart = [];
+                $.each(lst, function (i, item) {
+                    cart.push({
+                        Quantity: $(item).val(),
+                        Product: {
+                            ProductID: $(item).data('id')
+                        }
+                    });
+                });
+                $.ajax({
+                    url: '/Cart/Update',
+                    type: 'post',
+                    data: { cartModel: JSON.stringify(cart) },
+                    dataType:'json',
+                    success: function (data) {
+                        if (data.code == 200) {
+                            window.location.href = "/gio-hang";
+                        } else {
+                            alert(data.msg);
+                        }
+                    }
+                });
+
+
+            });
+            var total = @totalprice;
+            var OldPrice = @totalprice;
+            $("#FromKhuyenMai").off('submit').on('submit', function (e) {
+                e.preventDefault();
+                $.ajax({
+                    url: '/Cart/AddMaKhuyenMai',
+                    type: 'post',
+                    data: {
+                        MaKhuyenMai: $("#CodeDiscount").val(),
+                        TotalPrice: total
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.code == 200) {
+                            if (data.status == true) {
+                                $("#khuyenmai").empty();
+                                $.each(data.data, function (k, v) {
+                                    if (v.Percent != null) {
+                                        $("#khuyenmai").append('<h5>' + v.Name + ' <span>' + "-" + v.Percent + '%</span> <button class="deletekhuyenmai" data-id="' + v.DiscountID + '" style=" border: none; "><i class="fa fa-times"></i></button></h5>')
+
+                                    } else {
+                                        $("#khuyenmai").append('<h5>' + v.Name + ' <span>' + "-" + new Intl.NumberFormat().format(v.Total) + '</span> <button class="deletekhuyenmai" data-id="' + v.DiscountID + '" style=" border: none; "><i class="fa fa-times"></i></button></h5>')
+                                    }
+
+                                });
+                                if (data.total != -1) {
+                                    $("#Thanhtien").empty();
+                                    $("#Thanhtien").append(new Intl.NumberFormat().format(data.total) + 'VNĐ');
+                                    total = data.total;
+                                }
+                                alert(data.msg);
+
+                                Delete();
+                            } else {
+                                alert(data.msg);
+                            }
+
+                        } else {
+
+                        }
+                    }
+                });
+
+                function Delete() {
+                    $(".deletekhuyenmai").off('click').on('click', function (e) {
+                        e.preventDefault();
+                        var id = $(this).data('id');
+
+                        $.ajax({
+                            url: '/Cart/DeleteMaKhuyenMai',
+                            type: 'post',
+                            data: {
+                                id: id,
+                                TotalPrice: total,
+                                Old: OldPrice
+                            },
+                            dataType: 'json',
+                            success: function (data) {
+                                if (data.code == 200) {
+                                    if (data.status == true) {
+                                        $("#khuyenmai").empty();
+                                        $.each(data.data, function (k, v) {
+                                            if (v.Percent != null) {
+                                                $("#khuyenmai").append('<h5>' + v.Name + ' <span>' + "-" + v.Percent + '%</span> <button class="deletekhuyenmai" data-id="' + v.DiscountID + '" style=" border: none; "><i class="fa fa-times"></i></button></h5>')
+
+                                            } else {
+                                                $("#khuyenmai").append('<h5>' + v.Name + ' <span>' + "-" + new Intl.NumberFormat().format(v.Total) + '</span> <button class="deletekhuyenmai" data-id="' + v.DiscountID + '" style=" border: none; "><i class="fa fa-times"></i></button></h5>')
+                                            }
+
+                                        });
+                                        if (data.total != -1) {
+                                            $("#Thanhtien").empty();
+                                            $("#Thanhtien").append(new Intl.NumberFormat().format(data.total) + 'VNĐ');
+                                            total = data.total;
+                                        }
+                                        alert(data.msg);
+                                        Delete();
+                                    } else {
+                                        alert(data.msg);
+                                    }
+
+                                } else {
+
+                                }
+                            }
+                        });
+                    })
+                }
+
+            })
+
+        });
+
+
+    </script>
+
+
+}

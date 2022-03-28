@@ -1,0 +1,299 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@section scripts{
+    <script src="~/Assets/Admin/plugins/select2/js/select2.full.min.js"></script>
+    <script src="~/Assets/Admin/plugins/sweetalert2/sweetalert2.js"></script>
+    <script src="~/Assets/Admin/plugins/mustache.min.js"></script>
+    <script src="~/Assets/Admin/dist/js/jquery.twbsPagination.js"></script>
+    <script src="~/Assets/Admin/plugins/jquery-validation/jquery.validate.js"></script>
+    <script src="~/Assets/Admin/plugins/moment/moment.min.js"></script>
+    <link href="~/Assets/Admin/plugins/daterangepicker/daterangepicker.css" rel="stylesheet" />
+    <script src="~/Assets/Admin/plugins/daterangepicker/daterangepicker.js"></script>
+
+    <script src="~/Assets/Admin/dist/js/pages/admin-discountcode-index.js"></script>
+
+    <script>
+        /*Gia Giam*/
+        $('.PriceSearch').keyup(function (event) {
+
+            // skip for arrow keys
+            if (event.which >= 37 && event.which <= 40) return;
+
+            // format number
+            $(this).val(function (index, value) {
+                return value
+                    .replace(/[^0-9]/g, "")
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+                    ;
+            });
+        });
+        $('.EditGiam').keyup(function (event) {
+
+            // skip for arrow keys
+            if (event.which >= 37 && event.which <= 40) return;
+
+            // format number
+            $(this).val(function (index, value) {
+                return value
+                    .replace(/[^0-9]/g, "")
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+                    ;
+            });
+        });
+    </script>
+}
+
+<!--header Table-->
+<div class="row mb-3">
+    <div class="col-6 col-md-3">
+        <div class="input-group">
+            <input type="search" id="search-discount" class="form-control" placeholder="Nhập tên mã khuyến mãi" />
+        </div>
+    </div>
+    <div class="col-3 col-md-3">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Từ ngày</span>
+            </div>
+            <input type="date" class="form-control float-right" id="TuNgay">
+        </div>
+    </div>
+    <div class="col-3 col-md-3">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Đến ngày</span>
+            </div>
+            <input type="date" class="form-control float-right" id="DenNgay">
+        </div>
+    </div>
+    <div class="col-6 col-md-1">
+        <button type="button" id="btnTiemKiem" class="btn btn-primary"><i class="fas fa-search"></i>Tìm kiếm</button>
+    </div>
+    <div class="col-6 col-md-2">
+        <button type="button" class="btn btn-primary" id="CreateDiscount"><i class="fas fa-plus"></i>Thêm mã giảm giá</button>
+    </div>
+</div>
+<!--Table-->
+<div class="row">
+    <div class="col-sm-12">
+        <table class="table table-bordered table-hover" id="tbl-data">
+            <thead class="thead-light">
+                <tr>
+                    <th>STT</th>
+                    <th>Mã giảm giá</th>
+                    <th>Tên giảm giá</th>
+                    <th>Ngày bắt đầu</th>
+                    <th>Người kết thúc</th>
+                    <th>Ngày tạo</th>
+                    <th>Phần trăm giảm</th>
+                    <th>Giảm trực tiếp</th>
+                    <th>Số lượng</th>
+                    <th>Trạng thái</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="tbNews">
+            </tbody>
+        </table>
+        <ul id="paginationdiscount" class="pagination"></ul>
+        <script id="data-templatediscount" type="x-tmpl-mustache">
+                                            <tr>
+                                                <td>{{STT}}</td>
+                                                <td>{{DiscountCodeID}}</td>
+                                                <td>{{Name}}</td>
+                                                <td>{{StartDate}}</td>
+                                                <td>{{EndDate}}</td>
+                                                <td>{{CreateDate}}</td>
+                                                <td>{{PercentCart}}</td>
+                                                <td>{{TotalCart}}</td>
+                                                <td>{{DistcountCount}}</td>
+                                                <td>{{{DiscountStatus}}}</td>
+                                                <th>
+                                                    <a class="modalshowEdit" data-id="{{DiscountCodeID}}" data-name="{{Name}}" data-toggle="tooltip" data-placement="top" title="Sửa mã khuyến mãi"><i class="far fa-edit"></i></a>
+                                                    <a class="actiondelete" data-id="{{DiscountCodeID}}" data-name="{{Name}}" style="margin-left:5px"data-toggle="tooltip" data-placement="top" title="Xóa mã khuyến mãi"><i class="far fa-trash-alt"></i></a>
+                                                </th>
+                                            </tr>
+        </script>
+    </div>
+</div>
+
+<!-- Modal Thêm mã giảm giá -->
+<div class="modal fade" id="ModalCreateDiscount" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 1000px!important" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #01A65B;color:white">
+                <h5>THÊM MÃ GIẢM GIÁ</h5>
+            </div>
+            <div class="modal-body">
+                <!-- form start -->
+                <form class="form-horizontal" id="FromCreateDiscount" method="post">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-2 col-form-label">Tên giảm giá*</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="NameDiscount" placeholder="Nhập tên mã giảm giá" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-2 col-form-label">Ngày bắt đầu*</label>
+                            <div class="col-sm-4">
+                                <input type="datetime-local" class="form-control" id="StartDateDiscount" placeholder="Ngày bắt đầu" required>
+                            </div>
+                            <label for="inputEmail3" class="col-sm-2 col-form-label">Ngày kết thúc*</label>
+                            <div class="col-sm-4">
+                                <input type="datetime-local" class="form-control" id="EndDateDiscount" placeholder="Ngày kết thúc" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="form-check" style="margin-left:160px">
+                                <input class="form-check-input" type="radio" value="0" name="flexRadioDefault" id="flexRadioDefault1">
+                                <label class="form-check-label" for="flexRadioDefault1">
+                                    Giảm theo phần trăm
+                                </label>
+                            </div>
+                            <div class="form-check" style="margin-left:22px">
+                                <input class="form-check-input" type="radio" value="1" name="flexRadioDefault" id="flexRadioDefault2" checked>
+                                <label class="form-check-label" for="flexRadioDefault2">
+                                    Giảm theo đơn hàng
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-2 col-form-label">Phần trăm</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="Percent" placeholder="Nhập phần trăm giảm">
+                            </div>
+                            <label for="inputEmail3" class="col-sm-2 col-form-label">Tiền giảm</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control PriceSearch" id="Total" placeholder="Nhập tiền giảm">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-2 col-form-label">Số lượng</label>
+                            <div class="col-sm-10">
+                                <input type="number" class="form-control" id="CountDiscount" min="1" max="100" placeholder="Nhập số lượng" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- /.card-body -->
+                    <div class="card-footer">
+                        <button class="btn btn-default float-right" style="margin-right:10px" data-dismiss="modal">Thoát</button>
+                        <button type="submit" class="btn btn-info float-right" style="margin-right:10px">Lưu</button>
+                    </div>
+                    <!-- /.card-footer -->
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal Chỉnh sửa mã giảm giá -->
+<div class="modal fade" id="ModalEditDiscount" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 1000px!important" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #01A65B;color:white">
+                <h5>CHỈNH SỬA MÃ GIẢM GIÁ</h5>
+            </div>
+            <div class="modal-body">
+                <!-- form start -->
+                <form class="form-horizontal" id="FromEditDiscount" method="post">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-2 col-form-label">Mã giảm giá*</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="IDDiscountedit" placeholder="Nhập tên mã giảm giá" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-2 col-form-label">Tên giảm giá*</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="NameDiscountedit" placeholder="Nhập tên mã giảm giá" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-2 col-form-label">Ngày bắt đầu*</label>
+                            <div class="col-sm-4">
+                                <input type="datetime-local" class="form-control" id="StartDateDiscountedit" placeholder="Ngày bắt đầu" required>
+                            </div>
+                            <label for="inputEmail3" class="col-sm-2 col-form-label">Ngày kết thúc*</label>
+                            <div class="col-sm-4">
+                                <input type="datetime-local" class="form-control" id="EndDateDiscountedit" placeholder="Ngày kết thúc" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="form-check" style="margin-left:160px">
+                                <input class="form-check-input" type="radio" value="0" name="flexRadioDefaultedit" id="flexRadioDefault3">
+                                <label class="form-check-label" for="flexRadioDefault3">
+                                    Giảm theo phần trăm
+                                </label>
+                            </div>
+                            <div class="form-check" style="margin-left:22px">
+                                <input class="form-check-input" type="radio" value="1" name="flexRadioDefaultedit" id="flexRadioDefault4">
+                                <label class="form-check-label" for="flexRadioDefault4">
+                                    Giảm theo đơn hàng
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-2 col-form-label">Phần trăm</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" id="Percentedit" placeholder="Nhập phần trăm giảm">
+                            </div>
+                            <label for="inputEmail3" class="col-sm-2 col-form-label">Tiền giảm</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control EditGiam" id="Totaledit" placeholder="Nhập tiền giảm">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-2 col-form-label">Số lượng</label>
+                            <div class="col-sm-10">
+                                <input type="number" class="form-control" id="CountDiscountedit" min="1" max="100" placeholder="Nhập số lượng" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- /.card-body -->
+                    <div class="card-footer">
+                        <button class="btn btn-default float-right" style="margin-right:10px" data-dismiss="modal">Thoát</button>
+                        <button type="submit" class="btn btn-info float-right" style="margin-right:10px">Lưu</button>
+                    </div>
+                    <!-- /.card-footer -->
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal Xác nhận xóa mã khuyến mãi -->
+<div class="modal fade" id="ModalDelete" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 1000px!important" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #01A65B;color:white">
+                <h5>XÁC NHẬN XÓA </h5>
+            </div>
+            <div class="modal-body">
+                <p id="idnews"></p><br />
+                <p id="namenews" style="margin-top:3px"></p>
+                <div class="card-footer">
+                    <button class="btn btn-default float-right" style="margin-right:10px" data-dismiss="modal">Thoát</button>
+                    <button type="button" class="btn btn-info float-right" id="btndelete" style="margin-right:10px">Xóa</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section headerBig{
+    Quản lý mã giảm giá
+}
+
+@section headersmall{
+    Quản lý mã giảm giá
+}
+
+
